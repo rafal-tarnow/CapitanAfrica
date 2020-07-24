@@ -10,15 +10,26 @@ public class BackgroundLoop : MonoBehaviour
     public float choke;
     public float scrollSpeed;
 
+
     void Start(){
         mainCamera = gameObject.GetComponent<Camera>();
+        float viewHeight = mainCamera.orthographicSize * 2.0f;
+
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
+
         foreach(GameObject obj in layers){
+            float objectHeight = obj.GetComponent<SpriteRenderer>().bounds.size.y;
+            float heightScale = viewHeight/objectHeight;
+            obj.transform.localScale = new Vector3(heightScale, heightScale, 1.0f);
             loadChildObjects(obj);
         }
+
+
+
+        
     }
     void loadChildObjects(GameObject layer){
-        float objectWidth = layer.GetComponent<SpriteRenderer>().bounds.size.x - choke;
+        float objectWidth = (layer.GetComponent<SpriteRenderer>().bounds.size.x - choke);
         int childsNeeded = (int)Mathf.Ceil(screenBounds.x * 2 / objectWidth);
         GameObject clone = Instantiate(layer) as GameObject;
         for(int i = 0; i <= childsNeeded; i++){
@@ -58,5 +69,6 @@ public class BackgroundLoop : MonoBehaviour
             repositionChildObjects(obj);
             obj.transform.position = new Vector3(obj.transform.position.x, mainCamera.transform.position.y, obj.transform.position.z);
         }
+       
     }
 }
