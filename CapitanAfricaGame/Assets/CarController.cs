@@ -22,7 +22,30 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movement = Input.GetAxis("Horizontal");
+        Debug.Log("Car controller update!!");
+        if(Input.touchCount > 0) //Touch
+        {
+            Debug.Log("   1");
+            Touch touch = Input.GetTouch(0);
+
+            if(touch.position.x > (Screen.width/2))
+            {
+                movement = 1.0f;
+            }
+            else
+            {
+                movement = -1.0f;
+            }
+        }
+        else    //Keyboard
+        {
+            Debug.Log("   2");
+            movement = Input.GetAxis("Horizontal");
+        }
+
+       
+
+
         image.fillAmount = fuel;
     }
 

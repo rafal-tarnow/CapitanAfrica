@@ -496,7 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a91a40f5fc5d1cc4982ffef05af4fbff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levels:
+  layers:
   - {fileID: 757692291}
   choke: 0
   scrollSpeed: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BackgroundLoop : MonoBehaviour
 {
-    public GameObject[] levels;
+    public GameObject[] layers;
     private Camera mainCamera;
     private Vector2 screenBounds;
     public float choke;
@@ -13,25 +13,25 @@ public class BackgroundLoop : MonoBehaviour
     void Start(){
         mainCamera = gameObject.GetComponent<Camera>();
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
-        foreach(GameObject obj in levels){
+        foreach(GameObject obj in layers){
             loadChildObjects(obj);
         }
     }
-    void loadChildObjects(GameObject obj){
-        float objectWidth = obj.GetComponent<SpriteRenderer>().bounds.size.x - choke;
+    void loadChildObjects(GameObject layer){
+        float objectWidth = layer.GetComponent<SpriteRenderer>().bounds.size.x - choke;
         int childsNeeded = (int)Mathf.Ceil(screenBounds.x * 2 / objectWidth);
-        GameObject clone = Instantiate(obj) as GameObject;
+        GameObject clone = Instantiate(layer) as GameObject;
         for(int i = 0; i <= childsNeeded; i++){
             GameObject c = Instantiate(clone) as GameObject;
-            c.transform.SetParent(obj.transform);
-            c.transform.position = new Vector3(objectWidth * i, obj.transform.position.y, obj.transform.position.z);
-            c.name = obj.name + i;
+            c.transform.SetParent(layer.transform);
+            c.transform.position = new Vector3(objectWidth * i, layer.transform.position.y, layer.transform.position.z);
+            c.name = layer.name + i;
         }
         Destroy(clone);
-        Destroy(obj.GetComponent<SpriteRenderer>());
+        Destroy(layer.GetComponent<SpriteRenderer>());
     }
     void repositionChildObjects(GameObject obj){
-        Transform[] children = obj.GetComponentsInChildren<Transform>();
+         Transform[] children = obj.GetComponentsInChildren<Transform>();
         if(children.Length > 1){
             GameObject firstChild = children[1].gameObject;
             GameObject lastChild = children[children.Length - 1].gameObject;
@@ -54,8 +54,9 @@ public class BackgroundLoop : MonoBehaviour
 
     }
     void LateUpdate(){
-        foreach(GameObject obj in levels){
+        foreach(GameObject obj in layers){
             repositionChildObjects(obj);
+            obj.transform.position = new Vector3(obj.transform.position.x, mainCamera.transform.position.y, obj.transform.position.z);
         }
     }
 }
