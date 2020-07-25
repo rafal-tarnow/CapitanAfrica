@@ -14,11 +14,16 @@ public class CarController : MonoBehaviour
     private float movement;
     public UnityEngine.UI.Image image;
     // Start is called before the first frame update
+    private Vector3 startPosition;
     void Start()
     {
-        
+        startPosition = transform.position;
     }
 
+    public void resetPosition()
+    {
+        transform.position = startPosition;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -47,6 +52,8 @@ public class CarController : MonoBehaviour
 
 
         image.fillAmount = fuel;
+
+        DistanceText.distance = Mathf.CeilToInt(transform.position.x);
     }
 
     private void FixedUpdate() {
