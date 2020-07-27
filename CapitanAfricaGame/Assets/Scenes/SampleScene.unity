@@ -1474,7 +1474,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 561010960}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 321dd27d1c72c399ab0a30c9baf7c51c, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -1917,7 +1917,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dd719aac897dae1988cdafbd0cdef1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mousePositionWorld: {x: 0, y: 0, z: 0}
 --- !u!1 &584771077
 GameObject:
   m_ObjectHideFlags: 0
@@ -2326,7 +2325,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 956466922}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 321dd27d1c72c399ab0a30c9baf7c51c, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -2373,7 +2372,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 321dd27d1c72c399ab0a30c9baf7c51c, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -2811,7 +2810,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 1068981912}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 321dd27d1c72c399ab0a30c9baf7c51c, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -2858,7 +2857,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 321dd27d1c72c399ab0a30c9baf7c51c, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
