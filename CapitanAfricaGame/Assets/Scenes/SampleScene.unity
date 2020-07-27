@@ -672,7 +672,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 160217587}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.22, y: 2.69, z: -1.4386048}
+  m_LocalPosition: {x: 0.021, y: 2.609, z: -1.4386048}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1376297454}
@@ -867,7 +867,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 416455398}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.15, y: 2.24, z: -1.4386048}
+  m_LocalPosition: {x: 0.013, y: 2.168, z: -1.4386048}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1376297454}
@@ -3213,8 +3213,8 @@ MonoBehaviour:
   image: {fileID: 1884064126}
   wheelFrontJoint: {fileID: 1376297457}
   wheelBackJoint: {fileID: 1376297458}
-  speedForward: -600
-  speedBackward: 1800
+  speedForward: -1800
+  speedBackward: 600
   Torque: 1000
 --- !u!235 &1376297457
 WheelJoint2D:

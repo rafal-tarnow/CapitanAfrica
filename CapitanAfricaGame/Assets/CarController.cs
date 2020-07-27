@@ -52,7 +52,9 @@ public class CarController : MonoBehaviour
         //     movement = Input.GetAxis("Horizontal");
         // }
 
-        float x  = Input.GetAxis("Horizontal");
+        float x = getGas();
+
+
         if(x > 0)
         {
             backMotor.motorSpeed = speedForward;
@@ -64,7 +66,8 @@ public class CarController : MonoBehaviour
             wheelFrontJoint.motor = frontMotor;
             wheelBackJoint.motor = backMotor;
 
-        }else if(x < 0)
+        }
+        else if(x < 0)
         {
             backMotor.motorSpeed = speedBackward;
             frontMotor.motorSpeed = speedBackward;
@@ -75,11 +78,44 @@ public class CarController : MonoBehaviour
             wheelFrontJoint.motor = frontMotor;
             wheelBackJoint.motor = backMotor;
         }
+        else
+        {
+            backMotor.motorSpeed = 0;
+            frontMotor.motorSpeed = 0;
+
+            backMotor.maxMotorTorque = 1;
+            frontMotor.maxMotorTorque = 1;
+
+            wheelFrontJoint.motor = frontMotor;
+            wheelBackJoint.motor = backMotor;                           
+        }
 
         //FUEL
         image.fillAmount = fuel;
         //DISTANCE
         DistanceText.distance = Mathf.CeilToInt(transform.position.x);
+    }
+
+    private float getGas()
+    {
+
+        if(Input.touchCount > 0) //Touch
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if(touch.position.x > (Screen.width/2))
+            {
+                return(1.0f);
+            }
+            else
+            {
+                return (-1.0f);
+            }
+        }
+        else    //Keyboard
+        {
+            return(Input.GetAxis("Horizontal"));
+        }
     }
 
     private void FixedUpdate() {
