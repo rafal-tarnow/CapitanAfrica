@@ -3204,10 +3204,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fuel: 1
-  fuelconsumption: 0.1
+  fuelconsumption: 0.01
   carRigidbody: {fileID: 1376297455}
-  backTire: {fileID: 1068981917}
-  frontTire: {fileID: 956466927}
   speed: 100
   carTorque: 50
   image: {fileID: 1884064126}
@@ -4158,7 +4156,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066990239}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4859, y: 3.46, z: 0}
+  m_LocalPosition: {x: 295.2, y: -3.572, z: 0}
   m_LocalScale: {x: 0.5322388, y: 0.5322388, z: 0.5322388}
   m_Children: []
   m_Father: {fileID: 0}
