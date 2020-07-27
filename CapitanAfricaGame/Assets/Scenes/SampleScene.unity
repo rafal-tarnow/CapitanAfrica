@@ -2243,7 +2243,6 @@ GameObject:
   - component: {fileID: 956466924}
   - component: {fileID: 956466925}
   - component: {fileID: 956466927}
-  - component: {fileID: 956466926}
   m_Layer: 8
   m_Name: FroTire
   m_TagString: Untagged
@@ -2332,30 +2331,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.3
---- !u!235 &956466926
-WheelJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 956466922}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 1376297455}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.895, y: 1.2230002}
-  m_Suspension:
-    m_DampingRatio: 1
-    m_Frequency: 20
-    m_Angle: 90
-  m_UseMotor: 1
-  m_Motor:
-    m_MotorSpeed: 0
-    m_MaximumMotorForce: 10000
 --- !u!50 &956466927
 Rigidbody2D:
   serializedVersion: 4
@@ -2728,7 +2703,6 @@ GameObject:
   - component: {fileID: 1068981914}
   - component: {fileID: 1068981915}
   - component: {fileID: 1068981917}
-  - component: {fileID: 1068981916}
   m_Layer: 8
   m_Name: BckTire
   m_TagString: Untagged
@@ -2817,30 +2791,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.3
---- !u!235 &1068981916
-WheelJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068981912}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 1376297455}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: -0.71799994, y: 1.2329999}
-  m_Suspension:
-    m_DampingRatio: 1
-    m_Frequency: 20
-    m_Angle: 90
-  m_UseMotor: 1
-  m_Motor:
-    m_MotorSpeed: 0
-    m_MaximumMotorForce: 10000
 --- !u!50 &1068981917
 Rigidbody2D:
   serializedVersion: 4
@@ -3192,6 +3142,8 @@ GameObject:
   - component: {fileID: 1376297454}
   - component: {fileID: 1376297455}
   - component: {fileID: 1376297456}
+  - component: {fileID: 1376297457}
+  - component: {fileID: 1376297458}
   m_Layer: 8
   m_Name: CarController
   m_TagString: Untagged
@@ -3259,11 +3211,59 @@ MonoBehaviour:
   speed: 100
   carTorque: 50
   image: {fileID: 1884064126}
-  wheelFrontJoint: {fileID: 956466926}
-  wheelBackJoint: {fileID: 1068981916}
-  speedForward: 1800
-  speedBackward: -600
+  wheelFrontJoint: {fileID: 1376297457}
+  wheelBackJoint: {fileID: 1376297458}
+  speedForward: -600
+  speedBackward: 1800
   Torque: 1000
+--- !u!235 &1376297457
+WheelJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376297453}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 956466927}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 1
+  m_Anchor: {x: 0.895, y: 1.223}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_Suspension:
+    m_DampingRatio: 0.7
+    m_Frequency: 2
+    m_Angle: 90
+  m_UseMotor: 0
+  m_Motor:
+    m_MotorSpeed: 0
+    m_MaximumMotorForce: 10000
+--- !u!235 &1376297458
+WheelJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376297453}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 1068981917}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 1
+  m_Anchor: {x: -0.724, y: 1.233}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_Suspension:
+    m_DampingRatio: 0.7
+    m_Frequency: 2
+    m_Angle: 90
+  m_UseMotor: 0
+  m_Motor:
+    m_MotorSpeed: 0
+    m_MaximumMotorForce: 10000
 --- !u!1 &1423948063
 GameObject:
   m_ObjectHideFlags: 0
