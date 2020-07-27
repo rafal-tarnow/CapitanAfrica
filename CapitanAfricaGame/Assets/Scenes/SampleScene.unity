@@ -2352,7 +2352,7 @@ WheelJoint2D:
     m_DampingRatio: 1
     m_Frequency: 20
     m_Angle: 90
-  m_UseMotor: 0
+  m_UseMotor: 1
   m_Motor:
     m_MotorSpeed: 0
     m_MaximumMotorForce: 10000
@@ -2837,7 +2837,7 @@ WheelJoint2D:
     m_DampingRatio: 1
     m_Frequency: 20
     m_Angle: 90
-  m_UseMotor: 0
+  m_UseMotor: 1
   m_Motor:
     m_MotorSpeed: 0
     m_MaximumMotorForce: 10000
@@ -3259,6 +3259,11 @@ MonoBehaviour:
   speed: 100
   carTorque: 50
   image: {fileID: 1884064126}
+  wheelFrontJoint: {fileID: 956466926}
+  wheelBackJoint: {fileID: 1068981916}
+  speedForward: 1800
+  speedBackward: -600
+  Torque: 1000
 --- !u!1 &1423948063
 GameObject:
   m_ObjectHideFlags: 0
