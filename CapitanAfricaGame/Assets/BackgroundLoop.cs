@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BackgroundLoop : MonoBehaviour
 {
+    public Transform follow_target; //camera follow
+    private Vector3 offset; //camera follow
+
     public GameObject[] layers;
     private Camera mainCamera;
     private Vector2 screenBounds;
@@ -25,8 +28,8 @@ public class BackgroundLoop : MonoBehaviour
         }
 
 
-
-        
+        //Camera follow
+        offset = transform.position - follow_target.position;
     }
     void loadChildObjects(GameObject layer){
         float objectWidth = (layer.GetComponent<SpriteRenderer>().bounds.size.x - choke);
@@ -63,12 +66,21 @@ public class BackgroundLoop : MonoBehaviour
         Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, 0.3f);
         transform.position = smoothPosition;
 
+
     }
     void LateUpdate(){
+          transform.position = follow_target.position + offset;    //camera follow
+
+
+
+
         foreach(GameObject obj in layers){
             repositionChildObjects(obj);
             obj.transform.position = new Vector3(obj.transform.position.x, mainCamera.transform.position.y, obj.transform.position.z);
         }
+             
+             
+      
        
     }
 }
