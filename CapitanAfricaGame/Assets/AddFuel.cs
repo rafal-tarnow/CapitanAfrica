@@ -6,7 +6,7 @@ public class AddFuel : MonoBehaviour
 {
     private static CarController carController;
 
-        void Start() 
+        void Awake() 
         {
             if (carController == null)
                 carController = GameObject.FindWithTag("CarController").GetComponent<CarController>();;
