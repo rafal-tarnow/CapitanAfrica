@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class AddFuel : MonoBehaviour
 {
-    public CarController carController;
+    private static CarController carController;
+
+        void Start() 
+        {
+            if (carController == null)
+                carController = GameObject.FindWithTag("CarController").GetComponent<CarController>();;
+        
+        }
+
+
     private void OnTriggerEnter2D(Collider2D other) {
         carController.fuel = 1.0f;
         Destroy(gameObject);
