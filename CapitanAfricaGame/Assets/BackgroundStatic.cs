@@ -17,8 +17,10 @@ public class BackgroundStatic : MonoBehaviour
 
      float run = 0.0f;
 
+     float antyOverlap = 1.0f;
+
     void Start(){
-  offset = transform.position - follow_target.position;  //Camera follow
+        offset = transform.position - follow_target.position;  //Camera follow
 
 
         Camera cam = gameObject.GetComponent<Camera>();
@@ -30,7 +32,7 @@ public class BackgroundStatic : MonoBehaviour
         image.transform.localScale = new Vector3(heightScale, heightScale, 1.0f);
 
         imageWidthAfterScale = image.GetComponent<SpriteRenderer>().bounds.size.x;
-        childsNeeded = (int)Mathf.Ceil(cameraWidth / imageWidthAfterScale) * 10;
+        childsNeeded = (int)Mathf.Ceil(cameraWidth / imageWidthAfterScale);
 
 
 
@@ -55,7 +57,11 @@ public class BackgroundStatic : MonoBehaviour
     void LateUpdate(){
         transform.position = follow_target.position + offset;    //camera follow
 
-        run = transform.position.x/40.0f; 
+        run = (transform.position.x/40.0f);
+
+        float howMany = Mathf.Floor(run/imageWidthAfterScale);
+
+        run = run - howMany*imageWidthAfterScale;
         image.transform.position = new Vector3(transform.position.x - run, transform.position.y, image.transform.position.z);
     }
 
