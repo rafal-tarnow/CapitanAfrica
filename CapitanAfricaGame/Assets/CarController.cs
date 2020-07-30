@@ -20,6 +20,19 @@ public class CarController : MonoBehaviour
     public float speedForward, speedBackward;
     public float Torque;
 
+   private static CustomButton buttonGas;
+    private static CustomButton buttonBrake;
+
+    void Awake() 
+    {
+        if (buttonGas == null)
+            buttonGas = GameObject.FindWithTag("ButtonGas").GetComponent<CustomButton>();
+        
+        if (buttonBrake == null)
+            buttonBrake = GameObject.FindWithTag("ButtonBrake").GetComponent<CustomButton>();
+        
+    }
+
     void Start()
     {
         startPosition = transform.position;
@@ -60,24 +73,13 @@ public class CarController : MonoBehaviour
     
     private float getGas()
     {
+        if(buttonGas.buttonPressed)
+            return 1.0f;
+        if(buttonBrake.buttonPressed)
+            return -1.0f;
+        return 0.0f;
 
-        if(Input.touchCount > 0) //Touch
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if(touch.position.x > (Screen.width/2))
-            {
-                return(1.0f);
-            }
-            else
-            {
-                return (-1.0f);
-            }
-        }
-        else    //Keyboard
-        {
-            return(Input.GetAxis("Horizontal"));
-        }
+        //return(Input.GetAxis("Horizontal"));
     }
 
     private void applyGasToCar(float x)

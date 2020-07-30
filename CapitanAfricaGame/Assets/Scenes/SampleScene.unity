@@ -2805,9 +2805,10 @@ GameObject:
   - component: {fileID: 1510620799}
   - component: {fileID: 1510620798}
   - component: {fileID: 1510620797}
+  - component: {fileID: 1510620800}
   m_Layer: 5
   m_Name: ButtonGas
-  m_TagString: Untagged
+  m_TagString: ButtonGas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2912,6 +2913,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1510620795}
   m_CullTransparentMesh: 0
+--- !u!114 &1510620800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510620795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6409a7a8a6558cf3b14049e8eb3f4f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonPressed: 0
 --- !u!1001 &1514060037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4132,9 +4146,10 @@ GameObject:
   - component: {fileID: 2111703572}
   - component: {fileID: 2111703571}
   - component: {fileID: 2111703570}
+  - component: {fileID: 2111703573}
   m_Layer: 5
   m_Name: ButtonBrake
-  m_TagString: Untagged
+  m_TagString: ButtonBrake
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4239,6 +4254,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2111703568}
   m_CullTransparentMesh: 0
+--- !u!114 &2111703573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111703568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6409a7a8a6558cf3b14049e8eb3f4f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonPressed: 0
 --- !u!1001 &2139584848
 PrefabInstance:
   m_ObjectHideFlags: 0
