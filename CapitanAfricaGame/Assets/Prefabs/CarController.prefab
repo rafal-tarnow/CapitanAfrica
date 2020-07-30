@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fuel: 1
-  fuelconsumption: 0.01
+  fuelconsumption: 0.1
   carRigidbody: {fileID: 2213201549961173762}
   speed: 100
   carTorque: 50

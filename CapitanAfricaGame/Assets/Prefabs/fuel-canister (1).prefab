@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 525367947853281195}
   - component: {fileID: 525367947853281194}
-  - component: {fileID: 525367947853281193}
   - component: {fileID: 525367947853281192}
+  - component: {fileID: 2490648009946036873}
+  - component: {fileID: 7631435595034715560}
   m_Layer: 0
   m_Name: fuel-canister (1)
   m_TagString: Untagged
@@ -84,7 +85,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &525367947853281193
+--- !u!114 &525367947853281192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525367947853281191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55bac29485f7a79e5ac4bd0c03e68402, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &2490648009946036873
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,8 +112,8 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.32
---- !u!114 &525367947853281192
+  m_Radius: 0.31999996
+--- !u!114 &7631435595034715560
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,7 +122,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 525367947853281191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55bac29485f7a79e5ac4bd0c03e68402, type: 3}
+  m_Script: {fileID: 11500000, guid: a9feac2be35ba35eba2b613bce323ab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carController: {fileID: 0}
