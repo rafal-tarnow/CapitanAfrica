@@ -8,14 +8,12 @@
      
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Gas is pressed");
         buttonPressed = true;
     }
      
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            Debug.Log("Gas is released");
+    public void OnPointerUp(PointerEventData eventData)
+    {
             buttonPressed = false;
-        }
+    }
     }
 
