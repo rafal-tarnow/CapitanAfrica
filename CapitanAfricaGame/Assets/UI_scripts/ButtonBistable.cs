@@ -2,19 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
- using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.UI;
+using System;
+
+
+
+
+[System.Serializable]
+public class MyBoolEvent : UnityEvent<bool>
+{
+}
+
 
 public class ButtonBistable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
      
-    public bool buttonPressed;
+    public MyBoolEvent OnBistableButtonEvent;
+
+
+
+    private bool buttonPressed;
 
     public Sprite pressedSprite;
     public Sprite releasedSprite;
     Image myImageComponent;
+
+
     void Start () 
     {
         myImageComponent = GetComponent<Image>();
         myImageComponent.sprite = releasedSprite;
+
+        if (OnBistableButtonEvent == null)
+            OnBistableButtonEvent = new MyBoolEvent();    
     }
  
 
@@ -27,6 +47,9 @@ public class ButtonBistable : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
     
         buttonPressed = !buttonPressed;
+
+        OnBistableButtonEvent?.Invoke(buttonPressed);
+
         if(buttonPressed)
             myImageComponent.sprite =  pressedSprite;
         else

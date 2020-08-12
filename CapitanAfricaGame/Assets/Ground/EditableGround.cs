@@ -31,7 +31,7 @@ public class EditableGround : MonoBehaviour
 
             spline.InsertPointAt(spline.GetPointCount(), insertPoint);
             var newPointIndex = spline.GetPointCount() - 1;
-            spline.SetTangentMode(newPointIndex, ShapeTangentMode.Continuous);
+            spline.SetTangentMode(newPointIndex, ShapeTangentMode.Linear);
             spline.SetHeight(newPointIndex, 1.0f);
             lastPosition = insertPoint;
             spriteShapeController.BakeCollider();

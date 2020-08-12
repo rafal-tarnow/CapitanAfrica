@@ -34,12 +34,12 @@ bool secondIsTouch = false;
     Vector3 touchZoomStartPos2_wordl;// = new Vector3();
 
     
-    private static Manager gameManager;
+    private static GameLogics gameLogics;
 
         void Awake() 
         {
-            if (gameManager == null)
-                gameManager = GameObject.FindWithTag("Manager").GetComponent<Manager>();
+            if (gameLogics == null)
+                gameLogics = GameObject.FindWithTag("GameLogics").GetComponent<GameLogics>();
         
         }
 
@@ -47,7 +47,7 @@ bool secondIsTouch = false;
     {
         Debug.Log("On DRAG"); 
         state = State.DRAG;
-        gameManager.cameraFollowEnable = false;
+        gameLogics.cameraFollowEnable = false;
 
         //touchZeroStartPos_screen = Input.GetTouch(0).position;
         //touchZeroStartPos_wordl = Camera.main.ScreenToWorldPoint(touchZeroStartPos_screen);

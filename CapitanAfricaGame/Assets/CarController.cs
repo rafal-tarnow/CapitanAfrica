@@ -20,7 +20,7 @@ public class CarController : MonoBehaviour
     public float speedForward, speedBackward;
     public float Torque;
 
-   private static CustomButton buttonGas;
+    private static CustomButton buttonGas;
     private static CustomButton buttonBrake;
 
     void Awake() 

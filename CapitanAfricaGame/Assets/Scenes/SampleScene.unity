@@ -483,8 +483,8 @@ GameObject:
   - component: {fileID: 227302621}
   - component: {fileID: 227302620}
   m_Layer: 0
-  m_Name: Manager
-  m_TagString: Manager
+  m_Name: GameLogics
+  m_TagString: GameLogics
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -530,12 +530,12 @@ GameObject:
   - component: {fileID: 245594506}
   - component: {fileID: 245594507}
   m_Layer: 0
-  m_Name: GroundSpriteShapeControllerEditable
-  m_TagString: Untagged
+  m_Name: GroundEditable
+  m_TagString: GroundEditable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
 --- !u!114 &245594503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,7 +613,7 @@ SpriteShapeRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 245594502}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 0
@@ -656,9 +656,10 @@ SpriteShapeRenderer:
   - {fileID: 21300000, guid: 05b89b627783633fe86b7e97b86bac8d, type: 3}
   - {fileID: 21300000, guid: 05b89b627783633fe86b7e97b86bac8d, type: 3}
   - {fileID: 21300000, guid: 05b89b627783633fe86b7e97b86bac8d, type: 3}
+  - {fileID: 21300000, guid: 05b89b627783633fe86b7e97b86bac8d, type: 3}
   m_LocalAABB:
-    m_Center: {x: -0.0848608, y: -0.33677608, z: -0.0001502}
-    m_Extent: {x: 4.770225, y: 0.5237325, z: 0.0001502}
+    m_Center: {x: -0.0848608, y: -0.33677608, z: -0.00015025}
+    m_Extent: {x: 4.770225, y: 0.5237325, z: 0.00015025}
 --- !u!4 &245594505
 Transform:
   m_ObjectHideFlags: 0
@@ -1010,13 +1011,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c0e05671350b48b0a4d9f17c4b2a289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomOutMin: 1
-  zoomOutMax: 8
+  zoomOutMin: 0.1
+  zoomOutMax: 80
 --- !u!1 &561010960
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,11 +1032,11 @@ GameObject:
   - component: {fileID: 561010964}
   - component: {fileID: 561010965}
   m_Layer: 0
-  m_Name: GroundSpriteShapeController
-  m_TagString: Untagged
+  m_Name: Ground
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!114 &561010961
 MonoBehaviour:
@@ -1457,9 +1458,10 @@ SpriteShapeRenderer:
   - {fileID: 21300000, guid: 05b89b627783633fe86b7e97b86bac8d, type: 3}
   - {fileID: 21300000, guid: 05b89b627783633fe86b7e97b86bac8d, type: 3}
   - {fileID: 21300000, guid: 05b89b627783633fe86b7e97b86bac8d, type: 3}
+  - {fileID: 21300000, guid: 05b89b627783633fe86b7e97b86bac8d, type: 3}
   m_LocalAABB:
-    m_Center: {x: 2412.9001, y: 31.11758, z: -0.0002001}
-    m_Extent: {x: 2587.2605, y: 58.3551, z: 0.0002001}
+    m_Center: {x: 2412.9001, y: 31.037579, z: -0.00025014998}
+    m_Extent: {x: 2587.2605, y: 58.435097, z: 0.00025014998}
 --- !u!4 &561010963
 Transform:
   m_ObjectHideFlags: 0
@@ -1490,7 +1492,7 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -173.89905, y: -19.675753}
+  - {x: -173.89905, y: -19.67544}
   - {x: -174.20004, y: -6.2338786}
   - {x: -143.19821, y: -5.3718467}
   - {x: -127.69709, y: -4.9419017}
@@ -1944,13 +1946,20 @@ EdgeCollider2D:
   - {x: 4999.999, y: -8.986299}
   - {x: 5000, y: -11.271353}
   - {x: 4999.999, y: -14.917944}
-  - {x: 5000, y: -27.237518}
-  - {x: 4092.4602, y: -25.911133}
-  - {x: 2671.3616, y: -23.834164}
-  - {x: 1647.313, y: -22.337502}
-  - {x: 77.51379, y: -20.043205}
-  - {x: -107.980064, y: -19.772102}
-  - {x: -173.89905, y: -19.675753}
+  - {x: 5000, y: -27.237198}
+  - {x: 4462.1255, y: -26.451109}
+  - {x: 4093.295, y: -25.912058}
+  - {x: 3662.9917, y: -25.283167}
+  - {x: 3181.4614, y: -24.5794}
+  - {x: 2674.3171, y: -23.838203}
+  - {x: 2156.9272, y: -23.082026}
+  - {x: 1649.7727, y: -22.340824}
+  - {x: 1168.2388, y: -21.637056}
+  - {x: 737.9342, y: -21.008148}
+  - {x: 369.10162, y: -20.469086}
+  - {x: 82.23238, y: -20.04981}
+  - {x: -168.7787, y: -19.68293}
+  - {x: -173.89905, y: -19.67544}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -2356,7 +2365,7 @@ GameObject:
   - component: {fileID: 843547863}
   m_Layer: 0
   m_Name: bg_6
-  m_TagString: Untagged
+  m_TagString: BackgroundSprite
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3050,7 +3059,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155e261ca975876b4bcd9cd6b0b2c450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPressed: 0
+  OnBistableButtonEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: onEditPlayButton
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   pressedSprite: {fileID: 21300000, guid: 8818150467dbc52918f380fc5b4324ea, type: 3}
   releasedSprite: {fileID: 21300000, guid: 3f615574aa00891c9ad1e82b2353dfe2, type: 3}
 --- !u!1001 &1447674223
