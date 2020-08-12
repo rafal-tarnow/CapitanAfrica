@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BackgroundStatic : MonoBehaviour
 {
+    public CarController carController;
     public Transform follow_target; //camera follow
     private Vector3 offset; //camera follow
 
@@ -18,6 +19,15 @@ public class BackgroundStatic : MonoBehaviour
      float run = 0.0f;
 
      float antyOverlap = 1.0f;
+
+    private static Manager gameManager;
+
+        void Awake() 
+        {
+            if (gameManager == null)
+                gameManager = GameObject.FindWithTag("Manager").GetComponent<Manager>();
+        
+        }
 
     void Start(){
         offset = transform.position - follow_target.position;  //Camera follow
@@ -54,15 +64,22 @@ public class BackgroundStatic : MonoBehaviour
     void Update() {
 
     }
-    void LateUpdate(){
-        transform.position = follow_target.position + offset;    //camera follow
 
+    Vector3 prevPosition;
+    void LateUpdate(){
+        if(gameManager.cameraFollowEnable)
+        {
+            transform.position = follow_target.position + offset;    //camera follow
+            prevPosition = follow_target.position;
+        
+        }
         run = (transform.position.x/40.0f);
 
         float howMany = Mathf.Floor(run/imageWidthAfterScale);
 
         run = run - howMany*imageWidthAfterScale;
         image.transform.position = new Vector3(transform.position.x - run, transform.position.y, image.transform.position.z);
+        
     }
 
 }

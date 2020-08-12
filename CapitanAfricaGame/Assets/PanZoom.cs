@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PanZoom : MonoBehaviour {
     Vector3 touchStart;
-    public float zoomOutMin = 1;
-    public float zoomOutMax = 8;
+    public float zoomOutMin = 0.1f;
+    public float zoomOutMax = 50.0f;
 	
 	// Update is called once per frame
 
@@ -33,10 +34,20 @@ bool secondIsTouch = false;
     Vector3 touchZoomStartPos2_wordl;// = new Vector3();
 
     
+    private static Manager gameManager;
+
+        void Awake() 
+        {
+            if (gameManager == null)
+                gameManager = GameObject.FindWithTag("Manager").GetComponent<Manager>();
+        
+        }
+
     void onDragStarted()
     {
         Debug.Log("On DRAG"); 
         state = State.DRAG;
+        gameManager.cameraFollowEnable = false;
 
         //touchZeroStartPos_screen = Input.GetTouch(0).position;
         //touchZeroStartPos_wordl = Camera.main.ScreenToWorldPoint(touchZeroStartPos_screen);
@@ -102,6 +113,9 @@ bool secondIsTouch = false;
     }
 
 	void Update () {
+
+        if(EventSystem.current.IsPointerOverGameObject()) //if pointer ovet UI dont make pan-zoom
+            return;
 
         debugState();
 
