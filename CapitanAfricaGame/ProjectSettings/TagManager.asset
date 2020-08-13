@@ -13,6 +13,9 @@ TagManager:
   - BackgroundSprite
   - ButtonReload
   - ButtonPanZoom
+  - RedDot
+  - YellowDotRightTangent
+  - YellowDotLeftTangent
   layers:
   - Default
   - TransparentFX

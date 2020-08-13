@@ -37,7 +37,6 @@ public class ButtonBistable : MonoBehaviour, IPointerDownHandler, IPointerUpHand
      
     public void OnPointerUp(PointerEventData eventData)
     {
-    
         buttonPressed = !buttonPressed;
 
         OnBistableButtonEvent?.Invoke(buttonPressed);
@@ -46,5 +45,6 @@ public class ButtonBistable : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             myImageComponent.sprite =  pressedSprite;
         else
             myImageComponent.sprite = releasedSprite;
+            
     }
 }

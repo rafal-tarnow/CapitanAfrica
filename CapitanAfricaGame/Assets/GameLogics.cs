@@ -18,6 +18,9 @@ public class GameLogics : MonoBehaviour
    private GameObject buttonReload;
    private GameObject buttonPanZoom;
 
+   private bool secondRun = false;
+
+  
         void Awake() 
         {
             if (ground == null)
@@ -87,11 +90,23 @@ public class GameLogics : MonoBehaviour
 
     void setPlayMode()
     {
+
             backgroundSprite.SetActive(true);
             Camera.main.GetComponent<BackgroundStatic>().enabled = true;
             Camera.main.GetComponent<PanZoom>().enabled = false;
+         if(secondRun == false)
+        {           
             groundEditable.SetActive(false);
             ground.SetActive(true);
+            secondRun = true;
+        }
+        else
+        {
+            groundEditable.SetActive(true);
+            groundEditable.GetComponent<EditableGround>().deleteLastSplinePoint();
+            groundEditable.GetComponent<EditableGround>().enabled = false;
+            ground.SetActive(false);
+        }
             carController.SetActive(true);
             buttonGas.SetActive(true);
             buttonBrake.SetActive(true);
@@ -103,7 +118,9 @@ public class GameLogics : MonoBehaviour
     {
             Camera.main.GetComponent<BackgroundStatic>().enabled = false;
             Camera.main.GetComponent<PanZoom>().enabled = false;
+
             groundEditable.SetActive(true);
+            groundEditable.GetComponent<EditableGround>().enabled = true;
             ground.SetActive(false);
             carController.SetActive(false);
             backgroundSprite.SetActive(false);
