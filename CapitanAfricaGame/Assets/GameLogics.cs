@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameLogics : MonoBehaviour
 {
@@ -14,7 +15,8 @@ public class GameLogics : MonoBehaviour
    private GameObject backgroundSprite;
    private GameObject buttonGas;
    private GameObject buttonBrake;
-
+   private GameObject buttonReload;
+   private GameObject buttonPanZoom;
 
         void Awake() 
         {
@@ -35,6 +37,13 @@ public class GameLogics : MonoBehaviour
 
             if(buttonGas == null)
                 buttonGas = GameObject.FindWithTag("ButtonGas");
+
+            if(buttonReload == null)
+                buttonReload = GameObject.FindWithTag("ButtonReload");
+
+            if(buttonPanZoom == null)
+                buttonPanZoom = GameObject.FindWithTag("ButtonPanZoom");
+
         
         }
 
@@ -42,6 +51,26 @@ public class GameLogics : MonoBehaviour
         {
             setPlayMode();
         }
+
+    public void onReloadButtonReleased(bool pressed)
+    {
+        if(!pressed) // if released
+            SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+    }
+
+    public void onPanZoomButton(bool pressed)
+    {
+        if(pressed)
+        {
+            Camera.main.GetComponent<PanZoom>().enabled = true;
+            groundEditable.GetComponent<EditableGround>().enabled = false;
+        }
+        else
+        {
+            Camera.main.GetComponent<PanZoom>().enabled = false;
+            groundEditable.GetComponent<EditableGround>().enabled = true;
+        }
+    }
 
     public void onEditPlayButton(bool edit)
     {
@@ -66,22 +95,22 @@ public class GameLogics : MonoBehaviour
             carController.SetActive(true);
             buttonGas.SetActive(true);
             buttonBrake.SetActive(true);
+            buttonReload.SetActive(true);
+            buttonPanZoom.SetActive(false);
     }
 
     void setEditMode()
     {
             Camera.main.GetComponent<BackgroundStatic>().enabled = false;
-            Camera.main.GetComponent<PanZoom>().enabled = true;
+            Camera.main.GetComponent<PanZoom>().enabled = false;
             groundEditable.SetActive(true);
             ground.SetActive(false);
             carController.SetActive(false);
             backgroundSprite.SetActive(false);
             buttonGas.SetActive(false);
             buttonBrake.SetActive(false);
-    }
-    public void onButton()
-    {
-        Debug.Log("onButton");
+            buttonReload.SetActive(false);
+            buttonPanZoom.SetActive(true);
     }
 
     // Start is called before the first frame update

@@ -11,6 +11,8 @@ TagManager:
   - Ground
   - GroundEditable
   - BackgroundSprite
+  - ButtonReload
+  - ButtonPanZoom
   layers:
   - Default
   - TransparentFX

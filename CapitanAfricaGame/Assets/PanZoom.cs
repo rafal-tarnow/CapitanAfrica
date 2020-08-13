@@ -124,7 +124,7 @@ bool secondIsTouch = false;
 
 
 
-        if(((Input.touchCount == 1) && Input.GetTouch(0).phase == TouchPhase.Began)){
+/*        if(((Input.touchCount == 1) && Input.GetTouch(0).phase == TouchPhase.Began)){
             state = State.DRAG;
 
             touchDragStartPos_screen = Input.GetTouch(0).position;
@@ -174,11 +174,63 @@ bool secondIsTouch = false;
             touchDragStartPos_wordl =  Camera.main.ScreenToWorldPoint(touchDragStartPos_screen);
             return;  //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
         }
+        */
+
+        if(((Input.touchCount == 2) && Input.GetTouch(1).phase == TouchPhase.Began)){
+            state = State.DRAG;
+
+            touchDragStartPos_screen = Input.GetTouch(1).position;
+            touchDragStartPos_wordl =  Camera.main.ScreenToWorldPoint(touchDragStartPos_screen);
+            return;  //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
+
+
+        if(((Input.touchCount == 2) && Input.GetTouch(1).phase == TouchPhase.Ended))
+        {
+            state = State.NONE;
+            return;  //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
+
+        if(((Input.touchCount == 3) && Input.GetTouch(1).phase == TouchPhase.Began)){
+            state = State.ZOOM;
+            touchZoomStartPos1_screen = Input.GetTouch(1).position;
+            touchZoomStartPos2_screen = Input.GetTouch(2).position;
+
+            touchDragInZoomStartPos_screen = (touchZoomStartPos1_screen + touchZoomStartPos2_screen)/2.0f;
+            touchDragInZoomStartPos_wordl =  Camera.main.ScreenToWorldPoint(touchDragInZoomStartPos_screen);
+            return;  //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
+
+        if(((Input.touchCount == 3) && Input.GetTouch(2).phase == TouchPhase.Began)){
+            state = State.ZOOM;
+            touchZoomStartPos1_screen = Input.GetTouch(1).position;
+            touchZoomStartPos2_screen = Input.GetTouch(2).position;
+
+            touchDragInZoomStartPos_screen = (touchZoomStartPos1_screen + touchZoomStartPos2_screen)/2.0f;
+            touchDragInZoomStartPos_wordl =  Camera.main.ScreenToWorldPoint(touchDragInZoomStartPos_screen);
+            return;  //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
+
+        if(((Input.touchCount == 3) && Input.GetTouch(2).phase == TouchPhase.Ended))
+        {
+            state = State.DRAG;
+            touchDragStartPos_screen = Input.GetTouch(1).position;
+            touchDragStartPos_wordl =  Camera.main.ScreenToWorldPoint(touchDragStartPos_screen);
+            return;  //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
+
+        if(((Input.touchCount == 3) && Input.GetTouch(1).phase == TouchPhase.Ended))
+        {
+            state = State.DRAG;
+            touchDragStartPos_screen = Input.GetTouch(2).position;
+            touchDragStartPos_wordl =  Camera.main.ScreenToWorldPoint(touchDragStartPos_screen);
+            return;  //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
 
 
 
 
-        switch(state)
+/*        switch(state)
         {
                  case State.NONE:
                 {
@@ -198,6 +250,43 @@ bool secondIsTouch = false;
 
                     Touch touchZero = Input.GetTouch(0);
                     Touch touchOne = Input.GetTouch(1);
+
+                    Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+                    Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+                    float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+                    float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+
+                    float difference = currentMagnitude - prevMagnitude;
+
+                    zoom(difference * 0.01f);
+                    break;
+                }
+                default: break;
+        }
+
+    */
+
+            switch(state)
+        {
+                 case State.NONE:
+                {
+
+                    break;
+                }
+                case State.DRAG:
+                {
+                    Vector3 direction = touchDragStartPos_wordl - Camera.main.ScreenToWorldPoint(Input.GetTouch(1).position);
+                    Camera.main.transform.position += direction;
+                    break;
+                }
+                case State.ZOOM:
+                {
+                    Vector3 direction = touchDragInZoomStartPos_wordl - Camera.main.ScreenToWorldPoint((Input.GetTouch(1).position + Input.GetTouch(2).position)/2.0f);
+                    Camera.main.transform.position += direction;
+
+                    Touch touchZero = Input.GetTouch(1);
+                    Touch touchOne = Input.GetTouch(2);
 
                     Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
                     Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;

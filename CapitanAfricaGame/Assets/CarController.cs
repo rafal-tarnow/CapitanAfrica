@@ -5,7 +5,7 @@ using UnityEngine;
 public class CarController : MonoBehaviour
 {
     public float fuel = 0.5f;
-    public float fuelconsumption = 0.1f;
+    public float fuelconsumption = 0.01f;
     public Rigidbody2D carRigidbody;
     public float speed = 20;
     public float carTorque = 10;

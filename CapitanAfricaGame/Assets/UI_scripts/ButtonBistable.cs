@@ -7,17 +7,9 @@ using UnityEngine.UI;
 using System;
 
 
-
-
-[System.Serializable]
-public class MyBoolEvent : UnityEvent<bool>
-{
-}
-
-
 public class ButtonBistable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
      
-    public MyBoolEvent OnBistableButtonEvent;
+    public UnityEvent<bool> OnBistableButtonEvent;
 
 
 
@@ -34,7 +26,7 @@ public class ButtonBistable : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         myImageComponent.sprite = releasedSprite;
 
         if (OnBistableButtonEvent == null)
-            OnBistableButtonEvent = new MyBoolEvent();    
+            OnBistableButtonEvent = new UnityEvent<bool>();    
     }
  
 
