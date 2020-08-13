@@ -19,7 +19,7 @@ public class GameLogics : MonoBehaviour
    private GameObject buttonPanZoom;
 
    private bool secondRun = false;
-
+    float cameraStartupOrthographicSize;
   
         void Awake() 
         {
@@ -50,10 +50,11 @@ public class GameLogics : MonoBehaviour
         
         }
 
-        private void Start() 
-        {
-            setPlayMode();
-        }
+    private void Start() 
+    {
+        cameraStartupOrthographicSize = Camera.main.orthographicSize;
+        setPlayMode();
+    }
 
     public void onReloadButtonReleased(bool pressed)
     {
@@ -94,6 +95,7 @@ public class GameLogics : MonoBehaviour
             backgroundSprite.SetActive(true);
             Camera.main.GetComponent<BackgroundStatic>().enabled = true;
             Camera.main.GetComponent<PanZoom>().enabled = false;
+            Camera.main.orthographicSize = cameraStartupOrthographicSize;
          if(secondRun == false)
         {           
             groundEditable.SetActive(false);

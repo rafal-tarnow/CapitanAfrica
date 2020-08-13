@@ -12,7 +12,7 @@ public class EditableGround : MonoBehaviour
     Spline spline;
 
    private GameObject redDot;
-   GameObject[] redDotArray;
+   List<GameObject> redDotList = new List<GameObject>();
      private int index = 0;
     void Awake() {
         if(redDot == null)
@@ -33,20 +33,20 @@ public class EditableGround : MonoBehaviour
 
     void OnDisable()
     {
-            redDotArray = GameObject.FindGameObjectsWithTag ("RedDot");
-            foreach (GameObject go in redDotArray) {
-                        go.SetActive (false);
-            }
+        foreach (var redDot in redDotList) 
+        {
+            redDot.SetActive(false);
+        }
     }
 
     void OnEnable()
     {
         redDot.SetActive(true);
-
-        foreach (GameObject go in redDotArray) 
+        foreach (var redDot in redDotList) 
         {
-            go.SetActive (false);
+            redDot.SetActive(true);
         }
+
     }
     // Start is called before the first frame update
 
@@ -69,6 +69,7 @@ public class EditableGround : MonoBehaviour
                 redDot.SetActive(true);
              GameObject cloneRedDot = Instantiate(redDot) as GameObject;
              cloneRedDot.transform.position = position;
+             redDotList.Add(cloneRedDot);
     }
 
     // Update is called once per frame
