@@ -29,6 +29,7 @@ public class GameLogics : MonoBehaviour
    private GameObject buttonReload;
    private GameObject buttonPanZoom;
    private GameObject buttonDrag;
+   private GameObject buttonLoad;
 
    private GameObject buttonSave;
    private GameObject textMoney;
@@ -71,6 +72,9 @@ public class GameLogics : MonoBehaviour
 
             if(buttonSave == null)
                 buttonSave = GameObject.FindWithTag("ButtonSave");
+
+            if(buttonLoad == null)
+                buttonLoad = GameObject.FindWithTag("ButtonLoad");
 
             if(textMoney == null)
                 textMoney = GameObject.FindWithTag("TextMoney");
@@ -182,6 +186,7 @@ public class GameLogics : MonoBehaviour
             buttonPanZoom.SetActive(false);
             buttonDrag.SetActive(false);
             buttonSave.SetActive(false);
+            buttonLoad.SetActive(false);
             textMoney.SetActive(true);
             textDistance.SetActive(true);
             imageFuel.SetActive(true);
@@ -202,13 +207,14 @@ public class GameLogics : MonoBehaviour
             buttonPanZoom.SetActive(true);
             buttonDrag.SetActive(true);
             buttonSave.SetActive(true);
+            buttonLoad.SetActive(true);
             textMoney.SetActive(false);
             textDistance.SetActive(false);
             imageFuel.SetActive(false);
 
             groundEditable.SetActive(true);
             groundEditable.GetComponent<EditableGround>().enabled = true;
-            LoadLevel();
+
     }
 
     // Start is called before the first frame update
