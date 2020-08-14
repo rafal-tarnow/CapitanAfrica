@@ -45,7 +45,7 @@ bool secondIsTouch = false;
 
     void onDragStarted()
     {
-        Debug.Log("On DRAG"); 
+        //Debug.Log("On DRAG"); 
         state = State.DRAG;
         gameLogics.cameraFollowEnable = false;
 
@@ -56,7 +56,7 @@ bool secondIsTouch = false;
 
     void onZoomStarted()
     {
-        Debug.Log("On ZOOM"); 
+        //Debug.Log("On ZOOM"); 
         state = State.ZOOM;
 
         //touchZeroStartPos_screen = Input.GetTouch(0).position;
@@ -68,7 +68,7 @@ bool secondIsTouch = false;
 
     void onStop()
     {
-        Debug.Log("On NONE"); 
+        //Debug.Log("On NONE"); 
         state = State.NONE;
 
     }
@@ -76,16 +76,16 @@ bool secondIsTouch = false;
 
     void debugState()
     {
-        Debug.Log(state.ToString());
-        Debug.Log("Input.touchCount " + Input.touchCount.ToString());
+        //Debug.Log(state.ToString());
+        //Debug.Log("Input.touchCount " + Input.touchCount.ToString());
         if(Input.touchCount == 1)
         {
-            print("Input.GetTouch(0).position", Input.GetTouch(0).position);
+            //print("Input.GetTouch(0).position", Input.GetTouch(0).position);
         }
         else if(Input.touchCount == 2)
         {
-            print("Input.GetTouch(0).position", Input.GetTouch(0).position);
-            print("Input.GetTouch(1).position", Input.GetTouch(1).position);      
+            //print("Input.GetTouch(0).position", Input.GetTouch(0).position);
+            //print("Input.GetTouch(1).position", Input.GetTouch(1).position);      
         }
 
 
@@ -98,14 +98,14 @@ bool secondIsTouch = false;
                 }
                 case State.DRAG:
                 {
-                    print("touchDragStartPos_screen", touchDragStartPos_screen);
-                    print("touchDragStartPos_wordl", touchDragStartPos_wordl);
+                    //print("touchDragStartPos_screen", touchDragStartPos_screen);
+                    //print("touchDragStartPos_wordl", touchDragStartPos_wordl);
                     break;
                 }
                 case State.ZOOM:
                 {
-                    print("touchZoomStartPos1_screen", touchZoomStartPos1_screen);
-                    print("touchZoomStartPos2_screen", touchZoomStartPos2_screen);
+                    //print("touchZoomStartPos1_screen", touchZoomStartPos1_screen);
+                    //print("touchZoomStartPos2_screen", touchZoomStartPos2_screen);
                     break;
                 }
                 default: break;
@@ -117,7 +117,7 @@ bool secondIsTouch = false;
         if(EventSystem.current.IsPointerOverGameObject()) //if pointer ovet UI dont make pan-zoom
             return;
 
-        debugState();
+        //debugState();
 
 
 

@@ -2,9 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class GameLogics : MonoBehaviour
 {
+
+    enum Mode 
+    {
+        PLAY,
+        EDIT,
+    }
+    Mode mode = Mode.PLAY;
+
+    private static string SAVE_FOLDER;
+
     public bool cameraFollowEnable = false;
 
 
@@ -17,12 +28,20 @@ public class GameLogics : MonoBehaviour
    private GameObject buttonBrake;
    private GameObject buttonReload;
    private GameObject buttonPanZoom;
+   private GameObject buttonDrag;
+
+   private GameObject buttonSave;
+   private GameObject textMoney;
+   private GameObject textDistance;
+   private GameObject imageFuel;
 
    private bool secondRun = false;
     float cameraStartupOrthographicSize;
   
         void Awake() 
         {
+            SaveSystem.Init();
+
             if (ground == null)
                 ground = GameObject.FindWithTag("Ground");
 
@@ -47,7 +66,21 @@ public class GameLogics : MonoBehaviour
             if(buttonPanZoom == null)
                 buttonPanZoom = GameObject.FindWithTag("ButtonPanZoom");
 
-        
+            if(buttonDrag == null)
+                buttonDrag = GameObject.FindWithTag("ButtonDrag");
+
+            if(buttonSave == null)
+                buttonSave = GameObject.FindWithTag("ButtonSave");
+
+            if(textMoney == null)
+                textMoney = GameObject.FindWithTag("TextMoney");
+
+            if(textDistance == null)
+                textDistance = GameObject.FindWithTag("TextDistance");
+
+            if(imageFuel == null)
+                imageFuel = GameObject.FindWithTag("ImageFuel");
+
         }
 
     private void Start() 
@@ -60,6 +93,25 @@ public class GameLogics : MonoBehaviour
     {
         if(!pressed) // if released
             SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+    }
+
+
+    public void SaveLevel()
+    {
+
+            SaveObject saveObject = new SaveObject();
+            saveObject.splinePoints = groundEditable.GetComponent<EditableGround>().getSplinesPointsPositions();
+
+            SaveSystem.Save<SaveObject>(saveObject);        
+    }
+
+    public void LoadLevel()
+    {
+        SaveObject saveObject = SaveSystem.Load<SaveObject>();
+        if(saveObject == null)
+            Debug.Log("Load retun null");
+        else
+            groundEditable.GetComponent<EditableGround>().loadPoints(saveObject.splinePoints);
     }
 
     public void onPanZoomButton(bool pressed)
@@ -81,11 +133,26 @@ public class GameLogics : MonoBehaviour
         Debug.Log("Edit " + edit.ToString());
         if(edit)
         {
+            mode = Mode.EDIT;
             setEditMode();
         }
         else
         {
+            mode = Mode.PLAY;
             setPlayMode();
+            carController.transform.position = Camera.main.transform.position;
+        }
+    }
+
+    public void onDragButton(bool drag)
+    {
+        if(mode == Mode.EDIT)
+        {
+            if(drag)
+                groundEditable.GetComponent<EditableGround>().blockAddNewPoints(true);
+            else
+                groundEditable.GetComponent<EditableGround>().blockAddNewPoints(false);
+
         }
     }
 
@@ -105,7 +172,6 @@ public class GameLogics : MonoBehaviour
         else
         {
             groundEditable.SetActive(true);
-            groundEditable.GetComponent<EditableGround>().deleteLastSplinePoint();
             groundEditable.GetComponent<EditableGround>().enabled = false;
             ground.SetActive(false);
         }
@@ -114,6 +180,12 @@ public class GameLogics : MonoBehaviour
             buttonBrake.SetActive(true);
             buttonReload.SetActive(true);
             buttonPanZoom.SetActive(false);
+            buttonDrag.SetActive(false);
+            buttonSave.SetActive(false);
+            textMoney.SetActive(true);
+            textDistance.SetActive(true);
+            imageFuel.SetActive(true);
+
     }
 
     void setEditMode()
@@ -121,8 +193,6 @@ public class GameLogics : MonoBehaviour
             Camera.main.GetComponent<BackgroundStatic>().enabled = false;
             Camera.main.GetComponent<PanZoom>().enabled = false;
 
-            groundEditable.SetActive(true);
-            groundEditable.GetComponent<EditableGround>().enabled = true;
             ground.SetActive(false);
             carController.SetActive(false);
             backgroundSprite.SetActive(false);
@@ -130,6 +200,15 @@ public class GameLogics : MonoBehaviour
             buttonBrake.SetActive(false);
             buttonReload.SetActive(false);
             buttonPanZoom.SetActive(true);
+            buttonDrag.SetActive(true);
+            buttonSave.SetActive(true);
+            textMoney.SetActive(false);
+            textDistance.SetActive(false);
+            imageFuel.SetActive(false);
+
+            groundEditable.SetActive(true);
+            groundEditable.GetComponent<EditableGround>().enabled = true;
+            LoadLevel();
     }
 
     // Start is called before the first frame update
@@ -143,4 +222,8 @@ public class GameLogics : MonoBehaviour
     // {
         
     // }
+
+    private class SaveObject{
+        public List<Vector3> splinePoints;
+    }
 }

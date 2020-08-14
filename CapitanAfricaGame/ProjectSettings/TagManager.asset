@@ -16,6 +16,12 @@ TagManager:
   - RedDot
   - YellowDotRightTangent
   - YellowDotLeftTangent
+  - ButtonDrag
+  - ButtonSave
+  - ImageMoney
+  - TextMoney
+  - TextDistance
+  - ImageFuel
   layers:
   - Default
   - TransparentFX

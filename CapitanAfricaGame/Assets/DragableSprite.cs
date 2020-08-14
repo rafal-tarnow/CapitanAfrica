@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DragableSprite : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class DragableSprite : MonoBehaviour
     private float startPoxY;
     private bool isBeginHeld = false;
 
+    public UnityEvent<GameObject> OnPositionChanged;
     // Update is called once per frame
     void Update()
     {
@@ -18,6 +20,7 @@ public class DragableSprite : MonoBehaviour
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
 
             this.gameObject.transform.localPosition = new Vector3(mousePos.x - startPosX, mousePos.y - startPoxY, 0);
+            OnPositionChanged?.Invoke(this.gameObject);
         }
     }
 
