@@ -16,7 +16,6 @@ public class EditableGround : MonoBehaviour
 
    List<GameObject> redDotList = new List<GameObject>();
    Dictionary<GameObject, int> redDotMap = new Dictionary<GameObject, int>();
-     private int index = 0;
     void Awake() {
         if(redDot == null)
         {
@@ -70,6 +69,33 @@ public class EditableGround : MonoBehaviour
     }
     // Start is called before the first frame update
 
+    private void Smoothen(SpriteShapeController sc, int pointIndex)
+    {
+        Vector3 position = sc.spline.GetPosition(pointIndex);
+        Vector3 positionNext = sc.spline.GetPosition(SplineUtility.NextIndex(pointIndex, sc.spline.GetPointCount()));
+        Vector3 positionPrev = sc.spline.GetPosition(SplineUtility.PreviousIndex(pointIndex, sc.spline.GetPointCount()));
+        Vector3 forward = gameObject.transform.forward;
+
+        float scale = Mathf.Min((positionNext - position).magnitude, (positionPrev - position).magnitude) * 0.33f;
+
+        Vector3 leftTangent = (positionPrev - position).normalized * scale;
+        Vector3 rightTangent = (positionNext - position).normalized * scale;
+
+        sc.spline.SetTangentMode(pointIndex, ShapeTangentMode.Continuous);
+        SplineUtility.CalculateTangents(position, positionPrev, positionNext, forward, scale, out rightTangent, out leftTangent);
+
+        sc.spline.SetLeftTangent(pointIndex, leftTangent);
+        sc.spline.SetRightTangent(pointIndex, rightTangent);
+    }
+
+    private int addSplinePoint2(Vector3 position)
+     {
+        spline.InsertPointAt(spline.GetPointCount(), position);
+        var newPointIndex = spline.GetPointCount() - 1;
+        Smoothen(spriteShapeController, newPointIndex - 1);
+        spline.SetHeight(newPointIndex, 1.0f);
+        return newPointIndex;
+     }
     private int addSplinePoint(Vector3 position)
     {
             spline.InsertPointAt(spline.GetPointCount(), position);
@@ -79,9 +105,13 @@ public class EditableGround : MonoBehaviour
             return newPointIndex;
     }
 
+
+
     private void changeSplinePointPosition(Int32 index, Vector3 position)
     {
         spline.SetPosition(index, position);
+        Smoothen(spriteShapeController, index - 1);
+
     }
 
     public void onRedDotPositionChanged(GameObject gameObject)
@@ -127,6 +157,8 @@ private bool IsPointerOverUIObject()
         foreach(var position in positions)
         {
             int splineIndex = addSplinePoint(position);
+            if(splineIndex > 3)
+                Smoothen(spriteShapeController, splineIndex - 1);
             addRedDot(position, splineIndex);
         }                
         
@@ -157,17 +189,35 @@ private bool IsPointerOverUIObject()
 
         if(!blockNewPoints)
         {
-            var insertPoint = Input.mousePosition;
-            insertPoint.z = 0.0f;
-            insertPoint = Camera.main.ScreenToWorldPoint(insertPoint);
-            insertPoint.z = 0.0f;  
-            var m = Mathf.Abs((insertPoint - lastPosition).magnitude);
-            if (Input.GetMouseButton(0) && m > minimumDistance)
-            { 
-                int splineIndex = addSplinePoint(insertPoint);
-                addRedDot(insertPoint, splineIndex);
-                lastPosition = insertPoint;
-            }
+            // var insertPoint = Input.mousePosition;
+            // insertPoint.z = 0.0f;
+            // insertPoint = Camera.main.ScreenToWorldPoint(insertPoint);
+            // insertPoint.z = 0.0f;  
+            // var m = Mathf.Abs((insertPoint - lastPosition).magnitude);
+            // if (Input.GetMouseButton(0) && m > minimumDistance)
+            // { 
+            //     int splineIndex = addSplinePoint2(insertPoint);
+
+            //     addRedDot(insertPoint, splineIndex);
+            //     lastPosition = insertPoint;
+            // }
+
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                var mp = Input.mousePosition;
+                mp.z = 0.0f;
+                mp = Camera.main.ScreenToWorldPoint(mp);
+                mp.z = 0.0f;
+                var dt = Mathf.Abs((mp - lastPosition).magnitude);
+                var md = (minimumDistance > 1.0f) ? minimumDistance : 1.0f;
+                if (Input.GetMouseButton(0) /* && dt > md */)
+                {
+                    var splineInxed = addSplinePoint2(mp);
+                    addRedDot(mp, splineInxed);
+                    lastPosition = mp;
+                }
+        }
 
         }
 
