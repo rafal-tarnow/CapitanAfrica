@@ -30,6 +30,7 @@ public class GameLogics : MonoBehaviour
    private GameObject buttonPanZoom;
    private GameObject buttonDrag;
    private GameObject buttonLoad;
+   private GameObject buttonEditGround;
 
    private GameObject buttonSave;
    private GameObject textMoney;
@@ -85,6 +86,9 @@ public class GameLogics : MonoBehaviour
             if(imageFuel == null)
                 imageFuel = GameObject.FindWithTag("ImageFuel");
 
+            if(buttonEditGround == null)
+                buttonEditGround = GameObject.FindWithTag("ButtonEditGround");
+
         }
 
     private void Start() 
@@ -99,36 +103,18 @@ public class GameLogics : MonoBehaviour
             SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
     }
 
-
-    public void SaveLevel()
-    {
-
-            SaveObject saveObject = new SaveObject();
-            saveObject.splinePoints = groundEditable.GetComponent<EditableGround>().getSplinesPointsPositions();
-
-            SaveSystem.Save<SaveObject>(saveObject);        
-    }
-
-    public void LoadLevel()
-    {
-        SaveObject saveObject = SaveSystem.Load<SaveObject>();
-        if(saveObject == null)
-            Debug.Log("Load retun null");
-        else
-            groundEditable.GetComponent<EditableGround>().loadPoints(saveObject.splinePoints);
-    }
-
     public void onPanZoomButton(bool pressed)
     {
         if(pressed)
         {
             Camera.main.GetComponent<PanZoom>().enabled = true;
-            groundEditable.GetComponent<EditableGround>().enabled = false;
+            groundEditable.GetComponent<EditableGround>().enableEditing(false);
         }
         else
         {
             Camera.main.GetComponent<PanZoom>().enabled = false;
-            groundEditable.GetComponent<EditableGround>().enabled = true;
+            bool edit = buttonEditGround.GetComponent<ButtonBistable>().GetState();
+            groundEditable.GetComponent<EditableGround>().enableEditing(edit);
         }
     }
 
@@ -148,14 +134,90 @@ public class GameLogics : MonoBehaviour
         }
     }
 
+    public void onEditGroundButton(bool editGround)
+    {
+        if(editGround)
+        {
+            groundEditable.GetComponent<EditableGround>().enableEditing(true);
+        }
+        else
+        {
+           groundEditable.GetComponent<EditableGround>().enableEditing(false);
+        }
+    }
+
+    public void SaveLevel()
+    {
+
+            SaveObject saveObject = new SaveObject();
+
+            //SAVE GROUND
+            saveObject.splinePoints = groundEditable.GetComponent<EditableGround>().getSplinesPointsPositions();
+
+            //SAVE COINS
+            GameObject[] coins;
+            coins = GameObject.FindGameObjectsWithTag("Coin");
+            saveObject.coinsPositions = new List<Vector3>();
+
+            foreach(var coin in coins)
+            {
+                saveObject.coinsPositions.Add(coin.transform.position);
+            }
+
+            //SAVE CANISTERS
+            GameObject[] canisters;
+            canisters = GameObject.FindGameObjectsWithTag("FuelCanister");
+            saveObject.canisterPositions = new List<Vector3>();
+
+            foreach(var canister in canisters)
+            {
+                saveObject.canisterPositions.Add(canister.transform.position);
+            }
+
+            SaveSystem.Save<SaveObject>(saveObject, "0.txt");        
+    }
+
+    public void LoadLevel()
+    {
+        SaveObject saveObject = SaveSystem.Load<SaveObject>("0.txt");
+
+        //LOAD GROUND
+        if(saveObject == null)
+            Debug.Log("Load retun null");
+        else
+            groundEditable.GetComponent<EditableGround>().loadPoints(saveObject.splinePoints);
+
+        //LOAD COINS
+        GameObject[] coins;
+        coins = GameObject.FindGameObjectsWithTag("Coin");
+
+        Vector3[] coinsPos = saveObject.coinsPositions.ToArray();
+
+        for(int i = 0; i < coins.Length; i++)
+        {
+            coins[i].transform.position = coinsPos[i];
+        }
+
+        //LOAD CANISTERS
+        GameObject[] canisters;
+        canisters = GameObject.FindGameObjectsWithTag("FuelCanister");
+
+        Vector3[] canisterPos = saveObject.canisterPositions.ToArray();
+
+        for(int i = 0; i < canisters.Length; i++)
+        {
+            canisters[i].transform.position = canisterPos[i];
+        }
+        
+    }
+
+
+
     public void onDragButton(bool drag)
     {
         if(mode == Mode.EDIT)
         {
-            if(drag)
-                groundEditable.GetComponent<EditableGround>().blockAddNewPoints(true);
-            else
-                groundEditable.GetComponent<EditableGround>().blockAddNewPoints(false);
+
 
         }
     }
@@ -187,6 +249,7 @@ public class GameLogics : MonoBehaviour
             buttonDrag.SetActive(false);
             buttonSave.SetActive(false);
             buttonLoad.SetActive(false);
+            buttonEditGround.SetActive(false);
             textMoney.SetActive(true);
             textDistance.SetActive(true);
             imageFuel.SetActive(true);
@@ -208,12 +271,16 @@ public class GameLogics : MonoBehaviour
             buttonDrag.SetActive(true);
             buttonSave.SetActive(true);
             buttonLoad.SetActive(true);
+            buttonEditGround.SetActive(true);
             textMoney.SetActive(false);
             textDistance.SetActive(false);
             imageFuel.SetActive(false);
 
             groundEditable.SetActive(true);
             groundEditable.GetComponent<EditableGround>().enabled = true;
+
+            bool edit = buttonEditGround.GetComponent<ButtonBistable>().GetState();
+            groundEditable.GetComponent<EditableGround>().enableEditing(edit);
 
     }
 
@@ -231,5 +298,7 @@ public class GameLogics : MonoBehaviour
 
     private class SaveObject{
         public List<Vector3> splinePoints;
+        public List<Vector3> coinsPositions;
+        public List<Vector3> canisterPositions;
     }
 }

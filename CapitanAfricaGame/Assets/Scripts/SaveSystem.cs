@@ -31,17 +31,17 @@ public static class SaveSystem
         }
     }
 
-    public static void Save<T>(T saveObject)
+    public static void Save<T>(T saveObject, string fileName)
     {
         string jsonString = JsonUtility.ToJson(saveObject);    
-        File.WriteAllText(SAVE_FOLDER + "/1.txt", jsonString);
+        File.WriteAllText(SAVE_FOLDER + "/" + fileName, jsonString);
     }
 
-    public static T Load<T>()
+    public static T Load<T>(string fileName)
     {
-        if(File.Exists(SAVE_FOLDER + "/1.txt"))
+        if(File.Exists(SAVE_FOLDER + "/" + fileName))
         {
-            string saveString = File.ReadAllText(SAVE_FOLDER + "/1.txt");
+            string saveString = File.ReadAllText(SAVE_FOLDER + "/" + fileName);
 
             T loadedObject = JsonUtility.FromJson<T>(saveString);
 

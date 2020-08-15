@@ -23,6 +23,9 @@ TagManager:
   - TextDistance
   - ImageFuel
   - ButtonLoad
+  - ButtonEditGround
+  - Coin
+  - FuelCanister
   layers:
   - Default
   - TransparentFX

@@ -11,13 +11,15 @@ public class EditableGround : MonoBehaviour
     Vector3 lastPosition;
     float minimumDistance = 0.3f;
     Spline spline;
-    bool blockNewPoints = false;
-   private GameObject redDot;
+    bool isEditingEnable = false;
+    bool dragMode = false;
+    private GameObject redDot;
 
-   List<GameObject> redDotList = new List<GameObject>();
-   Dictionary<GameObject, int> redDotMap = new Dictionary<GameObject, int>();
-    void Awake() {
-        if(redDot == null)
+    List<GameObject> redDotList = new List<GameObject>();
+    Dictionary<GameObject, int> redDotMap = new Dictionary<GameObject, int>();
+    void Awake()
+    {
+        if (redDot == null)
         {
             redDot = GameObject.FindWithTag("RedDot");
             redDot.SetActive(false);
@@ -26,7 +28,7 @@ public class EditableGround : MonoBehaviour
         spriteShapeController = gameObject.GetComponent<SpriteShapeController>();
         spline = spriteShapeController.spline;
 
-  }
+    }
 
     void Start()
     {
@@ -36,7 +38,7 @@ public class EditableGround : MonoBehaviour
     public List<Vector3> getSplinesPointsPositions()
     {
         List<Vector3> points = new List<Vector3>();
-        for(Int32 i = 0; i < spline.GetPointCount(); i++)
+        for (Int32 i = 0; i < spline.GetPointCount(); i++)
         {
             points.Add(spline.GetPosition(i));
         }
@@ -44,28 +46,35 @@ public class EditableGround : MonoBehaviour
     }
     void OnDisable()
     {
-
-        spriteShapeController.BakeCollider(); 
-        clearAllRedDots();
-
+        spriteShapeController.BakeCollider();
+        destroyAllRedDots();
     }
 
-    private void clearAllRedDots()
+    private void destroyAllRedDots()
     {
         redDotMap.Clear();
-        foreach(var obj in redDotList)
+        foreach (var obj in redDotList)
         {
             Destroy(obj);
         }
         redDotList.Clear();
     }
 
+    private void activateAllRedDots(bool activate)
+    {
+        foreach (var obj in redDotList)
+        {
+            obj.SetActive(activate);
+        }
+    }
+
     void OnEnable()
     {
-        for(int i = 0; i < spline.GetPointCount(); i++)
+        for (int i = 0; i < spline.GetPointCount(); i++)
         {
             addRedDot(spline.GetPosition(i), i);
         }
+        activateAllRedDots(false);
     }
     // Start is called before the first frame update
 
@@ -89,20 +98,20 @@ public class EditableGround : MonoBehaviour
     }
 
     private int addSplinePoint2(Vector3 position)
-     {
+    {
         spline.InsertPointAt(spline.GetPointCount(), position);
         var newPointIndex = spline.GetPointCount() - 1;
         Smoothen(spriteShapeController, newPointIndex - 1);
         spline.SetHeight(newPointIndex, 1.0f);
         return newPointIndex;
-     }
+    }
     private int addSplinePoint(Vector3 position)
     {
-            spline.InsertPointAt(spline.GetPointCount(), position);
-            var newPointIndex = spline.GetPointCount() - 1;
-            spline.SetTangentMode(newPointIndex, ShapeTangentMode.Continuous);
-            spline.SetHeight(newPointIndex, 1.0f);
-            return newPointIndex;
+        spline.InsertPointAt(spline.GetPointCount(), position);
+        var newPointIndex = spline.GetPointCount() - 1;
+        spline.SetTangentMode(newPointIndex, ShapeTangentMode.Continuous);
+        spline.SetHeight(newPointIndex, 1.0f);
+        return newPointIndex;
     }
 
 
@@ -116,6 +125,7 @@ public class EditableGround : MonoBehaviour
 
     public void onRedDotPositionChanged(GameObject gameObject)
     {
+        dragMode = true;
         //Debug.Log("Red dot pos changed = " + position.ToString());
         Int32 index = redDotMap[gameObject];
         Vector3 position = gameObject.transform.localPosition;
@@ -124,48 +134,55 @@ public class EditableGround : MonoBehaviour
     }
     private void addRedDot(Vector3 position, int splineIndex)
     {
-            if(redDot.activeSelf == false)
+        if (redDot.activeSelf == false)
             redDot.SetActive(true);
-             GameObject cloneRedDot = Instantiate(redDot) as GameObject;
-             redDot.SetActive(false);
-             cloneRedDot.transform.position = position;
-             cloneRedDot.GetComponent<DragableSprite>().OnPositionChanged.AddListener(onRedDotPositionChanged);
-             redDotList.Add(cloneRedDot);
-             redDotMap.Add(cloneRedDot, splineIndex);
+        GameObject cloneRedDot = Instantiate(redDot) as GameObject;
+        redDot.SetActive(false);
+        cloneRedDot.transform.position = position;
+        cloneRedDot.GetComponent<DragableSprite>().OnPositionChanged.AddListener(onRedDotPositionChanged);
+        redDotList.Add(cloneRedDot);
+        redDotMap.Add(cloneRedDot, splineIndex);
     }
 
-    public void blockAddNewPoints(bool block)
+    public void enableEditing(bool enableEditing)
     {
-        blockNewPoints = block;
+        isEditingEnable = enableEditing;
+        activateAllRedDots(enableEditing);
     }
     // Update is called once per frame
-private bool IsPointerOverUIObject() 
-{ 
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current); 
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y); 
-        List<RaycastResult> results = new List<RaycastResult>(); 
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results); 
-        return results.Count > 0; 
-}
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+    }
 
 
     public void loadPoints(List<Vector3> positions)
     {
-        clearAllRedDots();
-
+        destroyAllRedDots();
         spline.Clear();
-        foreach(var position in positions)
+
+        foreach (var position in positions)
         {
             int splineIndex = addSplinePoint(position);
-            if(splineIndex > 3)
+            if (splineIndex > 3)
                 Smoothen(spriteShapeController, splineIndex - 1);
             addRedDot(position, splineIndex);
-        }                
-        
+        }
+
+        activateAllRedDots(isEditingEnable);
     }
     void Update()
     {
-        if(IsPointerOverUIObject())
+        if (!isEditingEnable)
+        {
+            return;
+        }
+
+        if (IsPointerOverUIObject())
             return;
         // if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) // check touch over ui
         // {
@@ -187,23 +204,28 @@ private bool IsPointerOverUIObject()
         // }
 
 
-        if(!blockNewPoints)
+
+        // var insertPoint = Input.mousePosition;
+        // insertPoint.z = 0.0f;
+        // insertPoint = Camera.main.ScreenToWorldPoint(insertPoint);
+        // insertPoint.z = 0.0f;  
+        // var m = Mathf.Abs((insertPoint - lastPosition).magnitude);
+        // if (Input.GetMouseButton(0) && m > minimumDistance)
+        // { 
+        //     int splineIndex = addSplinePoint2(insertPoint);
+
+        //     addRedDot(insertPoint, splineIndex);
+        //     lastPosition = insertPoint;
+        // }
+
+
+        if (Input.GetMouseButtonUp(0))
         {
-            // var insertPoint = Input.mousePosition;
-            // insertPoint.z = 0.0f;
-            // insertPoint = Camera.main.ScreenToWorldPoint(insertPoint);
-            // insertPoint.z = 0.0f;  
-            // var m = Mathf.Abs((insertPoint - lastPosition).magnitude);
-            // if (Input.GetMouseButton(0) && m > minimumDistance)
-            // { 
-            //     int splineIndex = addSplinePoint2(insertPoint);
-
-            //     addRedDot(insertPoint, splineIndex);
-            //     lastPosition = insertPoint;
-            // }
-
-
-            if (Input.GetMouseButtonDown(0))
+            if (dragMode == true)
+            {
+                dragMode = false; // user was dragging points so dont add new
+            }
+            else
             {
                 var mp = Input.mousePosition;
                 mp.z = 0.0f;
@@ -211,15 +233,17 @@ private bool IsPointerOverUIObject()
                 mp.z = 0.0f;
                 var dt = Mathf.Abs((mp - lastPosition).magnitude);
                 var md = (minimumDistance > 1.0f) ? minimumDistance : 1.0f;
-                if (Input.GetMouseButton(0) /* && dt > md */)
+                //if (Input.GetMouseButton(0) /* && dt > md */)
                 {
                     var splineInxed = addSplinePoint2(mp);
                     addRedDot(mp, splineInxed);
                     lastPosition = mp;
                 }
-        }
+            }
 
         }
+
+
 
         // if(index == spline.GetPointCount())
         // {
@@ -227,8 +251,8 @@ private bool IsPointerOverUIObject()
         // } 
         // redDot.transform.position = spline.GetPosition(index);
         // index++;
-            //Debug.Log("lastPosition = " + lastPosition.ToString());
-            
+        //Debug.Log("lastPosition = " + lastPosition.ToString());
+
 
 
     }

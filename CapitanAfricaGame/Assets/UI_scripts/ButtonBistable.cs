@@ -13,7 +13,7 @@ public class ButtonBistable : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
 
 
-    private bool buttonPressed;
+    private bool buttonPressed = false;
 
     public Sprite pressedSprite;
     public Sprite releasedSprite;
@@ -29,6 +29,10 @@ public class ButtonBistable : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             OnBistableButtonEvent = new UnityEvent<bool>();    
     }
  
+    public bool GetState()
+    {
+        return buttonPressed;
+    }
 
     public void OnPointerDown(PointerEventData eventData)
     {
