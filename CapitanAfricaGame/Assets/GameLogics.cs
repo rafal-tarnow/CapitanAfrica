@@ -7,7 +7,7 @@ using System.IO;
 public class GameLogics : MonoBehaviour
 {
 
-    enum Mode 
+    enum Mode
     {
         PLAY,
         EDIT,
@@ -19,79 +19,84 @@ public class GameLogics : MonoBehaviour
     public bool cameraFollowEnable = false;
 
 
-   private static GameLogics gameLogics;
-   private GameObject ground;
-   private GameObject groundEditable;
-   private GameObject carController;
-   private GameObject backgroundSprite;
-   private GameObject buttonGas;
-   private GameObject buttonBrake;
-   private GameObject buttonReload;
-   private GameObject buttonPanZoom;
-   private GameObject buttonDrag;
-   private GameObject buttonLoad;
-   private GameObject buttonEditGround;
+    private static GameLogics gameLogics;
+    private GameObject ground;
+    private GameObject groundEditable;
+    private GameObject carController;
+    private GameObject backgroundSprite;
+    private GameObject buttonGas;
+    private GameObject buttonBrake;
+    private GameObject buttonReload;
+    private GameObject buttonPanZoom;
+    private GameObject buttonDrag;
+    private GameObject buttonLoad;
+    private GameObject buttonEditGround;
+    private GameObject inventoryUI;
 
-   private GameObject buttonSave;
-   private GameObject textMoney;
-   private GameObject textDistance;
-   private GameObject imageFuel;
+    private GameObject buttonSave;
+    private GameObject textMoney;
+    private GameObject textDistance;
+    private GameObject imageFuel;
 
-   private bool secondRun = false;
+    private bool secondRun = false;
     float cameraStartupOrthographicSize;
-  
-        void Awake() 
-        {
-            SaveSystem.Init();
 
-            if (ground == null)
-                ground = GameObject.FindWithTag("Ground");
+    void Awake()
+    {
+        SaveSystem.Init();
 
-            if(groundEditable == null)
-                groundEditable = GameObject.FindWithTag("GroundEditable");
+        if (ground == null)
+            ground = GameObject.FindWithTag("Ground");
 
-            if(carController == null)
-                carController = GameObject.FindWithTag("CarController");
+        if (groundEditable == null)
+            groundEditable = GameObject.FindWithTag("GroundEditable");
 
-            if(backgroundSprite == null)
-                backgroundSprite = GameObject.FindWithTag("BackgroundSprite");    
+        if (carController == null)
+            carController = GameObject.FindWithTag("CarController");
 
-            if(buttonBrake == null)
-                buttonBrake = GameObject.FindWithTag("ButtonBrake");
+        if (backgroundSprite == null)
+            backgroundSprite = GameObject.FindWithTag("BackgroundSprite");
 
-            if(buttonGas == null)
-                buttonGas = GameObject.FindWithTag("ButtonGas");
+        if (buttonBrake == null)
+            buttonBrake = GameObject.FindWithTag("ButtonBrake");
 
-            if(buttonReload == null)
-                buttonReload = GameObject.FindWithTag("ButtonReload");
+        if (buttonGas == null)
+            buttonGas = GameObject.FindWithTag("ButtonGas");
 
-            if(buttonPanZoom == null)
-                buttonPanZoom = GameObject.FindWithTag("ButtonPanZoom");
+        if (buttonReload == null)
+            buttonReload = GameObject.FindWithTag("ButtonReload");
 
-            if(buttonDrag == null)
-                buttonDrag = GameObject.FindWithTag("ButtonDrag");
+        if (buttonPanZoom == null)
+            buttonPanZoom = GameObject.FindWithTag("ButtonPanZoom");
 
-            if(buttonSave == null)
-                buttonSave = GameObject.FindWithTag("ButtonSave");
+        if (buttonDrag == null)
+            buttonDrag = GameObject.FindWithTag("ButtonDrag");
 
-            if(buttonLoad == null)
-                buttonLoad = GameObject.FindWithTag("ButtonLoad");
+        if (buttonSave == null)
+            buttonSave = GameObject.FindWithTag("ButtonSave");
 
-            if(textMoney == null)
-                textMoney = GameObject.FindWithTag("TextMoney");
+        if (buttonLoad == null)
+            buttonLoad = GameObject.FindWithTag("ButtonLoad");
 
-            if(textDistance == null)
-                textDistance = GameObject.FindWithTag("TextDistance");
+        if (textMoney == null)
+            textMoney = GameObject.FindWithTag("TextMoney");
 
-            if(imageFuel == null)
-                imageFuel = GameObject.FindWithTag("ImageFuel");
+        if (textDistance == null)
+            textDistance = GameObject.FindWithTag("TextDistance");
 
-            if(buttonEditGround == null)
-                buttonEditGround = GameObject.FindWithTag("ButtonEditGround");
+        if (imageFuel == null)
+            imageFuel = GameObject.FindWithTag("ImageFuel");
 
-        }
+        if (buttonEditGround == null)
+            buttonEditGround = GameObject.FindWithTag("ButtonEditGround");
 
-    private void Start() 
+        if (inventoryUI == null)
+            inventoryUI = GameObject.FindWithTag("InventoryUI");
+
+
+    }
+
+    private void Start()
     {
         cameraStartupOrthographicSize = Camera.main.orthographicSize;
         setPlayMode();
@@ -99,13 +104,13 @@ public class GameLogics : MonoBehaviour
 
     public void onReloadButtonReleased(bool pressed)
     {
-        if(!pressed) // if released
-            SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+        if (!pressed) // if released
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void onPanZoomButton(bool pressed)
     {
-        if(pressed)
+        if (pressed)
         {
             Camera.main.GetComponent<PanZoom>().enabled = true;
             groundEditable.GetComponent<EditableGround>().enableEditing(false);
@@ -121,7 +126,7 @@ public class GameLogics : MonoBehaviour
     public void onEditPlayButton(bool edit)
     {
         Debug.Log("Edit " + edit.ToString());
-        if(edit)
+        if (edit)
         {
             mode = Mode.EDIT;
             setEditMode();
@@ -136,45 +141,45 @@ public class GameLogics : MonoBehaviour
 
     public void onEditGroundButton(bool editGround)
     {
-        if(editGround)
+        if (editGround)
         {
             groundEditable.GetComponent<EditableGround>().enableEditing(true);
         }
         else
         {
-           groundEditable.GetComponent<EditableGround>().enableEditing(false);
+            groundEditable.GetComponent<EditableGround>().enableEditing(false);
         }
     }
 
     public void SaveLevel()
     {
 
-            SaveObject saveObject = new SaveObject();
+        SaveObject saveObject = new SaveObject();
 
-            //SAVE GROUND
-            saveObject.splinePoints = groundEditable.GetComponent<EditableGround>().getSplinesPointsPositions();
+        //SAVE GROUND
+        saveObject.splinePoints = groundEditable.GetComponent<EditableGround>().getSplinesPointsPositions();
 
-            //SAVE COINS
-            GameObject[] coins;
-            coins = GameObject.FindGameObjectsWithTag("Coin");
-            saveObject.coinsPositions = new List<Vector3>();
+        //SAVE COINS
+        GameObject[] coins;
+        coins = GameObject.FindGameObjectsWithTag("Coin");
+        saveObject.coinsPositions = new List<Vector3>();
 
-            foreach(var coin in coins)
-            {
-                saveObject.coinsPositions.Add(coin.transform.position);
-            }
+        foreach (var coin in coins)
+        {
+            saveObject.coinsPositions.Add(coin.transform.position);
+        }
 
-            //SAVE CANISTERS
-            GameObject[] canisters;
-            canisters = GameObject.FindGameObjectsWithTag("FuelCanister");
-            saveObject.canisterPositions = new List<Vector3>();
+        //SAVE CANISTERS
+        GameObject[] canisters;
+        canisters = GameObject.FindGameObjectsWithTag("FuelCanister");
+        saveObject.canisterPositions = new List<Vector3>();
 
-            foreach(var canister in canisters)
-            {
-                saveObject.canisterPositions.Add(canister.transform.position);
-            }
+        foreach (var canister in canisters)
+        {
+            saveObject.canisterPositions.Add(canister.transform.position);
+        }
 
-            SaveSystem.Save<SaveObject>(saveObject, "0.txt");        
+        SaveSystem.Save<SaveObject>(saveObject, "0.txt");
     }
 
     public void LoadLevel()
@@ -182,7 +187,7 @@ public class GameLogics : MonoBehaviour
         SaveObject saveObject = SaveSystem.Load<SaveObject>("0.txt");
 
         //LOAD GROUND
-        if(saveObject == null)
+        if (saveObject == null)
             Debug.Log("Load retun null");
         else
             groundEditable.GetComponent<EditableGround>().loadPoints(saveObject.splinePoints);
@@ -193,7 +198,7 @@ public class GameLogics : MonoBehaviour
 
         Vector3[] coinsPos = saveObject.coinsPositions.ToArray();
 
-        for(int i = 0; i < coins.Length; i++)
+        for (int i = 0; i < coins.Length; i++)
         {
             coins[i].transform.position = coinsPos[i];
         }
@@ -204,18 +209,18 @@ public class GameLogics : MonoBehaviour
 
         Vector3[] canisterPos = saveObject.canisterPositions.ToArray();
 
-        for(int i = 0; i < canisters.Length; i++)
+        for (int i = 0; i < canisters.Length; i++)
         {
             canisters[i].transform.position = canisterPos[i];
         }
-        
+
     }
 
 
 
     public void onDragButton(bool drag)
     {
-        if(mode == Mode.EDIT)
+        if (mode == Mode.EDIT)
         {
 
 
@@ -225,12 +230,12 @@ public class GameLogics : MonoBehaviour
     void setPlayMode()
     {
 
-            backgroundSprite.SetActive(true);
-            Camera.main.GetComponent<BackgroundStatic>().enabled = true;
-            Camera.main.GetComponent<PanZoom>().enabled = false;
-            Camera.main.orthographicSize = cameraStartupOrthographicSize;
-         if(secondRun == false)
-        {           
+        backgroundSprite.SetActive(true);
+        Camera.main.GetComponent<BackgroundStatic>().enabled = true;
+        Camera.main.GetComponent<PanZoom>().enabled = false;
+        Camera.main.orthographicSize = cameraStartupOrthographicSize;
+        if (secondRun == false)
+        {
             groundEditable.SetActive(false);
             ground.SetActive(true);
             secondRun = true;
@@ -241,62 +246,65 @@ public class GameLogics : MonoBehaviour
             groundEditable.GetComponent<EditableGround>().enabled = false;
             ground.SetActive(false);
         }
-            carController.SetActive(true);
-            buttonGas.SetActive(true);
-            buttonBrake.SetActive(true);
-            buttonReload.SetActive(true);
-            buttonPanZoom.SetActive(false);
-            buttonDrag.SetActive(false);
-            buttonSave.SetActive(false);
-            buttonLoad.SetActive(false);
-            buttonEditGround.SetActive(false);
-            textMoney.SetActive(true);
-            textDistance.SetActive(true);
-            imageFuel.SetActive(true);
+        carController.SetActive(true);
+        buttonGas.SetActive(true);
+        buttonBrake.SetActive(true);
+        buttonReload.SetActive(true);
+        buttonPanZoom.SetActive(false);
+        buttonDrag.SetActive(false);
+        buttonSave.SetActive(false);
+        buttonLoad.SetActive(false);
+        buttonEditGround.SetActive(false);
+        textMoney.SetActive(true);
+        textDistance.SetActive(true);
+        imageFuel.SetActive(true);
+        inventoryUI.SetActive(false);
 
     }
 
     void setEditMode()
     {
-            Camera.main.GetComponent<BackgroundStatic>().enabled = false;
-            Camera.main.GetComponent<PanZoom>().enabled = false;
+        Camera.main.GetComponent<BackgroundStatic>().enabled = false;
+        Camera.main.GetComponent<PanZoom>().enabled = false;
 
-            ground.SetActive(false);
-            carController.SetActive(false);
-            backgroundSprite.SetActive(false);
-            buttonGas.SetActive(false);
-            buttonBrake.SetActive(false);
-            buttonReload.SetActive(false);
-            buttonPanZoom.SetActive(true);
-            buttonDrag.SetActive(true);
-            buttonSave.SetActive(true);
-            buttonLoad.SetActive(true);
-            buttonEditGround.SetActive(true);
-            textMoney.SetActive(false);
-            textDistance.SetActive(false);
-            imageFuel.SetActive(false);
+        ground.SetActive(false);
+        carController.SetActive(false);
+        backgroundSprite.SetActive(false);
+        buttonGas.SetActive(false);
+        buttonBrake.SetActive(false);
+        buttonReload.SetActive(false);
+        buttonPanZoom.SetActive(true);
+        buttonDrag.SetActive(true);
+        buttonSave.SetActive(true);
+        buttonLoad.SetActive(true);
+        buttonEditGround.SetActive(true);
+        textMoney.SetActive(false);
+        textDistance.SetActive(false);
+        imageFuel.SetActive(false);
+        inventoryUI.SetActive(true);
 
-            groundEditable.SetActive(true);
-            groundEditable.GetComponent<EditableGround>().enabled = true;
+        groundEditable.SetActive(true);
+        groundEditable.GetComponent<EditableGround>().enabled = true;
 
-            bool edit = buttonEditGround.GetComponent<ButtonBistable>().GetState();
-            groundEditable.GetComponent<EditableGround>().enableEditing(edit);
+        bool edit = buttonEditGround.GetComponent<ButtonBistable>().GetState();
+        groundEditable.GetComponent<EditableGround>().enableEditing(edit);
 
     }
 
     // Start is called before the first frame update
     // void Start()
     // {
-        
+
     // }
 
     // // Update is called once per frame
     // void Update()
     // {
-        
+
     // }
 
-    private class SaveObject{
+    private class SaveObject
+    {
         public List<Vector3> splinePoints;
         public List<Vector3> coinsPositions;
         public List<Vector3> canisterPositions;

@@ -26,6 +26,7 @@ TagManager:
   - ButtonEditGround
   - Coin
   - FuelCanister
+  - InventoryUI
   layers:
   - Default
   - TransparentFX
