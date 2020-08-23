@@ -186,8 +186,23 @@ public class GameLogics : MonoBehaviour
         SaveSystem.Save<SaveObject>(saveObject, "0.txt");
     }
 
+
+    void DestroyAllObjects(string tag)
+    {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
+
+        for (var i = 0; i < gameObjects.Length; i++)
+        {
+            Destroy(gameObjects[i]);
+        }
+    }
+
     public void LoadLevel()
     {
+
+        DestroyAllObjects("Coin");
+        DestroyAllObjects("FuelCanister");
+
         SaveObject saveObject = SaveSystem.Load<SaveObject>("0.txt");
 
         //LOAD GROUND
@@ -234,7 +249,7 @@ public class GameLogics : MonoBehaviour
 
         groundEditable.SetActive(true);
         groundEditable.GetComponent<EditableGround>().enabled = false; // in play mode edition is disabled
-        
+
         carController.SetActive(true);
         buttonGas.SetActive(true);
         buttonBrake.SetActive(true);

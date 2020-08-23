@@ -59,7 +59,6 @@ public class EditableGround : MonoBehaviour
         }
         redDotList.Clear();
     }
-
     private void activateAllRedDots(bool activate)
     {
         foreach (var obj in redDotList)
@@ -68,12 +67,30 @@ public class EditableGround : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    private void updateAllRedDots()
     {
+        destroyAllRedDots();
+
+        //MAKE CLONE
+        if (redDot.activeSelf == false)
+            redDot.SetActive(true);
+ 
+
         for (int i = 0; i < spline.GetPointCount(); i++)
         {
-            addRedDot(spline.GetPosition(i), i);
+            GameObject cloneRedDot = Instantiate(redDot) as GameObject;      
+            cloneRedDot.transform.position = spline.GetPosition(i);
+            cloneRedDot.GetComponent<DragableSprite>().OnPositionChanged.AddListener(onRedDotPositionChanged);
+            redDotList.Add(cloneRedDot);
+            redDotMap.Add(cloneRedDot, i);
         }
+
+        redDot.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+
         activateAllRedDots(false);
     }
     // Start is called before the first frame update
@@ -111,17 +128,17 @@ public class EditableGround : MonoBehaviour
         float minDistance = float.MaxValue;
         int minDistanceIndex = 0;
 
-        if(spline.GetPointCount() < 2)
+        if (spline.GetPointCount() < 2)
             addSplinePoint2_atEnd(position);
 
-        if(!spline.isOpenEnded)
+        if (!spline.isOpenEnded)
         {
             int pointCount = spline.GetPointCount();
-            for(int i = 0; i < pointCount - 1; i++)
+            for (int i = 0; i < pointCount - 1; i++)
             {
-                float distance = Calc.DistancePointLine(position, spline.GetPosition(i), spline.GetPosition(i+1));
+                float distance = Calc.DistancePointLine(position, spline.GetPosition(i), spline.GetPosition(i + 1));
                 Debug.Log("distance = " + distance);
-                if(distance < minDistance)
+                if (distance < minDistance)
                 {
                     minDistance = distance;
                     minDistanceIndex = i;
@@ -170,17 +187,6 @@ public class EditableGround : MonoBehaviour
 
         changeSplinePointPosition(index, position);
     }
-    private void addRedDot(Vector3 position, int splineIndex)
-    {
-        if (redDot.activeSelf == false)
-            redDot.SetActive(true);
-        GameObject cloneRedDot = Instantiate(redDot) as GameObject;
-        redDot.SetActive(false);
-        cloneRedDot.transform.position = position;
-        cloneRedDot.GetComponent<DragableSprite>().OnPositionChanged.AddListener(onRedDotPositionChanged);
-        redDotList.Add(cloneRedDot);
-        redDotMap.Add(cloneRedDot, splineIndex);
-    }
 
     public void enableEditing(bool enableEditing)
     {
@@ -200,7 +206,6 @@ public class EditableGround : MonoBehaviour
 
     public void loadPoints(List<Vector3> positions)
     {
-        destroyAllRedDots();
         spline.Clear();
 
         foreach (var position in positions)
@@ -208,9 +213,8 @@ public class EditableGround : MonoBehaviour
             int splineIndex = addSplinePoint(position);
             if (splineIndex > 3)
                 Smoothen(spriteShapeController, splineIndex - 1);
-            addRedDot(position, splineIndex);
         }
-
+        updateAllRedDots();
         activateAllRedDots(isEditingEnable);
     }
     void Update()
@@ -274,7 +278,7 @@ public class EditableGround : MonoBehaviour
                 //if (Input.GetMouseButton(0) /* && dt > md */)
                 {
                     var splineInxed = insertSplinePoint(mp);
-                    addRedDot(mp, splineInxed);
+                   updateAllRedDots();
                     lastPosition = mp;
                 }
             }
