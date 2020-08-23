@@ -18,9 +18,10 @@ public class GameLogics : MonoBehaviour
 
     public bool cameraFollowEnable = false;
 
+    public GameObject coinPrefab;
+    public GameObject canisterPrefab;
 
     private static GameLogics gameLogics;
-    private GameObject ground;
     private GameObject groundEditable;
     private GameObject carController;
     private GameObject backgroundSprite;
@@ -37,16 +38,11 @@ public class GameLogics : MonoBehaviour
     private GameObject textMoney;
     private GameObject textDistance;
     private GameObject imageFuel;
-
-    private bool secondRun = false;
     float cameraStartupOrthographicSize;
 
     void Awake()
     {
         SaveSystem.Init();
-
-        if (ground == null)
-            ground = GameObject.FindWithTag("Ground");
 
         if (groundEditable == null)
             groundEditable = GameObject.FindWithTag("GroundEditable");
@@ -100,6 +96,7 @@ public class GameLogics : MonoBehaviour
     {
         cameraStartupOrthographicSize = Camera.main.orthographicSize;
         setPlayMode();
+        LoadLevel();
     }
 
     public void OnPrefabDropEvent(GameObject prefab)
@@ -200,27 +197,20 @@ public class GameLogics : MonoBehaviour
             groundEditable.GetComponent<EditableGround>().loadPoints(saveObject.splinePoints);
 
         //LOAD COINS
-        GameObject[] coins;
-        coins = GameObject.FindGameObjectsWithTag("Coin");
-
         Vector3[] coinsPos = saveObject.coinsPositions.ToArray();
 
-        for (int i = 0; i < coins.Length; i++)
+        for (int i = 0; i < coinsPos.Length; i++)
         {
-            coins[i].transform.position = coinsPos[i];
+            Instantiate(coinPrefab, coinsPos[i], Quaternion.identity);
         }
 
         //LOAD CANISTERS
-        GameObject[] canisters;
-        canisters = GameObject.FindGameObjectsWithTag("FuelCanister");
-
         Vector3[] canisterPos = saveObject.canisterPositions.ToArray();
 
-        for (int i = 0; i < canisters.Length; i++)
+        for (int i = 0; i < canisterPos.Length; i++)
         {
-            canisters[i].transform.position = canisterPos[i];
+            Instantiate(canisterPrefab, canisterPos[i], Quaternion.identity);
         }
-
     }
 
 
@@ -241,18 +231,10 @@ public class GameLogics : MonoBehaviour
         Camera.main.GetComponent<BackgroundStatic>().enabled = true;
         Camera.main.GetComponent<PanZoom>().enabled = false;
         Camera.main.orthographicSize = cameraStartupOrthographicSize;
-        if (secondRun == false)
-        {
-            groundEditable.SetActive(false);
-            ground.SetActive(true);
-            secondRun = true;
-        }
-        else
-        {
-            groundEditable.SetActive(true);
-            groundEditable.GetComponent<EditableGround>().enabled = false;
-            ground.SetActive(false);
-        }
+
+        groundEditable.SetActive(true);
+        groundEditable.GetComponent<EditableGround>().enabled = false; // in play mode edition is disabled
+        
         carController.SetActive(true);
         buttonGas.SetActive(true);
         buttonBrake.SetActive(true);
@@ -274,7 +256,6 @@ public class GameLogics : MonoBehaviour
         Camera.main.GetComponent<BackgroundStatic>().enabled = false;
         Camera.main.GetComponent<PanZoom>().enabled = false;
 
-        ground.SetActive(false);
         carController.SetActive(false);
         backgroundSprite.SetActive(false);
         buttonGas.SetActive(false);
