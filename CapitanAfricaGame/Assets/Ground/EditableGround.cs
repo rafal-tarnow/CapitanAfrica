@@ -97,13 +97,51 @@ public class EditableGround : MonoBehaviour
         sc.spline.SetRightTangent(pointIndex, rightTangent);
     }
 
-    private int addSplinePoint2(Vector3 position)
+    private int addSplinePoint2_atEnd(Vector3 position)
     {
         spline.InsertPointAt(spline.GetPointCount(), position);
         var newPointIndex = spline.GetPointCount() - 1;
         Smoothen(spriteShapeController, newPointIndex - 1);
         spline.SetHeight(newPointIndex, 1.0f);
         return newPointIndex;
+    }
+
+    private int insertSplinePoint(Vector3 position)
+    {
+        float minDistance = float.MaxValue;
+        int minDistanceIndex = 0;
+
+        if(spline.GetPointCount() < 2)
+            addSplinePoint2_atEnd(position);
+
+        if(!spline.isOpenEnded)
+        {
+            int pointCount = spline.GetPointCount();
+            for(int i = 0; i < pointCount - 1; i++)
+            {
+                float distance = Calc.DistancePointLine(position, spline.GetPosition(i), spline.GetPosition(i+1));
+                Debug.Log("distance = " + distance);
+                if(distance < minDistance)
+                {
+                    minDistance = distance;
+                    minDistanceIndex = i;
+                }
+            }
+        }
+        else
+        {
+
+        }
+
+        minDistanceIndex++;
+
+        Debug.Log("minDistance = " + minDistance);
+        Debug.Log("minDistanceIndex = " + minDistanceIndex);
+
+        spline.InsertPointAt(minDistanceIndex, position);
+        Smoothen(spriteShapeController, minDistanceIndex - 1);
+        spline.SetHeight(minDistanceIndex, 1.0f);
+        return minDistanceIndex;
     }
     private int addSplinePoint(Vector3 position)
     {
@@ -235,7 +273,7 @@ public class EditableGround : MonoBehaviour
                 var md = (minimumDistance > 1.0f) ? minimumDistance : 1.0f;
                 //if (Input.GetMouseButton(0) /* && dt > md */)
                 {
-                    var splineInxed = addSplinePoint2(mp);
+                    var splineInxed = insertSplinePoint(mp);
                     addRedDot(mp, splineInxed);
                     lastPosition = mp;
                 }
