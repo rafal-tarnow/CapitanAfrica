@@ -6,12 +6,13 @@ using UnityEngine.UI;
 
 public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
+    public GameObject prefab;
+
     public bool Draggable { get; set; }
 
     private RectTransform rectTransform;
     private RectTransform parentRectTransform;
     private Transform parent;
-    private bool draggingSlot;
     private bool dragScrollView = false;
     public Canvas canvas;
     public Vector2 deltaPos = new Vector2(0,0);
@@ -36,23 +37,17 @@ private void Awake() {
             return;
         }
 
-        StartCoroutine(StartTimer());
+
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        StopAllCoroutines();
+
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        StopAllCoroutines();
-    }
-
-    private IEnumerator StartTimer()
-    {
-        yield return new WaitForSeconds(0.5f);
-        draggingSlot = true;
+ 
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -69,17 +64,14 @@ private void Awake() {
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (draggingSlot)
-        {
-            //DO YOUR DRAGGING HERE
-        } else
-        {
-            //OR DO THE SCROLLRECT'S
+            Debug.Log("Event data pos = " + eventData.position.ToString());
+            
+
             deltaPos += eventData.delta / canvas.scaleFactor;
             rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-            Debug.Log("deltaPos.y = " + deltaPos.y.ToString());
-            Debug.Log("parentHeight = " + parentHeight.ToString());
-            Debug.Log("dragScroll = " + dragScrollView.ToString());
+            // Debug.Log("deltaPos.y = " + deltaPos.y.ToString());
+            // Debug.Log("parentHeight = " + parentHeight.ToString());
+            // Debug.Log("dragScroll = " + dragScrollView.ToString());
             if(Mathf.Abs(deltaPos.y) > (parentHeight/8.0f))
                 dragScrollView = false;
 
@@ -87,24 +79,16 @@ private void Awake() {
             if(dragScrollView)
                 ExecuteEvents.Execute(scrollRect.gameObject, eventData, ExecuteEvents.dragHandler);
 
-
-        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
 
         ExecuteEvents.Execute(scrollRect.gameObject, eventData, ExecuteEvents.endDragHandler);
-           rectTransform.SetParent(parent);
-           rectTransform.anchoredPosition = new Vector2(0,0);
+        rectTransform.SetParent(parent);
+        rectTransform.anchoredPosition = new Vector2(0,0);
 
-
-
-        if (draggingSlot)
-        {
-            //END YOUR DRAGGING HERE
-         
-            draggingSlot = false;
-        }
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
+        Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), Quaternion.identity);
     }
 }

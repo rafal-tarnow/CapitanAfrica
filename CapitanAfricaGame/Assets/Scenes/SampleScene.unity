@@ -2608,6 +2608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a5db4b0c2b0dd96b69468004b1bf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
@@ -2738,6 +2739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a5db4b0c2b0dd96b69468004b1bf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
@@ -3361,6 +3363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a5db4b0c2b0dd96b69468004b1bf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 525367947853281191, guid: ff282886d6e7603299ef7e8cb19a0057, type: 3}
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
@@ -4143,6 +4146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a5db4b0c2b0dd96b69468004b1bf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 7713528332877405868, guid: 577e0af0a4dae01b2a565248565c1c0e, type: 3}
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
@@ -6893,11 +6897,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7713528332877405866, guid: 577e0af0a4dae01b2a565248565c1c0e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.624
+      value: 11.59
       objectReference: {fileID: 0}
     - target: {fileID: 7713528332877405866, guid: 577e0af0a4dae01b2a565248565c1c0e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.006
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7713528332877405866, guid: 577e0af0a4dae01b2a565248565c1c0e, type: 3}
       propertyPath: m_LocalPosition.z

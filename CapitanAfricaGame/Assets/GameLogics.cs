@@ -102,6 +102,13 @@ public class GameLogics : MonoBehaviour
         setPlayMode();
     }
 
+    public void OnPrefabDropEvent(GameObject prefab)
+    {
+        Debug.Log("Game logics, on prefab drop event");
+        //Instantiate(prefab, new Vector3(5, 0, 0), Quaternion.identity);
+
+    }
+
     public void onReloadButtonReleased(bool pressed)
     {
         if (!pressed) // if released
