@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
+    public UnityEvent<bool> OnUIInventoryDragEvent;
+
     public GameObject prefab;
 
     public bool Draggable { get; set; }
@@ -52,6 +54,8 @@ private void Awake() {
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        OnUIInventoryDragEvent?.Invoke(true);
+
         deltaPos.x = 0.0f;
         deltaPos.y = 0.0f;
 
@@ -90,5 +94,7 @@ private void Awake() {
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
         Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), Quaternion.identity);
+
+        OnUIInventoryDragEvent?.Invoke(false);
     }
 }

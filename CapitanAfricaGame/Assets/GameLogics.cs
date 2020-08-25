@@ -7,12 +7,20 @@ using System.IO;
 public class GameLogics : MonoBehaviour
 {
 
-    enum Mode
+    enum MainMode
     {
         PLAY,
         EDIT,
     }
-    Mode mode = Mode.PLAY;
+    MainMode mode = MainMode.PLAY;
+
+    enum EditSubMode
+    {
+        ADD_FANT,
+        EDIT_GROUND,
+        NONE
+    }
+    EditSubMode editSubMode = EditSubMode.NONE;
 
     private static string SAVE_FOLDER;
 
@@ -28,7 +36,6 @@ public class GameLogics : MonoBehaviour
     private GameObject buttonGas;
     private GameObject buttonBrake;
     private GameObject buttonReload;
-    private GameObject buttonPanZoom;
     private GameObject buttonDrag;
     private GameObject buttonLoad;
     private GameObject buttonEditGround;
@@ -62,9 +69,6 @@ public class GameLogics : MonoBehaviour
         if (buttonReload == null)
             buttonReload = GameObject.FindWithTag("ButtonReload");
 
-        if (buttonPanZoom == null)
-            buttonPanZoom = GameObject.FindWithTag("ButtonPanZoom");
-
         if (buttonDrag == null)
             buttonDrag = GameObject.FindWithTag("ButtonDrag");
 
@@ -95,7 +99,11 @@ public class GameLogics : MonoBehaviour
     private void Start()
     {
         cameraStartupOrthographicSize = Camera.main.orthographicSize;
-        setPlayMode();
+
+        mode = MainMode.PLAY;
+        editSubMode = EditSubMode.NONE;
+        updateUIState();
+
         LoadLevel();
     }
 
@@ -112,46 +120,194 @@ public class GameLogics : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void onPanZoomButton(bool pressed)
+    public void OnUIInventoryDragEvent(bool isDragging)
     {
-        if (pressed)
-        {
-            Camera.main.GetComponent<PanZoom>().enabled = true;
-            groundEditable.GetComponent<EditableGround>().enableEditing(false);
-        }
-        else
-        {
-            Camera.main.GetComponent<PanZoom>().enabled = false;
-            bool edit = buttonEditGround.GetComponent<ButtonBistable>().GetState();
-            groundEditable.GetComponent<EditableGround>().enableEditing(edit);
-        }
+        Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if inventory is dragging disable pan zoom
     }
+    public void OnDragRedDotEvent(bool isDragging)
+    {
+        Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if red dot is dragging disable pan zoom
+    }
+
+    public void OnDragSprite(bool isDragging)
+    {
+         Camera.main.GetComponent<PanZoom>().enabled = !isDragging;
+    }
+
 
     public void onEditPlayButton(bool edit)
     {
         Debug.Log("Edit " + edit.ToString());
         if (edit)
         {
-            mode = Mode.EDIT;
-            setEditMode();
+            mode = MainMode.EDIT;
+            updateUIState();
         }
         else
         {
-            mode = Mode.PLAY;
-            setPlayMode();
+            mode = MainMode.PLAY;
+            updateUIState();
             carController.transform.position = Camera.main.transform.position;
         }
     }
 
-    public void onEditGroundButton(bool editGround)
+    public void onEditGroundButton(bool state)
     {
-        if (editGround)
+        if (state)
         {
-            groundEditable.GetComponent<EditableGround>().enableEditing(true);
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.EDIT_GROUND))
+            {
+                editSubMode = EditSubMode.EDIT_GROUND;
+                updateUIState();
+            }
         }
         else
         {
-            groundEditable.GetComponent<EditableGround>().enableEditing(false);
+            editSubMode = EditSubMode.NONE;
+            updateUIState();
+        }
+
+    }
+
+    public void onDragButton(bool state)
+    {
+        if (state)
+        {
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.ADD_FANT))
+            {
+                editSubMode = EditSubMode.ADD_FANT;
+                updateUIState();
+            }
+        }
+        else
+        {
+            editSubMode = EditSubMode.NONE;
+            updateUIState();
+        }
+    }
+
+    public void onPanZoomButton(bool state)
+    {
+        // if (state)
+        // {
+        //     if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.EDIT_PAN_ZOOM))
+        //     {
+        //         editSubMode = EditSubMode.EDIT_PAN_ZOOM;
+        //         updateUIState();
+        //     }
+        // }
+        // else 
+        // {
+        //     editSubMode = EditSubMode.EDIT_PAN_ZOOM;
+        //     updateUIState();
+        // }
+    }
+
+    private void updateUIState()
+    {
+        if (mode == MainMode.PLAY)
+        {
+
+            backgroundSprite.SetActive(true);
+            Camera.main.GetComponent<BackgroundStatic>().enabled = true;
+            Camera.main.GetComponent<PanZoom>().enabled = false;
+            Camera.main.orthographicSize = cameraStartupOrthographicSize;
+
+            groundEditable.SetActive(true);
+            groundEditable.GetComponent<EditableGround>().enabled = false; // in play mode edition is disabled
+
+            carController.SetActive(true);
+            buttonGas.SetActive(true);
+            buttonBrake.SetActive(true);
+            buttonReload.SetActive(true);
+            buttonDrag.SetActive(false);
+            buttonSave.SetActive(false);
+            buttonLoad.SetActive(false);
+            buttonEditGround.SetActive(false);
+            textMoney.SetActive(true);
+            textDistance.SetActive(true);
+            imageFuel.SetActive(true);
+            inventoryUI.SetActive(false);
+
+            setAllFantsOpacityAndDragable(1.0f, false);
+
+        }
+        else if (mode == MainMode.EDIT)
+        {
+
+            Camera.main.GetComponent<BackgroundStatic>().enabled = false;
+            Camera.main.GetComponent<PanZoom>().enabled = true;
+
+            carController.SetActive(false);
+            backgroundSprite.SetActive(false);
+            buttonGas.SetActive(false);
+            buttonBrake.SetActive(false);
+            buttonReload.SetActive(false);
+            buttonDrag.SetActive(true);
+            buttonSave.SetActive(true);
+            buttonLoad.SetActive(true);
+            textMoney.SetActive(false);
+            textDistance.SetActive(false);
+            imageFuel.SetActive(false);
+
+            groundEditable.SetActive(true);
+            groundEditable.GetComponent<EditableGround>().enabled = true;
+
+            buttonEditGround.SetActive(true);
+
+            if (editSubMode == EditSubMode.ADD_FANT)
+            {
+                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
+                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                groundEditable.GetComponent<EditableGround>().enableEditing(false);
+                //groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 0.3f);
+                inventoryUI.SetActive(true);
+                inventoryUI.GetComponent<UnityEngine.UI.ScrollRect>().horizontalNormalizedPosition = 1.0f;
+
+                setAllFantsOpacityAndDragable(1.0f, true);
+            }
+            else if (editSubMode == EditSubMode.EDIT_GROUND)
+            {
+                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
+
+                groundEditable.GetComponent<EditableGround>().enableEditing(true);
+                //groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1f);
+                inventoryUI.SetActive(false);
+
+                setAllFantsOpacityAndDragable(0.3f, false);
+            }
+            else if (editSubMode == EditSubMode.NONE)
+            {
+                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+
+                groundEditable.GetComponent<EditableGround>().enableEditing(false);
+                //groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 0.3f);
+                inventoryUI.SetActive(false);
+
+                setAllFantsOpacityAndDragable(0.3f, false);
+            }
+        }
+
+    }
+
+    void setAllFantsOpacityAndDragable(float opacity, bool dragable)
+    {
+        GameObject[] canisters;
+        canisters = GameObject.FindGameObjectsWithTag("FuelCanister");
+        foreach (var canister in canisters)
+        {
+            canister.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, opacity);
+            canister.GetComponent<DragableSprite>().enabled = dragable;
+        }
+
+        GameObject[] coins;
+        coins = GameObject.FindGameObjectsWithTag("Coin");
+        foreach (var coin in coins)
+        {
+            coin.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, opacity);
+            coin.GetComponent<DragableSprite>().enabled = dragable;
         }
     }
 
@@ -230,69 +386,9 @@ public class GameLogics : MonoBehaviour
 
 
 
-    public void onDragButton(bool drag)
-    {
-        if (mode == Mode.EDIT)
-        {
 
 
-        }
-    }
 
-    void setPlayMode()
-    {
-
-        backgroundSprite.SetActive(true);
-        Camera.main.GetComponent<BackgroundStatic>().enabled = true;
-        Camera.main.GetComponent<PanZoom>().enabled = false;
-        Camera.main.orthographicSize = cameraStartupOrthographicSize;
-
-        groundEditable.SetActive(true);
-        groundEditable.GetComponent<EditableGround>().enabled = false; // in play mode edition is disabled
-
-        carController.SetActive(true);
-        buttonGas.SetActive(true);
-        buttonBrake.SetActive(true);
-        buttonReload.SetActive(true);
-        buttonPanZoom.SetActive(false);
-        buttonDrag.SetActive(false);
-        buttonSave.SetActive(false);
-        buttonLoad.SetActive(false);
-        buttonEditGround.SetActive(false);
-        textMoney.SetActive(true);
-        textDistance.SetActive(true);
-        imageFuel.SetActive(true);
-        inventoryUI.SetActive(false);
-
-    }
-
-    void setEditMode()
-    {
-        Camera.main.GetComponent<BackgroundStatic>().enabled = false;
-        Camera.main.GetComponent<PanZoom>().enabled = false;
-
-        carController.SetActive(false);
-        backgroundSprite.SetActive(false);
-        buttonGas.SetActive(false);
-        buttonBrake.SetActive(false);
-        buttonReload.SetActive(false);
-        buttonPanZoom.SetActive(true);
-        buttonDrag.SetActive(true);
-        buttonSave.SetActive(true);
-        buttonLoad.SetActive(true);
-        buttonEditGround.SetActive(true);
-        textMoney.SetActive(false);
-        textDistance.SetActive(false);
-        imageFuel.SetActive(false);
-        inventoryUI.SetActive(true);
-
-        groundEditable.SetActive(true);
-        groundEditable.GetComponent<EditableGround>().enabled = true;
-
-        bool edit = buttonEditGround.GetComponent<ButtonBistable>().GetState();
-        groundEditable.GetComponent<EditableGround>().enableEditing(edit);
-
-    }
 
     // Start is called before the first frame update
     // void Start()

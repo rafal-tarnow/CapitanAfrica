@@ -4,16 +4,19 @@ using UnityEngine;
 using UnityEngine.U2D;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class EditableGround : MonoBehaviour
 {
+    public UnityEvent<bool> OnDragRedDotEvent;
     private SpriteShapeController spriteShapeController;
     Vector3 lastPosition;
     float minimumDistance = 0.3f;
     Spline spline;
     bool isEditingEnable = false;
-    bool dragMode = false;
+    bool dragRedDotMode = false;
     private GameObject redDot;
+    private Vector3 touchStartPos;
 
     List<GameObject> redDotList = new List<GameObject>();
     Dictionary<GameObject, int> redDotMap = new Dictionary<GameObject, int>();
@@ -50,6 +53,10 @@ public class EditableGround : MonoBehaviour
         destroyAllRedDots();
     }
 
+    void OnEnable()
+    {
+        updateAllRedDots();
+    }
     private void destroyAllRedDots()
     {
         redDotMap.Clear();
@@ -74,13 +81,15 @@ public class EditableGround : MonoBehaviour
         //MAKE CLONE
         if (redDot.activeSelf == false)
             redDot.SetActive(true);
- 
+
 
         for (int i = 0; i < spline.GetPointCount(); i++)
         {
-            GameObject cloneRedDot = Instantiate(redDot) as GameObject;      
+            GameObject cloneRedDot = Instantiate(redDot) as GameObject;
             cloneRedDot.transform.position = spline.GetPosition(i);
-            cloneRedDot.GetComponent<DragableSprite>().OnPositionChanged.AddListener(onRedDotPositionChanged);
+            cloneRedDot.GetComponent<DragableSprite>().OnBeginDrag.AddListener(onRedDotBeginDrag);
+            cloneRedDot.GetComponent<DragableSprite>().OnPositionChanged.AddListener(onRedDotDrag);
+            cloneRedDot.GetComponent<DragableSprite>().OnEndDrag.AddListener(onRedDotEndDrag);
             redDotList.Add(cloneRedDot);
             redDotMap.Add(cloneRedDot, i);
         }
@@ -88,11 +97,7 @@ public class EditableGround : MonoBehaviour
         redDot.SetActive(false);
     }
 
-    void OnEnable()
-    {
 
-        activateAllRedDots(false);
-    }
     // Start is called before the first frame update
 
     private void Smoothen(SpriteShapeController sc, int pointIndex)
@@ -131,7 +136,7 @@ public class EditableGround : MonoBehaviour
         if (spline.GetPointCount() < 2)
             addSplinePoint2_atEnd(position);
 
-        if (!spline.isOpenEnded)
+        if (spline.isOpenEnded)
         {
             int pointCount = spline.GetPointCount();
             for (int i = 0; i < pointCount - 1; i++)
@@ -144,16 +149,37 @@ public class EditableGround : MonoBehaviour
                     minDistanceIndex = i;
                 }
             }
+            minDistanceIndex++;
         }
         else
         {
+            float distance = float.MaxValue;
+            int pointCount = spline.GetPointCount();
+
+            for (int i = 0; i < pointCount - 1; i++)
+            {
+                distance = Calc.DistancePointLine(position, spline.GetPosition(i), spline.GetPosition(i + 1));
+ //               Debug.Log("distance = " + distance);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    minDistanceIndex = i;
+                }
+            }
+            minDistanceIndex++;
+            //additionaly measure distance beetwen last and first point because it is closed
+            distance = Calc.DistancePointLine(position, spline.GetPosition(0), spline.GetPosition(pointCount - 1));
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                minDistanceIndex = pointCount;
+            }
 
         }
 
-        minDistanceIndex++;
 
-        Debug.Log("minDistance = " + minDistance);
-        Debug.Log("minDistanceIndex = " + minDistanceIndex);
+//        Debug.Log("minDistance = " + minDistance);
+//        Debug.Log("minDistanceIndex = " + minDistanceIndex);
 
         spline.InsertPointAt(minDistanceIndex, position);
         Smoothen(spriteShapeController, minDistanceIndex - 1);
@@ -178,9 +204,20 @@ public class EditableGround : MonoBehaviour
 
     }
 
-    public void onRedDotPositionChanged(GameObject gameObject)
+
+    public void onRedDotBeginDrag(GameObject gameObject)
     {
-        dragMode = true;
+              OnDragRedDotEvent?.Invoke(true);
+        dragRedDotMode = true;
+    }
+
+    public void onRedDotEndDrag(GameObject gameObject)
+    {
+        dragRedDotMode = false;
+        OnDragRedDotEvent?.Invoke(false);
+    }
+    public void onRedDotDrag(GameObject gameObject)
+    {
         //Debug.Log("Red dot pos changed = " + position.ToString());
         Int32 index = redDotMap[gameObject];
         Vector3 position = gameObject.transform.localPosition;
@@ -216,6 +253,24 @@ public class EditableGround : MonoBehaviour
         }
         updateAllRedDots();
         activateAllRedDots(isEditingEnable);
+    }
+
+    private float distanceInMilimeters(Vector3 p1, Vector3 p2)
+    {
+        float distanceInPixels = Vector3.Distance(p1,p2);
+        Debug.Log("distanceInPixels" + distanceInPixels);
+
+        float dpi = Screen.dpi;
+        Debug.Log("dpi = " + dpi);
+        if(dpi < 1)
+            dpi = 424.0f;
+        #warning Make default dpi dependend on platform
+
+
+        float distanceInInches  = distanceInPixels/dpi;
+        Debug.Log("distance in inches" + distanceInInches);
+        float distInMilimeters = distanceInInches * 25.4f;
+        return distInMilimeters;
     }
     void Update()
     {
@@ -261,16 +316,26 @@ public class EditableGround : MonoBehaviour
         // }
 
 
+        if(dragRedDotMode)
+            return;
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            touchStartPos = Input.mousePosition;
+        }
+
         if (Input.GetMouseButtonUp(0))
         {
-            if (dragMode == true)
-            {
-                dragMode = false; // user was dragging points so dont add new
-            }
-            else
-            {
                 var mp = Input.mousePosition;
                 mp.z = 0.0f;
+
+                touchStartPos.z = 0.0f;
+
+                float distInMilimeters = distanceInMilimeters(touchStartPos, mp);
+                Debug.Log("distance in milimeters " + distInMilimeters);
+                if(distInMilimeters > 5.0f) //if user pressed and drag pointer, dond add point
+                    return;
+
                 mp = Camera.main.ScreenToWorldPoint(mp);
                 mp.z = 0.0f;
                 var dt = Mathf.Abs((mp - lastPosition).magnitude);
@@ -278,11 +343,9 @@ public class EditableGround : MonoBehaviour
                 //if (Input.GetMouseButton(0) /* && dt > md */)
                 {
                     var splineInxed = insertSplinePoint(mp);
-                   updateAllRedDots();
+                    updateAllRedDots();
                     lastPosition = mp;
                 }
-            }
-
         }
 
 

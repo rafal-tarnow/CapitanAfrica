@@ -6,11 +6,19 @@ using UnityEngine.EventSystems;
 
 public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler*/
 {
+    public static GameObject gameLogics;
     private float startPosX;
     private float startPoxY;
     private bool isBeginHeld = false;
      public UnityEvent<GameObject> OnPositionChanged;
+     public UnityEvent<GameObject> OnBeginDrag;
+     public UnityEvent<GameObject> OnEndDrag;
     // Update is called once per frame
+
+    void Start() {
+        if(gameLogics == null)
+            gameLogics = GameObject.FindWithTag("GameLogics");   
+    }
     void Update()
     {
         if(isBeginHeld == true)
@@ -28,6 +36,8 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
     {
         if(Input.GetMouseButtonDown(0))
         {
+            gameLogics.GetComponent<GameLogics>().OnDragSprite(true);
+
             Vector3 mousePos;
             mousePos = Input.mousePosition;
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
@@ -36,6 +46,7 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
             startPoxY = mousePos.y - this.transform.localPosition.y;
 
             isBeginHeld = true;
+            OnBeginDrag?.Invoke(this.gameObject);
         }
     }
 
@@ -43,6 +54,9 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
     {
         Debug.Log("Coin Mouse Up");
         isBeginHeld = false;
+        OnEndDrag?.Invoke(this.gameObject);
+
+        gameLogics.GetComponent<GameLogics>().OnDragSprite(false);
     }
 
     // public void OnPointerDown(PointerEventData eventData)

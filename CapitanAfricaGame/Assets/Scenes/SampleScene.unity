@@ -275,7 +275,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 175, y: -58}
+  m_AnchoredPosition: {x: 80, y: -150.1}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &70032403
@@ -641,6 +641,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77adcf68a2efa4c458b946a66bacb6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDragRedDotEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: OnDragRedDotEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &467132253
 GameObject:
   m_ObjectHideFlags: 0
@@ -1145,7 +1160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &842036682
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1160,9 +1175,9 @@ RectTransform:
   m_Father: {fileID: 34357984}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 82.9, y: 69}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80, y: -238}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &842036683
@@ -1174,10 +1189,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 842036681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccae0caf455db95e89cc8770b34d94fd, type: 3}
+  m_Script: {fileID: 11500000, guid: 155e261ca975876b4bcd9cd6b0b2c450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnButtonPressedReleasedEvent:
+  OnBistableButtonEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 227302620}
@@ -1192,6 +1207,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  pressedSprite: {fileID: 21300000, guid: 1383fe3ace1480a6d88ef233270c8213, type: 3}
+  releasedSprite: {fileID: 21300000, guid: 9555b32347fcfb67b80cc66755e5e808, type: 3}
 --- !u!114 &842036684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1255,7 +1272,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1383fe3ace1480a6d88ef233270c8213, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9555b32347fcfb67b80cc66755e5e808, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1443,6 +1460,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a5db4b0c2b0dd96b69468004b1bf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnUIInventoryDragEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: OnUIInventoryDragEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   prefab: {fileID: 525367947853281191, guid: ff282886d6e7603299ef7e8cb19a0057, type: 3}
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
@@ -1485,8 +1517,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 358.7, y: -57}
-  m_SizeDelta: {x: 250.25113, y: 96.32782}
+  m_AnchoredPosition: {x: 310.29, y: -57}
+  m_SizeDelta: {x: 347.07346, y: 96.32782}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1296211018
 MonoBehaviour:
@@ -1751,6 +1783,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a5db4b0c2b0dd96b69468004b1bf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnUIInventoryDragEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: OnUIInventoryDragEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   prefab: {fileID: 7713528332877405868, guid: 577e0af0a4dae01b2a565248565c1c0e, type: 3}
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
@@ -2415,6 +2462,12 @@ MonoBehaviour:
   OnPositionChanged:
     m_PersistentCalls:
       m_Calls: []
+  OnBeginDrag:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEndDrag:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &1684387197
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2467,7 +2520,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 83.8, y: -58}
+  m_AnchoredPosition: {x: 80, y: -58}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1767622472
