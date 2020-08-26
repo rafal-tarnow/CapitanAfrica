@@ -102,9 +102,10 @@ public class GameLogics : MonoBehaviour
 
         mode = MainMode.PLAY;
         editSubMode = EditSubMode.NONE;
-        updateUIState();
+
 
         LoadLevel();
+        updateUIState();
     }
 
     public void OnPrefabDropEvent(GameObject prefab)
@@ -131,7 +132,7 @@ public class GameLogics : MonoBehaviour
 
     public void OnDragSprite(bool isDragging)
     {
-         Camera.main.GetComponent<PanZoom>().enabled = !isDragging;
+        Camera.main.GetComponent<PanZoom>().enabled = !isDragging;
     }
 
 
@@ -141,11 +142,13 @@ public class GameLogics : MonoBehaviour
         if (edit)
         {
             mode = MainMode.EDIT;
+            LoadLevel();
             updateUIState();
         }
         else
         {
             mode = MainMode.PLAY;
+            SaveLevel();
             updateUIState();
             carController.transform.position = Camera.main.transform.position;
         }
@@ -217,6 +220,9 @@ public class GameLogics : MonoBehaviour
             groundEditable.GetComponent<EditableGround>().enabled = false; // in play mode edition is disabled
 
             carController.SetActive(true);
+            // carController.GetComponent<FollowByCamera>().enabled = false;
+            // carController.GetComponent<CarController>().enabled = true;
+
             buttonGas.SetActive(true);
             buttonBrake.SetActive(true);
             buttonReload.SetActive(true);
@@ -235,10 +241,18 @@ public class GameLogics : MonoBehaviour
         else if (mode == MainMode.EDIT)
         {
 
+            //carController.GetComponent<FollowByCamera>().enabled = true;
+            //carController.GetComponent<CarController>().enabled = false;
+            //carController.GetComponent<Rigidbody2D>().isKinematic = true;
+            carController.transform.eulerAngles = new Vector3(0, 0, 0);
+            carController.SetActive(false);
+
+            
+
             Camera.main.GetComponent<BackgroundStatic>().enabled = false;
             Camera.main.GetComponent<PanZoom>().enabled = true;
 
-            carController.SetActive(false);
+
             backgroundSprite.SetActive(false);
             buttonGas.SetActive(false);
             buttonBrake.SetActive(false);
