@@ -27,6 +27,12 @@ TagManager:
   - Coin
   - FuelCanister
   - InventoryUI
+  - Meta
+  - Bomb
+  - Box
+  - Board_0
+  - Board_30
+  - Board_m30
   layers:
   - Default
   - TransparentFX
