@@ -93,7 +93,7 @@ private void Awake() {
         rectTransform.anchoredPosition = new Vector2(0,0);
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
-        Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), Quaternion.identity);
+        Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), prefab.transform.rotation);
 
         OnUIInventoryDragEvent?.Invoke(false);
     }
