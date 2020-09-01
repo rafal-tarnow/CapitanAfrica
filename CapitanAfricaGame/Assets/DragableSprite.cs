@@ -10,18 +10,19 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
     private float startPosX;
     private float startPoxY;
     private bool isBeginHeld = false;
-     public UnityEvent<GameObject> OnPositionChanged;
-     public UnityEvent<GameObject> OnBeginDrag;
-     public UnityEvent<GameObject> OnEndDrag;
+    public UnityEvent<GameObject> OnPositionChanged;
+    public UnityEvent<GameObject> OnBeginDrag;
+    public UnityEvent<GameObject> OnEndDrag;
     // Update is called once per frame
 
-    void Start() {
-        if(gameLogics == null)
-            gameLogics = GameObject.FindWithTag("GameLogics");   
+    void Start()
+    {
+        if (gameLogics == null)
+            gameLogics = GameObject.FindWithTag("GameLogics");
     }
     void Update()
     {
-        if(isBeginHeld == true)
+        if (isBeginHeld == true)
         {
             Vector3 mousePos;
             mousePos = Input.mousePosition;
@@ -34,9 +35,14 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
 
     private void OnMouseDown()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            gameLogics.GetComponent<GameLogics>().OnDragSprite(true);
+            isBeginHeld = true;
+            Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D>();
+            if (rigidbody != null)
+            { //errors here
+                rigidbody.isKinematic = true;
+            }
 
             Vector3 mousePos;
             mousePos = Input.mousePosition;
@@ -45,7 +51,8 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
             startPosX = mousePos.x - this.transform.localPosition.x;
             startPoxY = mousePos.y - this.transform.localPosition.y;
 
-            isBeginHeld = true;
+
+            gameLogics.GetComponent<GameLogics>().OnDragSprite(true);
             OnBeginDrag?.Invoke(this.gameObject);
         }
     }
@@ -54,9 +61,15 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
     {
         Debug.Log("Coin Mouse Up");
         isBeginHeld = false;
-        OnEndDrag?.Invoke(this.gameObject);
 
+        OnEndDrag?.Invoke(this.gameObject);
         gameLogics.GetComponent<GameLogics>().OnDragSprite(false);
+
+            Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D>();
+            if (rigidbody != null)
+            { //errors here
+                rigidbody.isKinematic = false;
+            }
     }
 
     // public void OnPointerDown(PointerEventData eventData)
