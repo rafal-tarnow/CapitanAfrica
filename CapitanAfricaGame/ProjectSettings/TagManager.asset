@@ -33,6 +33,9 @@ TagManager:
   - Board_0
   - Board_30
   - Board_m30
+  - ButtonSelectLevelLeft
+  - ButtonSelectLevelRight
+  - ButtonBack
   layers:
   - Default
   - TransparentFX

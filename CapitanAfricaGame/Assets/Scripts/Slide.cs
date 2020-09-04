@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Slide : MonoBehaviour
 {
@@ -31,6 +32,16 @@ public class Slide : MonoBehaviour
     public Sprite leftButtonInactiveSprite;
 
 
+    void Start()
+    {
+        var buttons = FindObjectsOfType<Button>();
+        foreach (var button in buttons)
+        {
+            if ((button.tag != "ButtonSelectLevelLeft") && (button.tag != "ButtonSelectLevelRight") && (button.tag != "ButtonBack"))
+                button.onClick.AddListener(onButtonPressed);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -42,8 +53,8 @@ public class Slide : MonoBehaviour
 
             imageWorld_1.transform.position = Vector3.Lerp(imageWorld_1.transform.position, center.transform.position, 1f);
             imageWorld_2.transform.position = Vector3.Lerp(imageWorld_2.transform.position, Right.transform.position, 1f);
-             imageWorld_3.transform.position = Vector3.Lerp(imageWorld_3.transform.position, Right.transform.position, 1f);
-            
+            imageWorld_3.transform.position = Vector3.Lerp(imageWorld_3.transform.position, Right.transform.position, 1f);
+
         }
         else if (count == 1)
         {
@@ -109,6 +120,16 @@ public class Slide : MonoBehaviour
             }
         }
 
+    }
+
+    public void onButtonPressed()
+    {
+        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+    }
+
+    public void onBackButtonPressed()
+    {
+        SceneManager.LoadScene("WelcomeScene", LoadSceneMode.Single);
     }
 }
 

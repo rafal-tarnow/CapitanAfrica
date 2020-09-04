@@ -42,6 +42,7 @@ public class GameLogics : MonoBehaviour
     private GameObject buttonGas;
     private GameObject buttonBrake;
     private GameObject buttonReload;
+    private GameObject buttonBack;
     private GameObject buttonDrag;
     private GameObject buttonLoad;
     private GameObject buttonEditGround;
@@ -96,6 +97,9 @@ public class GameLogics : MonoBehaviour
         if (buttonEditGround == null)
             buttonEditGround = GameObject.FindWithTag("ButtonEditGround");
 
+        if(buttonBack == null)
+            buttonBack = GameObject.FindWithTag("ButtonBack");
+
         if (inventoryUI == null)
             inventoryUI = GameObject.FindWithTag("InventoryUI");
 
@@ -119,6 +123,11 @@ public class GameLogics : MonoBehaviour
         Debug.Log("Game logics, on prefab drop event");
         //Instantiate(prefab, new Vector3(5, 0, 0), Quaternion.identity);
 
+    }
+
+    public void onBackButtonPressed()
+    {
+        SceneManager.LoadScene("LevelSelectScene",LoadSceneMode.Single);
     }
 
     public void onReloadButtonReleased(bool pressed)
@@ -245,6 +254,7 @@ public class GameLogics : MonoBehaviour
             textDistance.SetActive(true);
             imageFuel.SetActive(true);
             inventoryUI.SetActive(false);
+            buttonBack.SetActive(true);
 
             setAllFantsOpacityAndDragable(1.0f, false);
 
@@ -274,6 +284,7 @@ public class GameLogics : MonoBehaviour
             textMoney.SetActive(false);
             textDistance.SetActive(false);
             imageFuel.SetActive(false);
+            buttonBack.SetActive(false);
 
             groundEditable.SetActive(true);
             groundEditable.GetComponent<EditableGround>().enabled = true;
