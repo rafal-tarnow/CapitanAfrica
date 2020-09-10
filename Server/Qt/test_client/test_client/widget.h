@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QTcpSocket>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -15,7 +16,11 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+private slots:
+    void on_pushButtonSelectFile_clicked();
+
 private:
     Ui::Widget *ui;
+    QTcpSocket *tcpSocket = nullptr;
 };
 #endif // WIDGET_H

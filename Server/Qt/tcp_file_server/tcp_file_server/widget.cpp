@@ -11,14 +11,6 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    fortunes << tr("You've been leading a dog's life. Stay off the furniture.")
-             << tr("You've got to think about tomorrow.")
-             << tr("You will be surprised by a loud noise.")
-             << tr("You will feel hungry again in another hour.")
-             << tr("You might have mail.")
-             << tr("You cannot kill time without injuring eternity.")
-             << tr("Computers are not intelligent. They only think they are.");
-
     tcpServer = new QTcpServer(this);
     if (!tcpServer->listen(QHostAddress::Any,1234)) {
         QMessageBox::critical(this, tr("Fortune Server"),
@@ -36,6 +28,7 @@ Widget::Widget(QWidget *parent)
 Widget::~Widget()
 {
     delete ui;
+    delete tcpServer;
 }
 
 void Widget::sendFortune()

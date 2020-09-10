@@ -22,6 +22,5 @@ private:
 
     Ui::Widget *ui;
     QTcpServer * tcpServer;
-    QVector<QString> fortunes;
 };
 #endif // WIDGET_H
