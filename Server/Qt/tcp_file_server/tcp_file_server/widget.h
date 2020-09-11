@@ -16,11 +16,25 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+private slots:
+    void on_pushButton_startListenForConnections_clicked();
+
 private:
-    void sendFortune();
+    void acceptConnection();
     void showIpAndPortOnLabel();
 
     Ui::Widget *ui;
     QTcpServer * tcpServer;
 };
+
+
+class Client : public QObject
+{
+    Q_OBJECT
+
+public:
+    Client();
+    ~Client();
+};
+
 #endif // WIDGET_H

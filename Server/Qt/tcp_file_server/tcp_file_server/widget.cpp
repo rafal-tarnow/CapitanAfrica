@@ -5,6 +5,17 @@
 #include <QRandomGenerator>
 #include <QTcpSocket>
 
+
+Client::Client()
+{
+    qDebug() << "New Cient";
+}
+
+Client::~Client()
+{
+    qDebug() << "Delete Client";
+}
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
@@ -12,17 +23,7 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
 
     tcpServer = new QTcpServer(this);
-    if (!tcpServer->listen(QHostAddress::Any,1234)) {
-        QMessageBox::critical(this, tr("Fortune Server"),
-                              tr("Unable to start the server: %1.")
-                              .arg(tcpServer->errorString()));
-        close();
-        return;
-    }
 
-    showIpAndPortOnLabel();
-
-    connect(tcpServer, &QTcpServer::newConnection, this, &Widget::sendFortune);
 }
 
 Widget::~Widget()
@@ -31,9 +32,34 @@ Widget::~Widget()
     delete tcpServer;
 }
 
-void Widget::sendFortune()
+
+void Widget::on_pushButton_startListenForConnections_clicked()
 {
-//! [5]
+    if (!tcpServer->listen(QHostAddress::Any,1234))
+    {
+        QMessageBox::critical(this, tr("Fortune Server"),tr("Unable to start the server: %1.").arg(tcpServer->errorString()));
+        close();
+        return;
+    }
+    connect(tcpServer, &QTcpServer::newConnection, this, &Widget::acceptConnection);
+
+
+    showIpAndPortOnLabel();
+}
+
+void Widget::acceptConnection()
+{ 
+    QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
+    Client * client = new Client();
+    //connect(clientConnection,SIGNAL(connected()), this, SLOT(startTransfer()));
+    //connect(clientConnection, SIGNAL(bytesWritten(qint64)), this, SLOT(updateServerProgress(qint64)));
+    //connect(clientConnection, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
+    connect(clientSocket, &QAbstractSocket::disconnected,clientSocket, &QObject::deleteLater);
+    connect(clientSocket, &QAbstractSocket::disconnected,client, &QObject::deleteLater);
+
+
+
+    //! [5]
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_10);
@@ -50,15 +76,14 @@ void Widget::sendFortune()
     text_flag = !text_flag;
 
 
-    QTcpSocket *clientConnection = tcpServer->nextPendingConnection();
-    connect(clientConnection, &QAbstractSocket::disconnected,
-            clientConnection, &QObject::deleteLater);
-//! [7] //! [8]
 
-    clientConnection->write(block);
-    clientConnection->disconnectFromHost();
-//! [5]
+    //! [7] //! [8]
+
+    clientSocket->write(block);
+    clientSocket->disconnectFromHost();
+    //! [5]
 }
+
 
 void Widget::showIpAndPortOnLabel()
 {
@@ -67,7 +92,7 @@ void Widget::showIpAndPortOnLabel()
     // use the first non-localhost IPv4 address
     for (int i = 0; i < ipAddressesList.size(); ++i) {
         if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
-            ipAddressesList.at(i).toIPv4Address()) {
+                ipAddressesList.at(i).toIPv4Address()) {
             ipAddress = ipAddressesList.at(i).toString();
             break;
         }
@@ -76,6 +101,8 @@ void Widget::showIpAndPortOnLabel()
     if (ipAddress.isEmpty())
         ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
     ui->statusLabel->setText(tr("The server is running on\n\nIP: %1\nport: %2\n\n"
-                            "Run the Fortune Client example now.")
-                         .arg(ipAddress).arg(tcpServer->serverPort()));
+                                "Run the Fortune Client example now.")
+                             .arg(ipAddress).arg(tcpServer->serverPort()));
 }
+
+

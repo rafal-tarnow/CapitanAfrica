@@ -17,10 +17,16 @@ public:
     ~Widget();
 
 private slots:
+    void readFortune();
+    void displayError(QAbstractSocket::SocketError socketError);
+    void requestNewFortune();
+
+private slots:
     void on_pushButtonSelectFile_clicked();
 
 private:
     Ui::Widget *ui;
     QTcpSocket *tcpSocket = nullptr;
+    QDataStream in;
 };
 #endif // WIDGET_H
