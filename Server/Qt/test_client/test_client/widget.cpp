@@ -2,12 +2,18 @@
 #include "ui_widget.h"
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QNetworkInterface>
+#include <QMessageBox>
+#include <QTimer>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+
+    ui->pushButtonGetFortune->setDefault(true);
+    //ui->pushButtonGetFortune->setEnabled(false);
 
     tcpSocket = new QTcpSocket(this);
 
@@ -29,12 +35,31 @@ Widget::~Widget()
 
 void Widget::requestNewFortune()
 {
-    getFortuneButton->setEnabled(false);
+    ui->pushButtonGetFortune->setEnabled(false);
     tcpSocket->abort();
 //! [7]
-    tcpSocket->connectToHost(hostCombo->currentText(),
-                             portLineEdit->text().toInt());
+    tcpSocket->connectToHost(getIP().toString(),1234);
 //! [7]
+}
+
+QHostAddress Widget::getIP()
+{
+    QHostAddress address;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    // use the first non-localhost IPv4 address
+    for (int i = 0; i < ipAddressesList.size(); ++i) {
+        if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
+                ipAddressesList.at(i).toIPv4Address()) {
+            return ipAddressesList.at(i);
+        }
+    }
+    // if we did not find one, use IPv4 localhost
+    return QHostAddress(QHostAddress::LocalHost);
+}
+
+void Widget::on_pushButtonGetFortune_clicked()
+{
+    requestNewFortune();
 }
 
 void Widget::readFortune()
@@ -48,13 +73,13 @@ void Widget::readFortune()
         return;
 
     if (nextFortune == currentFortune) {
-        QTimer::singleShot(0, this, &Client::requestNewFortune);
+        QTimer::singleShot(0, this, &Widget::requestNewFortune);
         return;
     }
 
     currentFortune = nextFortune;
-    statusLabel->setText(currentFortune);
-    getFortuneButton->setEnabled(true);
+    ui->statusLabel->setText(currentFortune);
+    ui->pushButtonGetFortune->setEnabled(true);
 }
 
 void Widget::on_pushButtonSelectFile_clicked()
@@ -87,5 +112,7 @@ void Widget::displayError(QAbstractSocket::SocketError socketError)
                                  .arg(tcpSocket->errorString()));
     }
 
-    getFortuneButton->setEnabled(true);
+    ui->pushButtonGetFortune->setEnabled(true);
 }
+
+

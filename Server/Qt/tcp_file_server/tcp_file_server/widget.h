@@ -20,6 +20,7 @@ private slots:
     void on_pushButton_startListenForConnections_clicked();
 
 private:
+    QHostAddress getIP();
     void acceptConnection();
     void showIpAndPortOnLabel();
 
@@ -28,13 +29,25 @@ private:
 };
 
 
-class Client : public QObject
+class ServerClient : public QObject
 {
     Q_OBJECT
 
 public:
-    Client();
-    ~Client();
+    ServerClient(QTcpSocket *clientSocket);
+    ~ServerClient();
+
+public slots:
+    void startTransfer();
+
+private slots:
+    void displayError(QAbstractSocket::SocketError socketError);
+
+
+
+
+private:
+    QTcpSocket *clientSocket;
 };
 
 #endif // WIDGET_H

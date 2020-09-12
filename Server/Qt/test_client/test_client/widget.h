@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTcpSocket>
+#include <QHostAddress>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -24,9 +25,16 @@ private slots:
 private slots:
     void on_pushButtonSelectFile_clicked();
 
+    void on_pushButtonGetFortune_clicked();
+
+private:
+    QHostAddress getIP();
+
 private:
     Ui::Widget *ui;
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
+
+     QString currentFortune;
 };
 #endif // WIDGET_H
