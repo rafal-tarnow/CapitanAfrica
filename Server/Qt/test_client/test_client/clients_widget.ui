@@ -13,29 +13,15 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="0">
-    <widget class="QPushButton" name="pushButtonAbord">
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QPushButton" name="pushButtonNewClient">
      <property name="text">
-      <string>Abord</string>
+      <string>New Client</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QPushButton" name="pushButtonConnect">
-     <property name="text">
-      <string>Connect</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="statusLabel">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
     <widget class="QPushButton" name="pushButtonSelectFile">
      <property name="text">
       <string>Select file</string>
@@ -43,11 +29,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QPushButton" name="pushButtonStartTransfer">
-     <property name="text">
-      <string>Start transfer</string>
-     </property>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout_2"/>
    </item>
   </layout>
  </widget>

@@ -2,7 +2,7 @@
 #include <QDataStream>
 #include <QMessageBox>
 
-ServerClient::ServerClient(QTcpSocket *socket)
+Client::Client(QTcpSocket *socket)
 {
     qDebug() << "New Cient";
     clientSocket = socket;
@@ -11,19 +11,19 @@ ServerClient::ServerClient(QTcpSocket *socket)
     in.setVersion(QDataStream::Qt_4_0);
 
     //connect(clientConnection, SIGNAL(bytesWritten(qint64)), this, SLOT(updateServerProgress(qint64)));
-    connect(clientSocket, &QIODevice::readyRead, this, &ServerClient::readyReadFromSocket);
+    connect(clientSocket, &QIODevice::readyRead, this, &Client::readyReadFromSocket);
     connect(clientSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
     connect(clientSocket, &QAbstractSocket::disconnected,this, &QObject::deleteLater);
     connect(clientSocket, &QAbstractSocket::disconnected,clientSocket, &QObject::deleteLater);
 
 }
 
-void ServerClient::connectTo(const QHostAddress &address, quint16 port)
+void Client::connectTo(const QHostAddress &address, quint16 port)
 {
     clientSocket->connectToHost(address,port);
 }
 
-void ServerClient::startTransfer(QString textToTransfer)
+void Client::startTransfer(QString textToTransfer)
 {
     qDebug() << "startTransfer()";
 
@@ -36,12 +36,16 @@ void ServerClient::startTransfer(QString textToTransfer)
     clientSocket->write(block);
 }
 
-void ServerClient::disconnect()
+void Client::disconnect()
 {
     clientSocket->disconnectFromHost();
 }
+void Client::abort()
+{
+    clientSocket->abort();
+}
 
-void ServerClient::readyReadFromSocket()
+void Client::readyReadFromSocket()
 {
     in.startTransaction();
 
@@ -54,12 +58,12 @@ void ServerClient::readyReadFromSocket()
     emit textArrive(nextFortune);
 }
 
-ServerClient::~ServerClient()
+Client::~Client()
 {
     qDebug() << "Delete Client";
 }
 
-void ServerClient::displayError(QAbstractSocket::SocketError socketError)
+void Client::displayError(QAbstractSocket::SocketError socketError)
 {
     switch (socketError) {
     case QAbstractSocket::RemoteHostClosedError:

@@ -4,13 +4,13 @@
 #include <QDataStream>
 
 
-class ServerClient : public QObject
+class Client : public QObject
 {
     Q_OBJECT
 
 public:
-    ServerClient(QTcpSocket *clientSocket);
-    ~ServerClient();
+    Client(QTcpSocket *clientSocket);
+    ~Client();
 
 signals:
     void textArrive(QString text);
@@ -19,6 +19,7 @@ public slots:
     void connectTo(const QHostAddress &address, quint16 port);
     void startTransfer(QString textToTransfer);
     void disconnect();
+    void abort();
 
 private slots:
     void readyReadFromSocket();

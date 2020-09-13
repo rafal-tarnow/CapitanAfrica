@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTcpSocket>
 #include <QHostAddress>
+#include "../../libs/client.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -18,15 +19,10 @@ public:
     ~Widget();
 
 private slots:
-    void readyReadFromSocket();
-    void displayError(QAbstractSocket::SocketError socketError);
 
 private slots:
     void on_pushButtonSelectFile_clicked();
-    void on_pushButtonConnect_clicked();
-    void on_pushButtonAbord_clicked();
-
-    void on_pushButtonStartTransfer_clicked();
+    void on_pushButtonNewClient_clicked();
 
 private:
     QHostAddress getIP();
@@ -34,7 +30,6 @@ private:
 
 private:
     Ui::Widget *ui;
-    QTcpSocket *tcpSocket = nullptr;
-    QDataStream in;
+    int connectionCount = 0;
 };
 #endif // WIDGET_H

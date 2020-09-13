@@ -47,30 +47,27 @@ void Widget::acceptConnection()
     connectionCount++;
 
     QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
-    ServerClient * client = new ServerClient(clientSocket);
-
-
-    client->startTransfer("TEKST" + QString::number(connectionCount));
+    Client * client = new Client(clientSocket);
 
 
     QLabel * label = new QLabel("Connection " + QString::number(connectionCount));
     QLineEdit * lineEdit = new QLineEdit();
-    QPushButton *button1 = new QPushButton("Start transfer");
-    QPushButton *button2 = new QPushButton("Disconnect");
+    QPushButton *button_startTransfer = new QPushButton("Start transfer");
+    QPushButton *button_disconnect = new QPushButton("Disconnect");
     QLabel * label_text_from_client = new QLabel("");
 
-    connect(client, &ServerClient::textArrive, label_text_from_client, &QLabel::setText);
-    connect(button1, &QPushButton::clicked,
+    connect(button_startTransfer, &QPushButton::clicked,
         [client, lineEdit]() { client->startTransfer(lineEdit->text()); }
     );
+    connect(client, &Client::textArrive, label_text_from_client, &QLabel::setText);
 
 
     QGridLayout *layout = ui->gridLayout;
     int column  = connectionCount - 1;
     layout->addWidget(label, 0, column);
     layout->addWidget(lineEdit, 1, column);
-    layout->addWidget(button1, 2, column);
-    layout->addWidget(button2, 3, column);
+    layout->addWidget(button_startTransfer, 2, column);
+    layout->addWidget(button_disconnect, 3, column);
     layout->addWidget(label_text_from_client, 4, column);
 }
 
