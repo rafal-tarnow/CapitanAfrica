@@ -57,7 +57,7 @@ void Widget::acceptConnection()
     QLabel * label_text_from_client = new QLabel("");
 
     connect(button_startTransfer, &QPushButton::clicked,
-        [client, lineEdit]() { client->startTransfer(lineEdit->text()); }
+        [client, lineEdit]() { client->startTransferMessage(lineEdit->text()); }
     );
     connect(client, &Client::textArrive, label_text_from_client, &QLabel::setText);
 

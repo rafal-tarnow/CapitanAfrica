@@ -36,13 +36,23 @@ void Widget::on_pushButtonNewClient_clicked()
     QPushButton * button_connect = new QPushButton("Connect");
     QLineEdit * lineEdit = new QLineEdit();
     QPushButton *button_startTransfer = new QPushButton("Start transfer");
+    QPushButton *button_startTransferFile = new QPushButton("Start transfer file");
     QPushButton *button_disconnect = new QPushButton("Disconnect");
     QLabel * label_text_from_server = new QLabel("");
 
     connect(button_connect, &QPushButton::clicked,
             [client, this]() { client->connectTo(this->getIP(),1234);});
     connect(button_startTransfer, &QPushButton::clicked,
-            [client, lineEdit]() { client->startTransfer(lineEdit->text()); }
+            [client, lineEdit]() { client->startTransferMessage(lineEdit->text()); }
+    );
+    connect(button_startTransferFile, &QPushButton::clicked,
+            [this, client]()
+    {
+        QString fileName = QFileDialog::getOpenFileName(this,
+                                                        tr("Open Image"), QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+        client->startTransferFile(fileName);
+    }
+
     );
     connect(client, &Client::textArrive, label_text_from_server, &QLabel::setText);
 
@@ -52,8 +62,9 @@ void Widget::on_pushButtonNewClient_clicked()
     layout->addWidget(button_connect, 1, column);
     layout->addWidget(lineEdit, 2, column);
     layout->addWidget(button_startTransfer, 3, column);
-    layout->addWidget(button_disconnect, 4, column);
-    layout->addWidget(label_text_from_server, 5, column);
+    layout->addWidget(button_startTransferFile, 4, column);
+    layout->addWidget(button_disconnect, 5, column);
+    layout->addWidget(label_text_from_server, 6, column);
 }
 
 void Widget::on_pushButtonSelectFile_clicked()
