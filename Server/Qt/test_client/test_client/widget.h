@@ -18,23 +18,23 @@ public:
     ~Widget();
 
 private slots:
-    void readFortune();
+    void readyReadFromSocket();
     void displayError(QAbstractSocket::SocketError socketError);
-    void requestNewFortune();
 
 private slots:
     void on_pushButtonSelectFile_clicked();
+    void on_pushButtonConnect_clicked();
+    void on_pushButtonAbord_clicked();
 
-    void on_pushButtonGetFortune_clicked();
+    void on_pushButtonStartTransfer_clicked();
 
 private:
     QHostAddress getIP();
+    void startTransfer(QString textToTransfer);
 
 private:
     Ui::Widget *ui;
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
-
-     QString currentFortune;
 };
 #endif // WIDGET_H

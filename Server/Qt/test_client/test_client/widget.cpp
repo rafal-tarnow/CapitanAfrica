@@ -12,57 +12,44 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->pushButtonGetFortune->setDefault(true);
-    //ui->pushButtonGetFortune->setEnabled(false);
-
     tcpSocket = new QTcpSocket(this);
 
-        in.setDevice(tcpSocket);
-        in.setVersion(QDataStream::Qt_4_0);
-
-        connect(tcpSocket, &QIODevice::readyRead, this, &Widget::readFortune);
-    //! [2] //! [4]
-        connect(tcpSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-    //! [3]
-                this, &Widget::displayError);
 }
 
 Widget::~Widget()
 {
     delete ui;
-    delete tcpSocket;
 }
 
-void Widget::requestNewFortune()
+void Widget::on_pushButtonConnect_clicked()
 {
-    ui->pushButtonGetFortune->setEnabled(false);
-    tcpSocket->abort();
-//! [7]
     tcpSocket->connectToHost(getIP().toString(),1234);
-//! [7]
 }
 
-QHostAddress Widget::getIP()
+void Widget::on_pushButtonStartTransfer_clicked()
 {
-    QHostAddress address;
-    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-    // use the first non-localhost IPv4 address
-    for (int i = 0; i < ipAddressesList.size(); ++i) {
-        if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
-                ipAddressesList.at(i).toIPv4Address()) {
-            return ipAddressesList.at(i);
-        }
-    }
-    // if we did not find one, use IPv4 localhost
-    return QHostAddress(QHostAddress::LocalHost);
+    startTransfer("Data form client!");
 }
 
-void Widget::on_pushButtonGetFortune_clicked()
+void Widget::on_pushButtonAbord_clicked()
 {
-    requestNewFortune();
+    tcpSocket->abort();
 }
 
-void Widget::readFortune()
+void Widget::startTransfer(QString textToTransfer)
+{
+    qDebug() << "startTransfer()";
+
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_10);
+
+    out << textToTransfer;
+
+    tcpSocket->write(block);
+}
+
+void Widget::readyReadFromSocket()
 {
     in.startTransaction();
 
@@ -72,20 +59,13 @@ void Widget::readFortune()
     if (!in.commitTransaction())
         return;
 
-    if (nextFortune == currentFortune) {
-        QTimer::singleShot(0, this, &Widget::requestNewFortune);
-        return;
-    }
-
-    currentFortune = nextFortune;
-    ui->statusLabel->setText(currentFortune);
-    ui->pushButtonGetFortune->setEnabled(true);
+    ui->statusLabel->setText(nextFortune);
 }
 
 void Widget::on_pushButtonSelectFile_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open Image"), QStandardPaths::writableLocation(QStandardPaths::DesktopLocation), tr("Image Files (*.png *.jpg *.bmp)"));
+                                                    tr("Open Image"), QStandardPaths::writableLocation(QStandardPaths::DesktopLocation), tr("Image Files (*.png *.jpg *.bmp)"));
 }
 
 
@@ -111,8 +91,27 @@ void Widget::displayError(QAbstractSocket::SocketError socketError)
                                  tr("The following error occurred: %1.")
                                  .arg(tcpSocket->errorString()));
     }
-
-    ui->pushButtonGetFortune->setEnabled(true);
 }
+
+QHostAddress Widget::getIP()
+{
+    QHostAddress address;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    // use the first non-localhost IPv4 address
+    for (int i = 0; i < ipAddressesList.size(); ++i) {
+        if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
+                ipAddressesList.at(i).toIPv4Address()) {
+            return ipAddressesList.at(i);
+        }
+    }
+    // if we did not find one, use IPv4 localhost
+    return QHostAddress(QHostAddress::LocalHost);
+}
+
+
+
+
+
+
 
 

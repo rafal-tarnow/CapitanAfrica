@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTcpServer>
+#include "../../libs/client.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -26,28 +27,10 @@ private:
 
     Ui::Widget *ui;
     QTcpServer * tcpServer;
+    int connectionCount = 0;
 };
 
 
-class ServerClient : public QObject
-{
-    Q_OBJECT
 
-public:
-    ServerClient(QTcpSocket *clientSocket);
-    ~ServerClient();
-
-public slots:
-    void startTransfer();
-
-private slots:
-    void displayError(QAbstractSocket::SocketError socketError);
-
-
-
-
-private:
-    QTcpSocket *clientSocket;
-};
 
 #endif // WIDGET_H
