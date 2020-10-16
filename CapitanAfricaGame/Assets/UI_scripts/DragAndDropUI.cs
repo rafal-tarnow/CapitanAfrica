@@ -13,6 +13,7 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public bool Draggable { get; set; }
 
     private RectTransform rectTransform;
+    private RectTransform childImageRectTransform;
     private RectTransform parentRectTransform;
     private RectTransform inventoryRectTransform;
     private Transform parent;
@@ -34,6 +35,8 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         parentHeight = parentRectTransform.sizeDelta.y;
 
         inventoryRectTransform = parent.parent.parent.GetComponent<RectTransform>();
+
+        childImageRectTransform = transform.GetChild(0).GetComponent<RectTransform>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -92,8 +95,8 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
         ExecuteEvents.Execute(scrollRect.gameObject, eventData, ExecuteEvents.endDragHandler);
 
-        //add new fant if drag ended outside inventory panel
-        if(!rectTransform.Overlaps(inventoryRectTransform))
+        //add new fant if fant image is outside inventory panel
+        if(!childImageRectTransform.Overlaps(inventoryRectTransform))
         {
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
             Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), prefab.transform.rotation);
