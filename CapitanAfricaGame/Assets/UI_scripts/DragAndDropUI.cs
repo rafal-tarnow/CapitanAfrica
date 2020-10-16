@@ -14,6 +14,7 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     private RectTransform rectTransform;
     private RectTransform parentRectTransform;
+    private RectTransform inventoryRectTransform;
     private Transform parent;
     private bool dragScrollView = false;
     public Canvas canvas;
@@ -24,22 +25,23 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     [SerializeField] private ScrollRect scrollRect;
     float parentHeight = 0.0f;
 
-private void Awake() {
-    rectTransform = GetComponent<RectTransform>();
-    parent = rectTransform.parent;
+    private void Awake() 
+    {
+        rectTransform = GetComponent<RectTransform>();
+        parent = rectTransform.parent;
 
-    parentRectTransform = parent.GetComponent<RectTransform>();
-    parentHeight = parentRectTransform.sizeDelta.y;
-    
-}
+        parentRectTransform = parent.GetComponent<RectTransform>();
+        parentHeight = parentRectTransform.sizeDelta.y;
+
+        inventoryRectTransform = parent.parent.parent.GetComponent<RectTransform>();
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!Draggable)
         {
             return;
         }
-
-
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -89,12 +91,19 @@ private void Awake() {
     {
 
         ExecuteEvents.Execute(scrollRect.gameObject, eventData, ExecuteEvents.endDragHandler);
+
+        //add new fant if drag ended outside inventory panel
+        if(!rectTransform.Overlaps(inventoryRectTransform))
+        {
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
+            Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), prefab.transform.rotation);
+        }
+
+        //return ui image to start position
         rectTransform.SetParent(parent);
         rectTransform.anchoredPosition = new Vector2(0,0);
 
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
-        Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), prefab.transform.rotation);
-
+        //propagate information to system that inventory drag ended
         OnUIInventoryDragEvent?.Invoke(false);
     }
 }
