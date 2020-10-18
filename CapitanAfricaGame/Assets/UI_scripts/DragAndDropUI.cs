@@ -73,6 +73,7 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public void OnDrag(PointerEventData eventData)
     {
+
             Debug.Log("Event data pos = " + eventData.position.ToString());
             
 

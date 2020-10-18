@@ -36,6 +36,7 @@ TagManager:
   - ButtonSelectLevelLeft
   - ButtonSelectLevelRight
   - ButtonBack
+  - ButtonTrash
   layers:
   - Default
   - TransparentFX

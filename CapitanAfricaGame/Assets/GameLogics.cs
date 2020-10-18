@@ -18,6 +18,7 @@ public class GameLogics : MonoBehaviour
     {
         ADD_FANT,
         EDIT_GROUND,
+        DELETE_FANT,
         NONE
     }
     EditSubMode editSubMode = EditSubMode.NONE;
@@ -46,6 +47,7 @@ public class GameLogics : MonoBehaviour
     private GameObject buttonDrag;
     private GameObject buttonLoad;
     private GameObject buttonEditGround;
+    private GameObject buttonTrash;
     private GameObject inventoryUI;
 
     private GameObject buttonSave;
@@ -96,6 +98,9 @@ public class GameLogics : MonoBehaviour
 
         if (buttonEditGround == null)
             buttonEditGround = GameObject.FindWithTag("ButtonEditGround");
+
+        if(buttonTrash == null)
+            buttonTrash = GameObject.FindWithTag("ButtonTrash");
 
         if(buttonBack == null)
             buttonBack = GameObject.FindWithTag("ButtonBack");
@@ -184,7 +189,23 @@ public class GameLogics : MonoBehaviour
             editSubMode = EditSubMode.NONE;
             updateUIState();
         }
+    }
 
+    public void onTrashButton(bool state)
+    {
+        if (state)
+        {
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.DELETE_FANT))
+            {
+                editSubMode = EditSubMode.DELETE_FANT;
+                updateUIState();
+            }
+        }
+        else
+        {
+            editSubMode = EditSubMode.NONE;
+            updateUIState();
+        }
     }
 
     public void onDragButton(bool state)
@@ -250,13 +271,15 @@ public class GameLogics : MonoBehaviour
             buttonSave.SetActive(false);
             buttonLoad.SetActive(false);
             buttonEditGround.SetActive(false);
+            buttonTrash.SetActive(false);
             textMoney.SetActive(true);
             textDistance.SetActive(true);
             imageFuel.SetActive(true);
             inventoryUI.SetActive(false);
             buttonBack.SetActive(true);
 
-            setAllFantsOpacityAndDragable(1.0f, false);
+            groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1.0f);
+            setAllFants_Opacity_Dragable_Deletable(1.0f, false, false);
 
         }
         else if (mode == MainMode.EDIT)
@@ -290,65 +313,91 @@ public class GameLogics : MonoBehaviour
             groundEditable.GetComponent<EditableGround>().enabled = true;
 
             buttonEditGround.SetActive(true);
+            buttonTrash.SetActive(true);
 
             if (editSubMode == EditSubMode.ADD_FANT)
             {
                 buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
                 buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                
                 groundEditable.GetComponent<EditableGround>().enableEditing(false);
-                //groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 0.3f);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1.0f);
                 inventoryUI.SetActive(true);
                 inventoryUI.GetComponent<UnityEngine.UI.ScrollRect>().horizontalNormalizedPosition = 1.0f;
 
-                setAllFantsOpacityAndDragable(1.0f, true);
+                setAllFants_Opacity_Dragable_Deletable(1.0f, true, false);
             }
             else if (editSubMode == EditSubMode.EDIT_GROUND)
             {
                 buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
                 buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
+                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
 
                 groundEditable.GetComponent<EditableGround>().enableEditing(true);
-                //groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1f);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1f);
                 inventoryUI.SetActive(false);
 
-                setAllFantsOpacityAndDragable(0.3f, false);
+                setAllFants_Opacity_Dragable_Deletable(0.3f, false, false);
+            }
+            else if (editSubMode == EditSubMode.DELETE_FANT)
+            {
+                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
+
+                groundEditable.GetComponent<EditableGround>().enableEditing(false);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 0.8f);
+                inventoryUI.SetActive(false);
+
+                setAllFants_Opacity_Dragable_Deletable(1.0f, false, true);
             }
             else if (editSubMode == EditSubMode.NONE)
             {
                 buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
                 buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
 
                 groundEditable.GetComponent<EditableGround>().enableEditing(false);
-                //groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 0.3f);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1.0f);
                 inventoryUI.SetActive(false);
 
-                setAllFantsOpacityAndDragable(0.3f, false);
+                setAllFants_Opacity_Dragable_Deletable(0.3f, false, false);
             }
         }
 
     }
 
-    void setAllFantsOpacityAndDragable(float opacity, bool dragable)
+    void setAllFants_Opacity_Dragable_Deletable(float opacity, bool dragable, bool deletable)
     {
-        setGivenTagFantsOpacityAndDragable("FuelCanister", opacity, dragable);
-        setGivenTagFantsOpacityAndDragable("Coin", opacity, dragable);
-        setGivenTagFantsOpacityAndDragable("Meta", opacity, dragable);
-        setGivenTagFantsOpacityAndDragable("Bomb", opacity, dragable);
-        setGivenTagFantsOpacityAndDragable("Box", opacity, dragable);
-        setGivenTagFantsOpacityAndDragable("Board_0", opacity, dragable);
-        setGivenTagFantsOpacityAndDragable("Board_30", opacity, dragable);
-        setGivenTagFantsOpacityAndDragable("Board_m30", opacity, dragable);
+        setGivenTagFantsOpacityAndDragable("FuelCanister", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Coin", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Meta", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Bomb", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Box", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Board_0", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Board_30", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Board_m30", opacity, dragable, deletable);
 
     }
 
-    void setGivenTagFantsOpacityAndDragable(string tag, float opacity, bool dragable)
+    void setGivenTagFantsOpacityAndDragable(string tag, float opacity, bool dragable, bool deletable)
     {
         GameObject[] fants;
         fants = GameObject.FindGameObjectsWithTag(tag);
         foreach (var fant in fants)
         {
             fant.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, opacity);
-            fant.GetComponent<DragableSprite>().enabled = dragable;
+
+            if(dragable == false)
+                Destroy(fant.GetComponent<DragableSprite>());
+            else
+                fant.AddComponent<DragableSprite>();
+
+            if(deletable == false)
+                Destroy(fant.GetComponent<TouchDeleteSprite>());
+            else
+                fant.AddComponent<TouchDeleteSprite>();
         }
     }
 

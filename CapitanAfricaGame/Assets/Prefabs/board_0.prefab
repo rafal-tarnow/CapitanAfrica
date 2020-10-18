@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5195222079632641291}
   - component: {fileID: 5195222079632641284}
   - component: {fileID: 1814373837847078303}
+  - component: {fileID: -1173207745758546750}
   m_Layer: 0
   m_Name: board_0
   m_TagString: Board_0
@@ -140,7 +141,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5195222079632641285}
-  m_BodyType: 0
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -153,3 +154,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-1173207745758546750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5195222079632641285}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd757afa2a8147b31938f6aa693911d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

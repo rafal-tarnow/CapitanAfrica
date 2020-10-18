@@ -41,7 +41,7 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
             Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D>();
             if (rigidbody != null)
             { //errors here
-                rigidbody.isKinematic = true;
+                rigidbody.bodyType = RigidbodyType2D.Kinematic;
             }
 
             Vector3 mousePos;
@@ -68,7 +68,7 @@ public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHa
             Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D>();
             if (rigidbody != null)
             { //errors here
-                rigidbody.isKinematic = false;
+                rigidbody.bodyType = RigidbodyType2D.Static;
             }
     }
 
