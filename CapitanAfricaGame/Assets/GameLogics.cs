@@ -141,6 +141,12 @@ public class GameLogics : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void onButtonRelovadLevel()
+    {
+        LoadLevel();
+        updateUIState();
+    }
+
     public void OnUIInventoryDragEvent(bool isDragging)
     {
         Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if inventory is dragging disable pan zoom

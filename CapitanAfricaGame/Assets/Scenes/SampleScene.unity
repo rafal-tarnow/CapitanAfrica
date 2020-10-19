@@ -3381,7 +3381,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 227302620}
         m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
-        m_MethodName: LoadLevel
+        m_MethodName: onButtonRelovadLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
