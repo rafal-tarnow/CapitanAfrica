@@ -734,6 +734,7 @@ MonoBehaviour:
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
+  newInstanceCreated: 0
   scrollRect: {fileID: 1296211018}
 --- !u!114 &270424566
 MonoBehaviour:
@@ -918,6 +919,7 @@ MonoBehaviour:
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
+  newInstanceCreated: 0
   scrollRect: {fileID: 1296211018}
 --- !u!114 &406942226
 MonoBehaviour:
@@ -1309,6 +1311,7 @@ MonoBehaviour:
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
+  newInstanceCreated: 0
   scrollRect: {fileID: 1296211018}
 --- !u!114 &591555445
 MonoBehaviour:
@@ -1810,6 +1813,7 @@ MonoBehaviour:
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
+  newInstanceCreated: 0
   scrollRect: {fileID: 1296211018}
 --- !u!114 &776244732
 MonoBehaviour:
@@ -2050,6 +2054,7 @@ MonoBehaviour:
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
+  newInstanceCreated: 0
   scrollRect: {fileID: 1296211018}
 --- !u!222 &818799788
 CanvasRenderer:
@@ -2503,6 +2508,7 @@ MonoBehaviour:
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
+  newInstanceCreated: 0
   scrollRect: {fileID: 1296211018}
 --- !u!1 &900356503
 GameObject:
@@ -2574,6 +2580,7 @@ MonoBehaviour:
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
+  newInstanceCreated: 0
   scrollRect: {fileID: 1296211018}
 --- !u!114 &900356506
 MonoBehaviour:
@@ -2683,6 +2690,7 @@ MonoBehaviour:
   canvas: {fileID: 34357983}
   deltaPos: {x: 0, y: 0}
   prevHorizontalNormalizedPosition: 0
+  newInstanceCreated: 0
   scrollRect: {fileID: 1296211018}
 --- !u!114 &1105172133
 MonoBehaviour:

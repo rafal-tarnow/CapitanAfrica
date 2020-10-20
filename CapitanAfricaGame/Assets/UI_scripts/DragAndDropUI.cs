@@ -22,6 +22,10 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public Vector2 deltaPos = new Vector2(0,0);
 
     public float prevHorizontalNormalizedPosition;
+    public bool newInstanceCreated = false;
+    private GameObject newObject;
+    private float newObjectWidht;
+    private float newObjectHeight;
 
     [SerializeField] private ScrollRect scrollRect;
     float parentHeight = 0.0f;
@@ -37,6 +41,8 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         inventoryRectTransform = parent.parent.parent.GetComponent<RectTransform>();
 
         childImageRectTransform = transform.GetChild(0).GetComponent<RectTransform>();
+
+        newInstanceCreated = false;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -89,23 +95,53 @@ public class DragAndDropUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             if(dragScrollView)
                 ExecuteEvents.Execute(scrollRect.gameObject, eventData, ExecuteEvents.dragHandler);
 
+
+
+        if(!childImageRectTransform.Overlaps(inventoryRectTransform))
+        {
+            this.transform.GetChild(0).GetComponent<Image> ().color = new Color (1f, 1f, 1f, 0.0f);
+
+            if(newInstanceCreated == false)
+            {
+                newInstanceCreated = true;
+                Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
+                newObject = Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), prefab.transform.rotation);
+
+                newObjectWidht = newObject.GetComponent<Renderer>().bounds.size.x;
+                newObjectHeight = newObject.GetComponent<Renderer>().bounds.size.y;
+            }
+        }
+        else
+        {
+            this.transform.GetChild(0).GetComponent<Image> ().color = new Color (1f, 1f, 1f, 1.0f);
+
+            if(newInstanceCreated == true)
+            {
+                newInstanceCreated = false;
+                Destroy(newObject);
+            }
+        }
+
+        if(newInstanceCreated)
+        {
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint (eventData.position);
+            newObject.transform.localPosition = new Vector3 (worldPos.x - newObjectWidht/2.0f, worldPos.y + newObjectHeight/2.0f, 0);
+        }
+
+
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
 
-        ExecuteEvents.Execute(scrollRect.gameObject, eventData, ExecuteEvents.endDragHandler);
+        newInstanceCreated = false;
 
-        //add new fant if fant image is outside inventory panel
-        if(!childImageRectTransform.Overlaps(inventoryRectTransform))
-        {
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
-            Instantiate(prefab, new Vector3(worldPos.x, worldPos.y, 0), prefab.transform.rotation);
-        }
+        ExecuteEvents.Execute(scrollRect.gameObject, eventData, ExecuteEvents.endDragHandler);
 
         //return ui image to start position
         rectTransform.SetParent(parent);
         rectTransform.anchoredPosition = new Vector2(0,0);
+        this.transform.GetChild(0).GetComponent<Image> ().color = new Color (1f, 1f, 1f, 1.0f);
 
         //propagate information to system that inventory drag ended
         OnUIInventoryDragEvent?.Invoke(false);
