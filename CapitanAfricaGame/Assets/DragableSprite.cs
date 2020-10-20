@@ -4,95 +4,65 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class DragableSprite : MonoBehaviour/*, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler*/
-{
+public class DragableSprite : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IEndDragHandler, IDragHandler {
     public static GameObject gameLogics;
     private float startPosX;
     private float startPoxY;
-    private bool isBeginHeld = false;
-    public UnityEvent<GameObject> OnPositionChanged;
-    public UnityEvent<GameObject> OnBeginDrag;
-    public UnityEvent<GameObject> OnEndDrag;
+
+    public UnityEvent<GameObject> OnSpriteDrag;
+    public UnityEvent<GameObject> OnSpriteBeginDrag;
+    public UnityEvent<GameObject> OnSpriteEndDrag;
     // Update is called once per frame
 
-    void Start()
-    {
+    void Start () {
         if (gameLogics == null)
-            gameLogics = GameObject.FindWithTag("GameLogics");
+            gameLogics = GameObject.FindWithTag ("GameLogics");
     }
-    void Update()
-    {
-        if (isBeginHeld == true)
-        {
-            Vector3 mousePos;
-            mousePos = Input.mousePosition;
-            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
 
-            this.gameObject.transform.localPosition = new Vector3(mousePos.x - startPosX, mousePos.y - startPoxY, 0);
-            OnPositionChanged?.Invoke(this.gameObject);
+    public void OnPointerDown (PointerEventData eventData) {
+        //Debug.Log ("Coin OnPointerDown()");
+
+        Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D> ();
+        if (rigidbody != null) { //errors here
+            rigidbody.bodyType = RigidbodyType2D.Kinematic;
+        }
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint (eventData.position);
+
+        startPosX = worldPos.x - this.transform.localPosition.x;
+        startPoxY = worldPos.y - this.transform.localPosition.y;
+
+        gameLogics.GetComponent<GameLogics> ().OnDragSprite (true);
+        OnSpriteBeginDrag?.Invoke (this.gameObject);
+    }
+
+    public void OnPointerUp (PointerEventData eventData) {
+        //Debug.Log ("Coin OnPointerUp()");
+
+        OnSpriteEndDrag?.Invoke (this.gameObject);
+        gameLogics.GetComponent<GameLogics> ().OnDragSprite (false);
+
+        Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D> ();
+        if (rigidbody != null) { //errors here
+            rigidbody.bodyType = RigidbodyType2D.Static;
         }
     }
 
-    private void OnMouseDown()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            isBeginHeld = true;
-            Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D>();
-            if (rigidbody != null)
-            { //errors here
-                rigidbody.bodyType = RigidbodyType2D.Kinematic;
-            }
-
-            Vector3 mousePos;
-            mousePos = Input.mousePosition;
-            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-
-            startPosX = mousePos.x - this.transform.localPosition.x;
-            startPoxY = mousePos.y - this.transform.localPosition.y;
-
-
-            gameLogics.GetComponent<GameLogics>().OnDragSprite(true);
-            OnBeginDrag?.Invoke(this.gameObject);
-        }
+    public void OnBeginDrag (PointerEventData eventData) {
+        //Debug.Log ("Coin OnBeginDrag()");
     }
 
-    private void OnMouseUp()
-    {
-        Debug.Log("Coin Mouse Up");
-        isBeginHeld = false;
+    public void OnDrag (PointerEventData eventData) {
+        //Debug.Log ("Coin OnDrag()");
 
-        OnEndDrag?.Invoke(this.gameObject);
-        gameLogics.GetComponent<GameLogics>().OnDragSprite(false);
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint (eventData.position);
 
-            Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D>();
-            if (rigidbody != null)
-            { //errors here
-                rigidbody.bodyType = RigidbodyType2D.Static;
-            }
+        this.gameObject.transform.localPosition = new Vector3 (worldPos.x - startPosX, worldPos.y - startPoxY, 0);
+        OnSpriteDrag?.Invoke (this.gameObject);
     }
 
-    // public void OnPointerDown(PointerEventData eventData)
-    // {
-    //     Debug.Log("Coin OnPointerDown()");
-    // }
-
-    // public void OnBeginDrag(PointerEventData eventData)
-    // {
-    //     Debug.Log("Coin OnBeginDrag()");
-    // }
-
-    // public void OnDrag(PointerEventData eventData)
-    // {
-    //     Debug.Log("Coin OnDrag()");
-    //     Vector3 worldPosition = Camera.main.ScreenToWorldPoint(eventData.position);
-    //     worldPosition.z = 0.0f;
-    //     this.gameObject.transform.localPosition = worldPosition;
-    // }
-    // public void OnEndDrag(PointerEventData eventData)
-    // {
-    //     Debug.Log("Coin OnEndDrag()");
-    // }
-
+    public void OnEndDrag (PointerEventData eventData) {
+        //Debug.Log ("Coin OnEndDrag()");
+    }
 
 }

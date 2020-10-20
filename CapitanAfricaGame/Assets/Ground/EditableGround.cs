@@ -87,9 +87,9 @@ public class EditableGround : MonoBehaviour
         {
             GameObject cloneRedDot = Instantiate(redDot) as GameObject;
             cloneRedDot.transform.position = spline.GetPosition(i);
-            cloneRedDot.GetComponent<DragableSprite>().OnBeginDrag.AddListener(onRedDotBeginDrag);
-            cloneRedDot.GetComponent<DragableSprite>().OnPositionChanged.AddListener(onRedDotDrag);
-            cloneRedDot.GetComponent<DragableSprite>().OnEndDrag.AddListener(onRedDotEndDrag);
+            cloneRedDot.GetComponent<DragableSprite>().OnSpriteBeginDrag.AddListener(onRedDotBeginDrag);
+            cloneRedDot.GetComponent<DragableSprite>().OnSpriteDrag.AddListener(onRedDotDrag);
+            cloneRedDot.GetComponent<DragableSprite>().OnSpriteEndDrag.AddListener(onRedDotEndDrag);
             redDotList.Add(cloneRedDot);
             redDotMap.Add(cloneRedDot, i);
         }

@@ -1,21 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.IO;
 
-public class GameLogics : MonoBehaviour
-{
+public class GameLogics : MonoBehaviour {
 
-    enum MainMode
-    {
+    enum MainMode {
         PLAY,
         EDIT,
     }
     MainMode mode = MainMode.PLAY;
 
-    enum EditSubMode
-    {
+    enum EditSubMode {
         ADD_FANT,
         EDIT_GROUND,
         DELETE_FANT,
@@ -56,183 +53,176 @@ public class GameLogics : MonoBehaviour
     private GameObject imageFuel;
     float cameraStartupOrthographicSize;
 
-    void Awake()
-    {
-        SaveSystem.Init();
+    void Awake () {
+        SaveSystem.Init ();
 
         if (groundEditable == null)
-            groundEditable = GameObject.FindWithTag("GroundEditable");
+            groundEditable = GameObject.FindWithTag ("GroundEditable");
 
         if (carController == null)
-            carController = GameObject.FindWithTag("CarController");
+            carController = GameObject.FindWithTag ("CarController");
 
         if (backgroundSprite == null)
-            backgroundSprite = GameObject.FindWithTag("BackgroundSprite");
+            backgroundSprite = GameObject.FindWithTag ("BackgroundSprite");
 
         if (buttonBrake == null)
-            buttonBrake = GameObject.FindWithTag("ButtonBrake");
+            buttonBrake = GameObject.FindWithTag ("ButtonBrake");
 
         if (buttonGas == null)
-            buttonGas = GameObject.FindWithTag("ButtonGas");
+            buttonGas = GameObject.FindWithTag ("ButtonGas");
 
         if (buttonReload == null)
-            buttonReload = GameObject.FindWithTag("ButtonReload");
+            buttonReload = GameObject.FindWithTag ("ButtonReload");
 
         if (buttonDrag == null)
-            buttonDrag = GameObject.FindWithTag("ButtonDrag");
+            buttonDrag = GameObject.FindWithTag ("ButtonDrag");
 
         if (buttonSave == null)
-            buttonSave = GameObject.FindWithTag("ButtonSave");
+            buttonSave = GameObject.FindWithTag ("ButtonSave");
 
         if (buttonLoad == null)
-            buttonLoad = GameObject.FindWithTag("ButtonLoad");
+            buttonLoad = GameObject.FindWithTag ("ButtonLoad");
 
         if (textMoney == null)
-            textMoney = GameObject.FindWithTag("TextMoney");
+            textMoney = GameObject.FindWithTag ("TextMoney");
 
         if (textDistance == null)
-            textDistance = GameObject.FindWithTag("TextDistance");
+            textDistance = GameObject.FindWithTag ("TextDistance");
 
         if (imageFuel == null)
-            imageFuel = GameObject.FindWithTag("ImageFuel");
+            imageFuel = GameObject.FindWithTag ("ImageFuel");
 
         if (buttonEditGround == null)
-            buttonEditGround = GameObject.FindWithTag("ButtonEditGround");
+            buttonEditGround = GameObject.FindWithTag ("ButtonEditGround");
 
-        if(buttonTrash == null)
-            buttonTrash = GameObject.FindWithTag("ButtonTrash");
+        if (buttonTrash == null)
+            buttonTrash = GameObject.FindWithTag ("ButtonTrash");
 
-        if(buttonBack == null)
-            buttonBack = GameObject.FindWithTag("ButtonBack");
+        if (buttonBack == null)
+            buttonBack = GameObject.FindWithTag ("ButtonBack");
 
         if (inventoryUI == null)
-            inventoryUI = GameObject.FindWithTag("InventoryUI");
-
+            inventoryUI = GameObject.FindWithTag ("InventoryUI");
 
     }
 
-    private void Start()
-    {
+    private void Start () {
         cameraStartupOrthographicSize = Camera.main.orthographicSize;
 
         mode = MainMode.PLAY;
         editSubMode = EditSubMode.NONE;
 
-
-        LoadLevel();
-        updateUIState();
+        LoadLevel ();
+        updateUIState (true);
     }
 
-    public void OnPrefabDropEvent(GameObject prefab)
-    {
-        Debug.Log("Game logics, on prefab drop event");
+    public void OnPrefabDropEvent (GameObject prefab) {
+        Debug.Log ("Game logics, on prefab drop event");
         //Instantiate(prefab, new Vector3(5, 0, 0), Quaternion.identity);
 
     }
 
-    public void onBackButtonPressed()
-    {
-        SceneManager.LoadScene("LevelSelectScene",LoadSceneMode.Single);
+    public void onBackButtonPressed () {
+        SceneManager.LoadScene ("LevelSelectScene", LoadSceneMode.Single);
     }
 
-    public void onReloadButtonReleased(bool pressed)
-    {
+    public void onReloadButtonReleased (bool pressed) {
         if (!pressed) // if released
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
     }
 
-    public void onButtonRelovadLevel()
-    {
-        LoadLevel();
-        updateUIState();
+    public void onButtonRelovadLevel () {
+        LoadLevel ();
+        updateUIState (true);
     }
 
-    public void OnUIInventoryDragEvent(bool isDragging)
-    {
-        Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if inventory is dragging disable pan zoom
+    public void OnUIInventoryDragEvent (bool isDragging) {
+        //Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if inventory is dragging disable pan zoom
     }
-    public void OnDragRedDotEvent(bool isDragging)
-    {
-        Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if red dot is dragging disable pan zoom
+    public void OnDragRedDotEvent (bool isDragging) {
+        //Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if red dot is dragging disable pan zoom
     }
 
-    public void OnDragSprite(bool isDragging)
-    {
-        Camera.main.GetComponent<PanZoom>().enabled = !isDragging;
+    public void OnDragSprite (bool isDragging) {
+        //Camera.main.GetComponent<PanZoom>().enabled = !isDragging;
     }
 
-
-    public void onEditPlayButton(bool edit)
-    {
-        Debug.Log("Edit " + edit.ToString());
-        if (edit)
-        {
-            mode = MainMode.EDIT;
-            LoadLevel();
-            updateUIState();
-        }
+    public void OnPanZoomActiveEvent (bool active) {
+        Debug.Log ("Game Logics OnPanZoomActiveEvent = " + active);
+        if(active)
+            setAllFants_Dragable(false);
         else
-        {
+            updateUIState(false);
+
+    //     if(active)
+    //         setAllFants_Dragable(false);
+    //     else
+    //     {
+    //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
+
+    //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
+
+    //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
+
+
+
+    //    ADD_FANT,
+    //     EDIT_GROUND,
+    //     DELETE_FANT,
+    //     NONE            updateUIState();
+    }
+
+    public void onEditPlayButton (bool edit) {
+        Debug.Log ("Edit " + edit.ToString ());
+        if (edit) {
+            mode = MainMode.EDIT;
+            LoadLevel ();
+            updateUIState (true);
+        } else {
             mode = MainMode.PLAY;
-            SaveLevel();
-            updateUIState();
+            SaveLevel ();
+            updateUIState (true);
             carController.transform.position = Camera.main.transform.position;
         }
     }
 
-    public void onEditGroundButton(bool state)
-    {
-        if (state)
-        {
-            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.EDIT_GROUND))
-            {
+    public void onEditGroundButton (bool state) {
+        if (state) {
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.EDIT_GROUND)) {
                 editSubMode = EditSubMode.EDIT_GROUND;
-                updateUIState();
+                updateUIState (true);
             }
-        }
-        else
-        {
+        } else {
             editSubMode = EditSubMode.NONE;
-            updateUIState();
+            updateUIState (true);
         }
     }
 
-    public void onTrashButton(bool state)
-    {
-        if (state)
-        {
-            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.DELETE_FANT))
-            {
+    public void onTrashButton (bool state) {
+        if (state) {
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.DELETE_FANT)) {
                 editSubMode = EditSubMode.DELETE_FANT;
-                updateUIState();
+                updateUIState (true);
             }
-        }
-        else
-        {
+        } else {
             editSubMode = EditSubMode.NONE;
-            updateUIState();
+            updateUIState (true);
         }
     }
 
-    public void onDragButton(bool state)
-    {
-        if (state)
-        {
-            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.ADD_FANT))
-            {
+    public void onDragButton (bool state) {
+        if (state) {
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.ADD_FANT)) {
                 editSubMode = EditSubMode.ADD_FANT;
-                updateUIState();
+                updateUIState (true);
             }
-        }
-        else
-        {
+        } else {
             editSubMode = EditSubMode.NONE;
-            updateUIState();
+            updateUIState (true);
         }
     }
 
-    public void onPanZoomButton(bool state)
-    {
+    public void onPanZoomButton (bool state) {
         // if (state)
         // {
         //     if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.EDIT_PAN_ZOOM))
@@ -248,393 +238,369 @@ public class GameLogics : MonoBehaviour
         // }
     }
 
-    public void onMetaReached()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    public void onMetaReached () {
+        SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
     }
 
-    private void updateUIState()
-    {
-        if (mode == MainMode.PLAY)
-        {
+    private void updateUIState (bool alignInventory) {
+        if (mode == MainMode.PLAY) {
 
-            backgroundSprite.SetActive(true);
-            Camera.main.GetComponent<BackgroundStatic>().enabled = true;
-            Camera.main.GetComponent<PanZoom>().enabled = false;
+            backgroundSprite.SetActive (true);
+            Camera.main.GetComponent<BackgroundStatic> ().enabled = true;
+            Camera.main.GetComponent<PanZoom> ().enabled = false;
             Camera.main.orthographicSize = cameraStartupOrthographicSize;
 
-            groundEditable.SetActive(true);
-            groundEditable.GetComponent<EditableGround>().enabled = false; // in play mode edition is disabled
+            groundEditable.SetActive (true);
+            groundEditable.GetComponent<EditableGround> ().enabled = false; // in play mode edition is disabled
 
-            carController.SetActive(true);
+            carController.SetActive (true);
             // carController.GetComponent<FollowByCamera>().enabled = false;
             // carController.GetComponent<CarController>().enabled = true;
 
-            buttonGas.SetActive(true);
-            buttonBrake.SetActive(true);
-            buttonReload.SetActive(true);
-            buttonDrag.SetActive(false);
-            buttonSave.SetActive(false);
-            buttonLoad.SetActive(false);
-            buttonEditGround.SetActive(false);
-            buttonTrash.SetActive(false);
-            textMoney.SetActive(true);
-            textDistance.SetActive(true);
-            imageFuel.SetActive(true);
-            inventoryUI.SetActive(false);
-            buttonBack.SetActive(true);
+            buttonGas.SetActive (true);
+            buttonBrake.SetActive (true);
+            buttonReload.SetActive (true);
+            buttonDrag.SetActive (false);
+            buttonSave.SetActive (false);
+            buttonLoad.SetActive (false);
+            buttonEditGround.SetActive (false);
+            buttonTrash.SetActive (false);
+            textMoney.SetActive (true);
+            textDistance.SetActive (true);
+            imageFuel.SetActive (true);
+            inventoryUI.SetActive (false);
+            buttonBack.SetActive (true);
 
-            groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1.0f);
-            setAllFants_Opacity_Dragable_Deletable(1.0f, false, false);
+            groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
+            setAllFants_Opacity_Dragable_Deletable (1.0f, false, false);
 
-        }
-        else if (mode == MainMode.EDIT)
-        {
+        } else if (mode == MainMode.EDIT) {
 
             //carController.GetComponent<FollowByCamera>().enabled = true;
             //carController.GetComponent<CarController>().enabled = false;
             //carController.GetComponent<Rigidbody2D>().isKinematic = true;
-            carController.transform.eulerAngles = new Vector3(0, 0, 0);
-            carController.SetActive(false);
+            carController.transform.eulerAngles = new Vector3 (0, 0, 0);
+            carController.SetActive (false);
 
+            Camera.main.GetComponent<BackgroundStatic> ().enabled = false;
+            Camera.main.GetComponent<PanZoom> ().enabled = true;
 
+            backgroundSprite.SetActive (false);
+            buttonGas.SetActive (false);
+            buttonBrake.SetActive (false);
+            buttonReload.SetActive (false);
+            buttonDrag.SetActive (true);
+            buttonSave.SetActive (true);
+            buttonLoad.SetActive (true);
+            textMoney.SetActive (false);
+            textDistance.SetActive (false);
+            imageFuel.SetActive (false);
+            buttonBack.SetActive (false);
 
-            Camera.main.GetComponent<BackgroundStatic>().enabled = false;
-            Camera.main.GetComponent<PanZoom>().enabled = true;
+            groundEditable.SetActive (true);
+            groundEditable.GetComponent<EditableGround> ().enabled = true;
 
+            buttonEditGround.SetActive (true);
+            buttonTrash.SetActive (true);
 
-            backgroundSprite.SetActive(false);
-            buttonGas.SetActive(false);
-            buttonBrake.SetActive(false);
-            buttonReload.SetActive(false);
-            buttonDrag.SetActive(true);
-            buttonSave.SetActive(true);
-            buttonLoad.SetActive(true);
-            textMoney.SetActive(false);
-            textDistance.SetActive(false);
-            imageFuel.SetActive(false);
-            buttonBack.SetActive(false);
+ 
 
-            groundEditable.SetActive(true);
-            groundEditable.GetComponent<EditableGround>().enabled = true;
+            if (editSubMode == EditSubMode.ADD_FANT) {
+                buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
+                buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+                buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
 
-            buttonEditGround.SetActive(true);
-            buttonTrash.SetActive(true);
-
-            if (editSubMode == EditSubMode.ADD_FANT)
-            {
-                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
-                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
-                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                groundEditable.GetComponent<EditableGround> ().enableEditing (false);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
+                inventoryUI.SetActive (true);
+                if(alignInventory)
+                    inventoryUI.GetComponent<UnityEngine.UI.ScrollRect> ().horizontalNormalizedPosition = 1.0f;
                 
-                groundEditable.GetComponent<EditableGround>().enableEditing(false);
-                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1.0f);
-                inventoryUI.SetActive(true);
-                inventoryUI.GetComponent<UnityEngine.UI.ScrollRect>().horizontalNormalizedPosition = 1.0f;
+                setAllFants_Opacity_Dragable_Deletable (1.0f, true, false);
+            } else if (editSubMode == EditSubMode.EDIT_GROUND) {
+                buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+                buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
+                buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
 
-                setAllFants_Opacity_Dragable_Deletable(1.0f, true, false);
-            }
-            else if (editSubMode == EditSubMode.EDIT_GROUND)
-            {
-                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
-                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
-                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                groundEditable.GetComponent<EditableGround> ().enableEditing (true);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1f);
+                inventoryUI.SetActive (false);
 
-                groundEditable.GetComponent<EditableGround>().enableEditing(true);
-                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1f);
-                inventoryUI.SetActive(false);
+                setAllFants_Opacity_Dragable_Deletable (0.3f, false, false);
+            } else if (editSubMode == EditSubMode.DELETE_FANT) {
+                buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+                buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+                buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
 
-                setAllFants_Opacity_Dragable_Deletable(0.3f, false, false);
-            }
-            else if (editSubMode == EditSubMode.DELETE_FANT)
-            {
-                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
-                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
-                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
+                groundEditable.GetComponent<EditableGround> ().enableEditing (false);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 0.8f);
+                inventoryUI.SetActive (false);
 
-                groundEditable.GetComponent<EditableGround>().enableEditing(false);
-                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 0.8f);
-                inventoryUI.SetActive(false);
+                setAllFants_Opacity_Dragable_Deletable (1.0f, false, true);
+            } else if (editSubMode == EditSubMode.NONE) {
+                buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+                buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+                buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
 
-                setAllFants_Opacity_Dragable_Deletable(1.0f, false, true);
-            }
-            else if (editSubMode == EditSubMode.NONE)
-            {
-                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
-                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
-                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                groundEditable.GetComponent<EditableGround> ().enableEditing (false);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
+                inventoryUI.SetActive (false);
 
-                groundEditable.GetComponent<EditableGround>().enableEditing(false);
-                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer>().color = new Color(1f, 1f, 1f, 1.0f);
-                inventoryUI.SetActive(false);
-
-                setAllFants_Opacity_Dragable_Deletable(0.3f, false, false);
+                setAllFants_Opacity_Dragable_Deletable (0.3f, false, false);
             }
         }
 
     }
 
-    void setAllFants_Opacity_Dragable_Deletable(float opacity, bool dragable, bool deletable)
-    {
-        setGivenTagFantsOpacityAndDragable("FuelCanister", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable("Coin", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable("Meta", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable("Bomb", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable("Box", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable("Board_0", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable("Board_30", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable("Board_m30", opacity, dragable, deletable);
+    void setAllFants_Dragable (bool dragable) {
+        Debug.Log("GameLogics::setAllFantsDragable = " + dragable);
+        setGivenTagFantsDragable ("FuelCanister", dragable);
+        setGivenTagFantsDragable ("Coin", dragable);
+        setGivenTagFantsDragable ("Meta", dragable);
+        setGivenTagFantsDragable ("Bomb", dragable);
+        setGivenTagFantsDragable ("Box", dragable);
+        setGivenTagFantsDragable ("Board_0", dragable);
+        setGivenTagFantsDragable ("Board_30", dragable);
+        setGivenTagFantsDragable ("Board_m30", dragable);
+    }
+
+    void setAllFants_Opacity_Dragable_Deletable (float opacity, bool dragable, bool deletable) {
+        setGivenTagFantsOpacityAndDragable ("FuelCanister", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable ("Coin", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable ("Meta", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable ("Bomb", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable ("Box", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable ("Board_0", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable ("Board_30", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable ("Board_m30", opacity, dragable, deletable);
 
     }
 
-    void setGivenTagFantsOpacityAndDragable(string tag, float opacity, bool dragable, bool deletable)
-    {
+    void setGivenTagFantsDragable (string tag, bool dragable) {
         GameObject[] fants;
-        fants = GameObject.FindGameObjectsWithTag(tag);
-        foreach (var fant in fants)
-        {
-            fant.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, opacity);
-
-            if(dragable == false)
-                Destroy(fant.GetComponent<DragableSprite>());
+        fants = GameObject.FindGameObjectsWithTag (tag);
+        foreach (var fant in fants) {
+            if (dragable == false)
+                Destroy (fant.GetComponent<DragableSprite> ());
             else
-                fant.AddComponent<DragableSprite>();
+                fant.AddComponent<DragableSprite> ();
 
-            if(deletable == false)
-                Destroy(fant.GetComponent<TouchDeleteSprite>());
-            else
-                fant.AddComponent<TouchDeleteSprite>();
         }
     }
 
-    public void SaveLevel()
-    {
+    void setGivenTagFantsOpacityAndDragable (string tag, float opacity, bool dragable, bool deletable) {
+        GameObject[] fants;
+        fants = GameObject.FindGameObjectsWithTag (tag);
+        foreach (var fant in fants) {
+            fant.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, opacity);
 
-        SaveObject saveObject = new SaveObject();
-        saveObject.fantPositions = new Dictionary<string, List<Vector3>>();
+            if (dragable == false)
+                Destroy (fant.GetComponent<DragableSprite> ());
+            else
+                fant.AddComponent<DragableSprite> ();
+
+            if (deletable == false)
+                Destroy (fant.GetComponent<TouchDeleteSprite> ());
+            else
+                fant.AddComponent<TouchDeleteSprite> ();
+        }
+    }
+
+    public void SaveLevel () {
+
+        SaveObject saveObject = new SaveObject ();
+        saveObject.fantPositions = new Dictionary<string, List<Vector3>> ();
 
         //SAVE GROUND
-        saveObject.splinePoints = groundEditable.GetComponent<EditableGround>().getSplinesPointsPositions();
+        saveObject.splinePoints = groundEditable.GetComponent<EditableGround> ().getSplinesPointsPositions ();
 
         // loadFantsPositionsToSaveObjectByTag(ref saveObject, "Coin");
         // loadFantsPositionsToSaveObjectByTag(ref saveObject, "FuelCanister");
         // loadFantsPositionsToSaveObjectByTag(ref saveObject, "Meta");
 
-
-
         //SAVE COINS
         GameObject[] coins;
-        coins = GameObject.FindGameObjectsWithTag("Coin");
-        saveObject.coinsPositions = new List<Vector3>();
+        coins = GameObject.FindGameObjectsWithTag ("Coin");
+        saveObject.coinsPositions = new List<Vector3> ();
 
-        foreach (var coin in coins)
-        {
-            saveObject.coinsPositions.Add(coin.transform.position);
+        foreach (var coin in coins) {
+            saveObject.coinsPositions.Add (coin.transform.position);
         }
-
-
 
         //SAVE CANISTERS
         GameObject[] canisters;
-        canisters = GameObject.FindGameObjectsWithTag("FuelCanister");
-        saveObject.canisterPositions = new List<Vector3>();
+        canisters = GameObject.FindGameObjectsWithTag ("FuelCanister");
+        saveObject.canisterPositions = new List<Vector3> ();
 
-        foreach (var canister in canisters)
-        {
-            saveObject.canisterPositions.Add(canister.transform.position);
+        foreach (var canister in canisters) {
+            saveObject.canisterPositions.Add (canister.transform.position);
         }
 
         //SAVE METAS
         GameObject[] metas;
-        metas = GameObject.FindGameObjectsWithTag("Meta");
-        saveObject.metaPositions = new List<Vector3>();
+        metas = GameObject.FindGameObjectsWithTag ("Meta");
+        saveObject.metaPositions = new List<Vector3> ();
 
-        foreach (var meta in metas)
-        {
-            saveObject.metaPositions.Add(meta.transform.position);
+        foreach (var meta in metas) {
+            saveObject.metaPositions.Add (meta.transform.position);
         }
 
         //SAVE Bombs
         GameObject[] bombs;
-        bombs = GameObject.FindGameObjectsWithTag("Bomb");
-        saveObject.bombPositions = new List<Vector3>();
-        saveObject.bombAngles = new List<Vector3>();
+        bombs = GameObject.FindGameObjectsWithTag ("Bomb");
+        saveObject.bombPositions = new List<Vector3> ();
+        saveObject.bombAngles = new List<Vector3> ();
 
-        foreach (var bomb in bombs)
-        {
-            saveObject.bombPositions.Add(bomb.transform.position);
-            saveObject.bombAngles.Add(bomb.transform.rotation.eulerAngles);
+        foreach (var bomb in bombs) {
+            saveObject.bombPositions.Add (bomb.transform.position);
+            saveObject.bombAngles.Add (bomb.transform.rotation.eulerAngles);
         }
 
         //SAVE Box
         GameObject[] boxes;
-        boxes = GameObject.FindGameObjectsWithTag("Box");
-        saveObject.boxPositions = new List<Vector3>();
-        saveObject.boxAngles = new List<Vector3>();
+        boxes = GameObject.FindGameObjectsWithTag ("Box");
+        saveObject.boxPositions = new List<Vector3> ();
+        saveObject.boxAngles = new List<Vector3> ();
 
-        foreach (var box in boxes)
-        {
-            saveObject.boxPositions.Add(box.transform.position);
-            saveObject.boxAngles.Add(box.transform.rotation.eulerAngles);
+        foreach (var box in boxes) {
+            saveObject.boxPositions.Add (box.transform.position);
+            saveObject.boxAngles.Add (box.transform.rotation.eulerAngles);
         }
 
         //SAVE Board_0
         GameObject[] boards_0;
-        boards_0 = GameObject.FindGameObjectsWithTag("Board_0");
-        saveObject.board_0Positions = new List<Vector3>();
-        saveObject.board_0Angles = new List<Vector3>();
+        boards_0 = GameObject.FindGameObjectsWithTag ("Board_0");
+        saveObject.board_0Positions = new List<Vector3> ();
+        saveObject.board_0Angles = new List<Vector3> ();
 
-        foreach (var board in boards_0)
-        {
-            saveObject.board_0Positions.Add(board.transform.position);
-            saveObject.board_0Angles.Add(board.transform.rotation.eulerAngles);
+        foreach (var board in boards_0) {
+            saveObject.board_0Positions.Add (board.transform.position);
+            saveObject.board_0Angles.Add (board.transform.rotation.eulerAngles);
         }
 
         //SAVE Board_30
         GameObject[] boards_30;
-        boards_30 = GameObject.FindGameObjectsWithTag("Board_30");
-        saveObject.board_30Positions = new List<Vector3>();
-        saveObject.board_30Angles = new List<Vector3>();
+        boards_30 = GameObject.FindGameObjectsWithTag ("Board_30");
+        saveObject.board_30Positions = new List<Vector3> ();
+        saveObject.board_30Angles = new List<Vector3> ();
 
-        foreach (var board in boards_30)
-        {
-            saveObject.board_30Positions.Add(board.transform.position);
-            saveObject.board_30Angles.Add(board.transform.rotation.eulerAngles);
+        foreach (var board in boards_30) {
+            saveObject.board_30Positions.Add (board.transform.position);
+            saveObject.board_30Angles.Add (board.transform.rotation.eulerAngles);
         }
 
         //SAVE Board_m30
         GameObject[] boards_m30;
-        boards_m30 = GameObject.FindGameObjectsWithTag("Board_m30");
-        saveObject.board_m30Positions = new List<Vector3>();
-        saveObject.board_m30Angles = new List<Vector3>();
+        boards_m30 = GameObject.FindGameObjectsWithTag ("Board_m30");
+        saveObject.board_m30Positions = new List<Vector3> ();
+        saveObject.board_m30Angles = new List<Vector3> ();
 
-        foreach (var board in boards_m30)
-        {
-            saveObject.board_m30Positions.Add(board.transform.position);
-            saveObject.board_m30Angles.Add(board.transform.rotation.eulerAngles);
+        foreach (var board in boards_m30) {
+            saveObject.board_m30Positions.Add (board.transform.position);
+            saveObject.board_m30Angles.Add (board.transform.rotation.eulerAngles);
         }
 
-        SaveSystem.Save<SaveObject>(saveObject, "0.txt");
+        SaveSystem.Save<SaveObject> (saveObject, "0.txt");
     }
 
-    private void loadFantsPositionsToSaveObjectByTag(ref SaveObject saveObject, string tag)
-    {
+    private void loadFantsPositionsToSaveObjectByTag (ref SaveObject saveObject, string tag) {
         GameObject[] fants;
-        fants = GameObject.FindGameObjectsWithTag(tag);
-        saveObject.fantPositions[tag] = new List<Vector3>();
+        fants = GameObject.FindGameObjectsWithTag (tag);
+        saveObject.fantPositions[tag] = new List<Vector3> ();
 
-        foreach (var fant in fants)
-        {
-            saveObject.fantPositions[tag].Add(fant.transform.position);
+        foreach (var fant in fants) {
+            saveObject.fantPositions[tag].Add (fant.transform.position);
         }
     }
 
+    void DestroyAllObjects (string tag) {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag (tag);
 
-    void DestroyAllObjects(string tag)
-    {
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
-
-        for (var i = 0; i < gameObjects.Length; i++)
-        {
-            Destroy(gameObjects[i]);
+        for (var i = 0; i < gameObjects.Length; i++) {
+            Destroy (gameObjects[i]);
         }
     }
 
-    public void LoadLevel()
-    {
+    public void LoadLevel () {
 
-        DestroyAllObjects("Coin");
-        DestroyAllObjects("FuelCanister");
-        DestroyAllObjects("Meta");
-        DestroyAllObjects("Box");
-        DestroyAllObjects("Bomb");
-        DestroyAllObjects("Board_0");
-        DestroyAllObjects("Board_30");
-        DestroyAllObjects("Board_m30");
+        DestroyAllObjects ("Coin");
+        DestroyAllObjects ("FuelCanister");
+        DestroyAllObjects ("Meta");
+        DestroyAllObjects ("Box");
+        DestroyAllObjects ("Bomb");
+        DestroyAllObjects ("Board_0");
+        DestroyAllObjects ("Board_30");
+        DestroyAllObjects ("Board_m30");
 
-        SaveObject saveObject = SaveSystem.Load<SaveObject>("0.txt");
+        SaveObject saveObject = SaveSystem.Load<SaveObject> ("0.txt");
 
         //LOAD GROUND
         if (saveObject == null)
-            Debug.Log("Load retun null");
+            Debug.Log ("Load retun null");
         else
-            groundEditable.GetComponent<EditableGround>().loadPoints(saveObject.splinePoints);
+            groundEditable.GetComponent<EditableGround> ().loadPoints (saveObject.splinePoints);
 
         //LOAD COINS
-        Vector3[] coinsPos = saveObject.coinsPositions.ToArray();
+        Vector3[] coinsPos = saveObject.coinsPositions.ToArray ();
 
-        for (int i = 0; i < coinsPos.Length; i++)
-        {
-            Instantiate(coinPrefab, coinsPos[i], Quaternion.identity);
+        for (int i = 0; i < coinsPos.Length; i++) {
+            Instantiate (coinPrefab, coinsPos[i], Quaternion.identity);
         }
 
         //LOAD CANISTERS
-        Vector3[] canisterPos = saveObject.canisterPositions.ToArray();
+        Vector3[] canisterPos = saveObject.canisterPositions.ToArray ();
 
-        for (int i = 0; i < canisterPos.Length; i++)
-        {
-            Instantiate(canisterPrefab, canisterPos[i], Quaternion.identity);
+        for (int i = 0; i < canisterPos.Length; i++) {
+            Instantiate (canisterPrefab, canisterPos[i], Quaternion.identity);
         }
 
         //LOAD META
-        Vector3[] metasPos = saveObject.metaPositions.ToArray();
+        Vector3[] metasPos = saveObject.metaPositions.ToArray ();
 
-        for (int i = 0; i < metasPos.Length; i++)
-        {
-            Instantiate(metaPrefab, metasPos[i], Quaternion.identity);
+        for (int i = 0; i < metasPos.Length; i++) {
+            Instantiate (metaPrefab, metasPos[i], Quaternion.identity);
         }
 
         //LOAD Bombs
-        Vector3[] bombsPos = saveObject.bombPositions.ToArray();
-        Vector3[] bombsRot = saveObject.bombAngles.ToArray();
+        Vector3[] bombsPos = saveObject.bombPositions.ToArray ();
+        Vector3[] bombsRot = saveObject.bombAngles.ToArray ();
 
-        for (int i = 0; i < bombsPos.Length; i++)
-        {
-            Instantiate(bombPrefab, bombsPos[i], Quaternion.Euler(bombsRot[i].x, bombsRot[i].y, bombsRot[i].z));
+        for (int i = 0; i < bombsPos.Length; i++) {
+            Instantiate (bombPrefab, bombsPos[i], Quaternion.Euler (bombsRot[i].x, bombsRot[i].y, bombsRot[i].z));
         }
 
         //LOAD Boxes
-        Vector3[] boxesPos = saveObject.boxPositions.ToArray();
-        Vector3[] boxesRot = saveObject.boxAngles.ToArray();
+        Vector3[] boxesPos = saveObject.boxPositions.ToArray ();
+        Vector3[] boxesRot = saveObject.boxAngles.ToArray ();
 
-        for (int i = 0; i < boxesPos.Length; i++)
-        {
-            Instantiate(boxPrefab, boxesPos[i], Quaternion.Euler(boxesRot[i].x, boxesRot[i].y, boxesRot[i].z));
+        for (int i = 0; i < boxesPos.Length; i++) {
+            Instantiate (boxPrefab, boxesPos[i], Quaternion.Euler (boxesRot[i].x, boxesRot[i].y, boxesRot[i].z));
         }
 
         //LOAD Board_0
-        Vector3[] board_0Pos = saveObject.board_0Positions.ToArray();
-        Vector3[] board_0Rot = saveObject.board_0Angles.ToArray();
+        Vector3[] board_0Pos = saveObject.board_0Positions.ToArray ();
+        Vector3[] board_0Rot = saveObject.board_0Angles.ToArray ();
 
-        for (int i = 0; i < board_0Pos.Length; i++)
-        {
-            Instantiate(board_0Prefab, board_0Pos[i], Quaternion.Euler(board_0Rot[i].x, board_0Rot[i].y, board_0Rot[i].z));
+        for (int i = 0; i < board_0Pos.Length; i++) {
+            Instantiate (board_0Prefab, board_0Pos[i], Quaternion.Euler (board_0Rot[i].x, board_0Rot[i].y, board_0Rot[i].z));
         }
 
         //LOAD Board_30
-        Vector3[] board_30Pos = saveObject.board_30Positions.ToArray();
-        Vector3[] board_30Rot = saveObject.board_30Angles.ToArray();
+        Vector3[] board_30Pos = saveObject.board_30Positions.ToArray ();
+        Vector3[] board_30Rot = saveObject.board_30Angles.ToArray ();
 
-        for (int i = 0; i < board_30Pos.Length; i++)
-        {
-            Instantiate(board_30Prefab, board_30Pos[i], Quaternion.Euler(board_30Rot[i].x, board_30Rot[i].y, board_30Rot[i].z));
+        for (int i = 0; i < board_30Pos.Length; i++) {
+            Instantiate (board_30Prefab, board_30Pos[i], Quaternion.Euler (board_30Rot[i].x, board_30Rot[i].y, board_30Rot[i].z));
         }
 
         //LOAD Board_m30
-        Vector3[] board_m30Pos = saveObject.board_m30Positions.ToArray();
-        Vector3[] board_m30Rot = saveObject.board_m30Angles.ToArray();
+        Vector3[] board_m30Pos = saveObject.board_m30Positions.ToArray ();
+        Vector3[] board_m30Rot = saveObject.board_m30Angles.ToArray ();
 
-        for (int i = 0; i < board_m30Pos.Length; i++)
-        {
-            Instantiate(board_m30Prefab, board_m30Pos[i], Quaternion.Euler(board_m30Rot[i].x, board_m30Rot[i].y, board_m30Rot[i].z));
+        for (int i = 0; i < board_m30Pos.Length; i++) {
+            Instantiate (board_m30Prefab, board_m30Pos[i], Quaternion.Euler (board_m30Rot[i].x, board_m30Rot[i].y, board_m30Rot[i].z));
         }
     }
-
-
-
-
-
-
 
     // Start is called before the first frame update
     // void Start()
@@ -648,14 +614,7 @@ public class GameLogics : MonoBehaviour
 
     // }
 
-
-
-
-
-
-
-    private class SaveObject
-    {
+    private class SaveObject {
         public List<Vector3> splinePoints;
         public List<Vector3> coinsPositions;
         public List<Vector3> canisterPositions;
@@ -676,19 +635,15 @@ public class GameLogics : MonoBehaviour
         public List<Vector3> board_m30Angles;
         public Dictionary<string, List<Vector3>> fantPositions;
 
-
     }
 }
 
-public class SerializedTransform
-{
+public class SerializedTransform {
     public float[] _position = new float[3];
     public float[] _rotation = new float[4];
     public float[] _scale = new float[3];
 
-
-    public SerializedTransform(Transform transform, bool worldSpace = false)
-    {
+    public SerializedTransform (Transform transform, bool worldSpace = false) {
         _position[0] = transform.localPosition.x;
         _position[1] = transform.localPosition.y;
         _position[2] = transform.localPosition.z;
@@ -704,20 +659,16 @@ public class SerializedTransform
 
     }
 }
-public static class SerializedTransformExtention
-{
-    public static void DeserialTransform(this SerializedTransform _serializedTransform, Transform _transform)
-    {
-        _transform.localPosition = new Vector3(_serializedTransform._position[0], _serializedTransform._position[1], _serializedTransform._position[2]);
-        _transform.localRotation = new Quaternion(_serializedTransform._rotation[1], _serializedTransform._rotation[2], _serializedTransform._rotation[3], _serializedTransform._rotation[0]);
-        _transform.localScale = new Vector3(_serializedTransform._scale[0], _serializedTransform._scale[1], _serializedTransform._scale[2]);
+public static class SerializedTransformExtention {
+    public static void DeserialTransform (this SerializedTransform _serializedTransform, Transform _transform) {
+        _transform.localPosition = new Vector3 (_serializedTransform._position[0], _serializedTransform._position[1], _serializedTransform._position[2]);
+        _transform.localRotation = new Quaternion (_serializedTransform._rotation[1], _serializedTransform._rotation[2], _serializedTransform._rotation[3], _serializedTransform._rotation[0]);
+        _transform.localScale = new Vector3 (_serializedTransform._scale[0], _serializedTransform._scale[1], _serializedTransform._scale[2]);
     }
 }
 
-public static class TransformExtention
-{
-    public static void SetTransformEX(this Transform original, Transform copy)
-    {
+public static class TransformExtention {
+    public static void SetTransformEX (this Transform original, Transform copy) {
         original.position = copy.position;
         original.rotation = copy.rotation;
         original.localScale = copy.localScale;
