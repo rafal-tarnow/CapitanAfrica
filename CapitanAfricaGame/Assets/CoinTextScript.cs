@@ -7,16 +7,26 @@ public class CoinTextScript : MonoBehaviour
 {
     // Start is called before the first frame update
     Text text;
-    public static int coinAmount = 0;
+    int coinAmount;
+    
+
+    private void Awake() {
+         text = GetComponent<Text>();
+    }
 
     void Start()
     {
-        text = GetComponent<Text>();
+       
     }
 
-    // Update is called once per frame
-    void Update()
+    public void setCoins(int coins)
     {
+        coinAmount = coins;
         text.text = coinAmount.ToString();
     }
+    // Update is called once per frame
+    // void Update()
+    // {
+        
+    // }
 }

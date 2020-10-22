@@ -24,6 +24,8 @@ public class GameLogics : MonoBehaviour {
 
     public bool cameraFollowEnable = false;
 
+    public static int coinAmount = 0;
+
     public GameObject coinPrefab;
     public GameObject canisterPrefab;
     public GameObject metaPrefab;
@@ -48,12 +50,15 @@ public class GameLogics : MonoBehaviour {
     private GameObject inventoryUI;
 
     private GameObject buttonSave;
-    private GameObject textMoney;
+    private GameObject textMoneyObject;
+    private CoinTextScript coinTextScript;
+
     private GameObject textDistance;
     private GameObject imageFuel;
     float cameraStartupOrthographicSize;
 
     void Awake () {
+
         SaveSystem.Init ();
 
         if (groundEditable == null)
@@ -83,8 +88,11 @@ public class GameLogics : MonoBehaviour {
         if (buttonLoad == null)
             buttonLoad = GameObject.FindWithTag ("ButtonLoad");
 
-        if (textMoney == null)
-            textMoney = GameObject.FindWithTag ("TextMoney");
+        if (textMoneyObject == null)
+        {
+            textMoneyObject = GameObject.FindWithTag ("TextMoney");
+            coinTextScript = textMoneyObject.GetComponent<CoinTextScript>();
+        }
 
         if (textDistance == null)
             textDistance = GameObject.FindWithTag ("TextDistance");
@@ -114,6 +122,20 @@ public class GameLogics : MonoBehaviour {
 
         LoadLevel ();
         updateUIState (true);
+
+        coinAmount = PlayerPrefs.GetInt("Coins",0);
+        updateCoins();
+    }
+
+    private void OnDestroy() {
+        PlayerPrefs.SetInt("Coins", coinAmount);
+        PlayerPrefs.Save();  
+    }
+
+    void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt("Coins", coinAmount);
+        PlayerPrefs.Save();
     }
 
     public void OnPrefabDropEvent (GameObject prefab) {
@@ -147,8 +169,21 @@ public class GameLogics : MonoBehaviour {
         //Camera.main.GetComponent<PanZoom>().enabled = !isDragging;
     }
 
+    public void OnCoinTriggerEnter2D(GameObject coin, Collider2D collider)
+    {
+        Destroy(coin);     
+        //Debug.Log("GameLogics::OnCoinTriggerEnter2D");
+        coinAmount++;
+        updateCoins();
+    }
+
+    private void updateCoins()
+    {
+        coinTextScript.setCoins(coinAmount);
+    }
+
     public void OnPanZoomActiveEvent (bool active) {
-        Debug.Log ("Game Logics OnPanZoomActiveEvent = " + active);
+        //Debug.Log ("Game Logics OnPanZoomActiveEvent = " + active);
         if(active)
             setAllFants_Dragable(false);
         else
@@ -265,7 +300,7 @@ public class GameLogics : MonoBehaviour {
             buttonLoad.SetActive (false);
             buttonEditGround.SetActive (false);
             buttonTrash.SetActive (false);
-            textMoney.SetActive (true);
+            textMoneyObject.SetActive (true);
             textDistance.SetActive (true);
             imageFuel.SetActive (true);
             inventoryUI.SetActive (false);
@@ -292,7 +327,7 @@ public class GameLogics : MonoBehaviour {
             buttonDrag.SetActive (true);
             buttonSave.SetActive (true);
             buttonLoad.SetActive (true);
-            textMoney.SetActive (false);
+            textMoneyObject.SetActive (false);
             textDistance.SetActive (false);
             imageFuel.SetActive (false);
             buttonBack.SetActive (false);
