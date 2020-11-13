@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting;
 
 public class GameLogics : MonoBehaviour {
 
@@ -55,9 +57,12 @@ public class GameLogics : MonoBehaviour {
 
     private GameObject textDistance;
     private GameObject imageFuel;
+    private GameObject canvas;
     float cameraStartupOrthographicSize;
 
     void Awake () {
+        Application.targetFrameRate = 60;
+        UnityEngine.Debug.unityLogger.logEnabled = false;
 
         SaveSystem.Init ();
 
@@ -112,6 +117,9 @@ public class GameLogics : MonoBehaviour {
         if (inventoryUI == null)
             inventoryUI = GameObject.FindWithTag ("InventoryUI");
 
+        if(canvas == null)
+            canvas = GameObject.FindWithTag("Canvas");
+
     }
 
     private void Start () {
@@ -125,11 +133,15 @@ public class GameLogics : MonoBehaviour {
 
         coinAmount = PlayerPrefs.GetInt("Coins",0);
         updateCoins();
+
+        DisableGC();
     }
 
     private void OnDestroy() {
         PlayerPrefs.SetInt("Coins", coinAmount);
         PlayerPrefs.Save();  
+
+        EnableGC();
     }
 
     void OnApplicationQuit()
@@ -139,7 +151,7 @@ public class GameLogics : MonoBehaviour {
     }
 
     public void OnPrefabDropEvent (GameObject prefab) {
-        Debug.Log ("Game logics, on prefab drop event");
+        UnityEngine.Debug.Log ("Game logics, on prefab drop event");
         //Instantiate(prefab, new Vector3(5, 0, 0), Quaternion.identity);
 
     }
@@ -208,7 +220,7 @@ public class GameLogics : MonoBehaviour {
     }
 
     public void onEditPlayButton (bool edit) {
-        Debug.Log ("Edit " + edit.ToString ());
+        UnityEngine.Debug.Log ("Edit " + edit.ToString ());
         if (edit) {
             mode = MainMode.EDIT;
             LoadLevel ();
@@ -292,6 +304,7 @@ public class GameLogics : MonoBehaviour {
             // carController.GetComponent<FollowByCamera>().enabled = false;
             // carController.GetComponent<CarController>().enabled = true;
 
+            //CANVAS
             buttonGas.SetActive (true);
             buttonBrake.SetActive (true);
             buttonReload.SetActive (true);
@@ -308,6 +321,7 @@ public class GameLogics : MonoBehaviour {
 
             groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
             setAllFants_Opacity_Dragable_Deletable (1.0f, false, false);
+
 
         } else if (mode == MainMode.EDIT) {
 
@@ -388,7 +402,7 @@ public class GameLogics : MonoBehaviour {
     }
 
     void setAllFants_Dragable (bool dragable) {
-        Debug.Log("GameLogics::setAllFantsDragable = " + dragable);
+        UnityEngine.Debug.Log("GameLogics::setAllFantsDragable = " + dragable);
         setGivenTagFantsDragable ("FuelCanister", dragable);
         setGivenTagFantsDragable ("Coin", dragable);
         setGivenTagFantsDragable ("Meta", dragable);
@@ -571,7 +585,7 @@ public class GameLogics : MonoBehaviour {
 
         //LOAD GROUND
         if (saveObject == null)
-            Debug.Log ("Load retun null");
+            UnityEngine.Debug.Log ("Load retun null");
         else
             groundEditable.GetComponent<EditableGround> ().loadPoints (saveObject.splinePoints);
 
@@ -635,6 +649,19 @@ public class GameLogics : MonoBehaviour {
         for (int i = 0; i < board_m30Pos.Length; i++) {
             Instantiate (board_m30Prefab, board_m30Pos[i], Quaternion.Euler (board_m30Rot[i].x, board_m30Rot[i].y, board_m30Rot[i].z));
         }
+    }
+
+
+    static void EnableGC()
+    {
+        GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
+        // Trigger a collection to free memory.
+        GC.Collect();
+    }
+
+    static void DisableGC()
+    {
+        GarbageCollector.GCMode = GarbageCollector.Mode.Disabled;
     }
 
     // Start is called before the first frame update

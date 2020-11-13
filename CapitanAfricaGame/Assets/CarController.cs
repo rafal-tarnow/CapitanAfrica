@@ -52,7 +52,6 @@ public class CarController : MonoBehaviour
     }
 
 
-
     void FixedUpdate() 
     {
         float gas = getGas();

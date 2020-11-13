@@ -37,6 +37,7 @@ TagManager:
   - ButtonSelectLevelRight
   - ButtonBack
   - ButtonTrash
+  - Canvas
   layers:
   - Default
   - TransparentFX
