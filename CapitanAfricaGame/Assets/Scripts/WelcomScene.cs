@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 public class WelcomScene : MonoBehaviour
 {
     // Start is called before the first frame update
+
+    private void Awake() {
+        //Application.targetFrameRate = 200;    
+    }
+
     void Start()
     {
         

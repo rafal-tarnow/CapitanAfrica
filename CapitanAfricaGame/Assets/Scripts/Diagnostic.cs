@@ -7,7 +7,7 @@ using System.Diagnostics;
 public class Diagnostic : MonoBehaviour
 {
     PerformanceCounter cpuCounter;
-     TMP_Text cpuUsage;
+    TMP_Text cpuUsage;
     // Start is called before the first frame update
     void Start()
     {

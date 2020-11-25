@@ -56,7 +56,7 @@ public class GameLogics : MonoBehaviour {
     float cameraStartupOrthographicSize;
 
     void Awake () {
-        Application.targetFrameRate = 60;
+        //Application.targetFrameRate = 200;
         UnityEngine.Debug.unityLogger.logEnabled = false;
 
         SaveSystem.Init ();
@@ -132,6 +132,16 @@ public class GameLogics : MonoBehaviour {
 
     public void onBackButtonPressed () {
         SceneManager.LoadScene ("LevelSelectScene", LoadSceneMode.Single);
+    }
+
+    public void onButtonAdjustPressed()
+    {
+        canvasAdjust.SetActive(true);
+    }
+
+    public void onButtonCloseAdjustCanvas()
+    {
+        canvasAdjust.SetActive(false);
     }
 
     public void onReloadButtonReleased (bool pressed) {
@@ -280,6 +290,7 @@ public class GameLogics : MonoBehaviour {
             //CANVAS
             canvasEdit.SetActive(false);
             canvasPlay.SetActive(true);
+            canvasAdjust.SetActive(false);
 
             groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
             setAllFants_Opacity_Dragable_Deletable (1.0f, false, false);
@@ -303,6 +314,7 @@ public class GameLogics : MonoBehaviour {
 
             canvasPlay.SetActive(false);
             canvasEdit.SetActive(true);
+            canvasAdjust.SetActive(false);
 
             if (editSubMode == EditSubMode.ADD_FANT) {
                 buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
