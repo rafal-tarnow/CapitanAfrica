@@ -41,23 +41,18 @@ public class GameLogics : MonoBehaviour {
     private GameObject groundEditable;
     private GameObject carController;
     private GameObject backgroundSprite;
-    private GameObject buttonGas;
-    private GameObject buttonBrake;
-    private GameObject buttonReload;
-    private GameObject buttonBack;
+
     private GameObject buttonDrag;
-    private GameObject buttonLoad;
     private GameObject buttonEditGround;
     private GameObject buttonTrash;
     private GameObject inventoryUI;
 
-    private GameObject buttonSave;
-    private GameObject textMoneyObject;
+    private GameObject canvasEdit;
+    private GameObject canvasPlay;
+    private GameObject canvasAdjust;
+
     private CoinTextScript coinTextScript;
 
-    private GameObject textDistance;
-    private GameObject imageFuel;
-    private GameObject canvas;
     float cameraStartupOrthographicSize;
 
     void Awake () {
@@ -75,35 +70,11 @@ public class GameLogics : MonoBehaviour {
         if (backgroundSprite == null)
             backgroundSprite = GameObject.FindWithTag ("BackgroundSprite");
 
-        if (buttonBrake == null)
-            buttonBrake = GameObject.FindWithTag ("ButtonBrake");
-
-        if (buttonGas == null)
-            buttonGas = GameObject.FindWithTag ("ButtonGas");
-
-        if (buttonReload == null)
-            buttonReload = GameObject.FindWithTag ("ButtonReload");
-
         if (buttonDrag == null)
             buttonDrag = GameObject.FindWithTag ("ButtonDrag");
 
-        if (buttonSave == null)
-            buttonSave = GameObject.FindWithTag ("ButtonSave");
-
-        if (buttonLoad == null)
-            buttonLoad = GameObject.FindWithTag ("ButtonLoad");
-
-        if (textMoneyObject == null)
-        {
-            textMoneyObject = GameObject.FindWithTag ("TextMoney");
-            coinTextScript = textMoneyObject.GetComponent<CoinTextScript>();
-        }
-
-        if (textDistance == null)
-            textDistance = GameObject.FindWithTag ("TextDistance");
-
-        if (imageFuel == null)
-            imageFuel = GameObject.FindWithTag ("ImageFuel");
+        if (coinTextScript == null)
+            coinTextScript = GameObject.FindWithTag ("TextMoney").GetComponent<CoinTextScript>();
 
         if (buttonEditGround == null)
             buttonEditGround = GameObject.FindWithTag ("ButtonEditGround");
@@ -111,14 +82,17 @@ public class GameLogics : MonoBehaviour {
         if (buttonTrash == null)
             buttonTrash = GameObject.FindWithTag ("ButtonTrash");
 
-        if (buttonBack == null)
-            buttonBack = GameObject.FindWithTag ("ButtonBack");
-
         if (inventoryUI == null)
             inventoryUI = GameObject.FindWithTag ("InventoryUI");
 
-        if(canvas == null)
-            canvas = GameObject.FindWithTag("Canvas");
+        if(canvasPlay == null)
+            canvasPlay = GameObject.FindWithTag("CanvasPlay");
+
+        if(canvasEdit == null)
+            canvasEdit = GameObject.FindWithTag("CanvasEdit");
+
+        if(canvasAdjust == null)
+            canvasAdjust = GameObject.FindWithTag("CanvasAdjust");
 
     }
 
@@ -219,18 +193,17 @@ public class GameLogics : MonoBehaviour {
     //     NONE            updateUIState();
     }
 
-    public void onEditPlayButton (bool edit) {
-        UnityEngine.Debug.Log ("Edit " + edit.ToString ());
-        if (edit) {
-            mode = MainMode.EDIT;
-            LoadLevel ();
-            updateUIState (true);
-        } else {
-            mode = MainMode.PLAY;
-            SaveLevel ();
-            updateUIState (true);
-            carController.transform.position = Camera.main.transform.position;
-        }
+    public void onEditButton () {
+        mode = MainMode.EDIT;
+        LoadLevel ();
+        updateUIState (true);
+    }
+
+    public void onPlayButton () {
+        mode = MainMode.PLAY;
+        SaveLevel ();
+        updateUIState (true);
+        carController.transform.position = Camera.main.transform.position;
     }
 
     public void onEditGroundButton (bool state) {
@@ -305,19 +278,8 @@ public class GameLogics : MonoBehaviour {
             // carController.GetComponent<CarController>().enabled = true;
 
             //CANVAS
-            buttonGas.SetActive (true);
-            buttonBrake.SetActive (true);
-            buttonReload.SetActive (true);
-            buttonDrag.SetActive (false);
-            buttonSave.SetActive (false);
-            buttonLoad.SetActive (false);
-            buttonEditGround.SetActive (false);
-            buttonTrash.SetActive (false);
-            textMoneyObject.SetActive (true);
-            textDistance.SetActive (true);
-            imageFuel.SetActive (true);
-            inventoryUI.SetActive (false);
-            buttonBack.SetActive (true);
+            canvasEdit.SetActive(false);
+            canvasPlay.SetActive(true);
 
             groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
             setAllFants_Opacity_Dragable_Deletable (1.0f, false, false);
@@ -335,24 +297,12 @@ public class GameLogics : MonoBehaviour {
             Camera.main.GetComponent<PanZoom> ().enabled = true;
 
             backgroundSprite.SetActive (false);
-            buttonGas.SetActive (false);
-            buttonBrake.SetActive (false);
-            buttonReload.SetActive (false);
-            buttonDrag.SetActive (true);
-            buttonSave.SetActive (true);
-            buttonLoad.SetActive (true);
-            textMoneyObject.SetActive (false);
-            textDistance.SetActive (false);
-            imageFuel.SetActive (false);
-            buttonBack.SetActive (false);
 
             groundEditable.SetActive (true);
             groundEditable.GetComponent<EditableGround> ().enabled = true;
 
-            buttonEditGround.SetActive (true);
-            buttonTrash.SetActive (true);
-
- 
+            canvasPlay.SetActive(false);
+            canvasEdit.SetActive(true);
 
             if (editSubMode == EditSubMode.ADD_FANT) {
                 buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);

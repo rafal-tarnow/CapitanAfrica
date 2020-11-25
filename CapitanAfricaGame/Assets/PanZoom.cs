@@ -11,11 +11,6 @@ public class PanZoom : MonoBehaviour {
     public float zoomOutMin = 0.1f;
     public float zoomOutMax = 50.0f;
 
-    // Update is called once per frame
-
-    bool firstIsTouch = false;
-    bool secondIsTouch = false;
-
     enum State {
         NONE,
         DRAG,

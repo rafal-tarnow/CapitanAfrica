@@ -37,7 +37,11 @@ TagManager:
   - ButtonSelectLevelRight
   - ButtonBack
   - ButtonTrash
-  - Canvas
+  - CanvasPlay
+  - CanvasEdit
+  - CanvasAdjust
+  - ButtonEditMode
+  - ButtonPlayMode
   layers:
   - Default
   - TransparentFX
