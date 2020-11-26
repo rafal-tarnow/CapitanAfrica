@@ -7,9 +7,7 @@ public class CarController : MonoBehaviour
     public float fuel = 0.5f;
     public float fuelconsumption = 0.01f;
     public Rigidbody2D carRigidbody;
-    public float speed = 20;
-    public float carTorque = 10;
-    private float movement;
+
     public UnityEngine.UI.Image image;
     // Start is called before the first frame update
     private Vector3 startPosition;
@@ -17,8 +15,10 @@ public class CarController : MonoBehaviour
     //--------------------
     private JointMotor2D backMotor, frontMotor;
     public WheelJoint2D wheelFrontJoint, wheelBackJoint;
-    public float speedForward, speedBackward;
-    public float Torque;
+    public float speedForward, speedBackward, speedFree;
+    public float torqueForward;
+    public float torqueBackward;
+    public float torqueFree;
 
     private static CustomButton buttonGas;
     private static CustomButton buttonBrake;
@@ -60,7 +60,6 @@ public class CarController : MonoBehaviour
         {
             applyGasToCar(gas);
 
-            //carRigidbody.AddTorque(-movement * carTorque * Time.fixedDeltaTime);
             fuel -= fuelconsumption*Mathf.Abs(gas)*Time.fixedDeltaTime;
         }
         else
@@ -88,8 +87,8 @@ public class CarController : MonoBehaviour
             backMotor.motorSpeed = speedForward;
             frontMotor.motorSpeed = speedForward;
 
-            backMotor.maxMotorTorque = Torque;
-            frontMotor.maxMotorTorque = Torque;
+            backMotor.maxMotorTorque = torqueForward;
+            frontMotor.maxMotorTorque = torqueForward;
 
             wheelFrontJoint.motor = frontMotor;
             wheelBackJoint.motor = backMotor;
@@ -100,19 +99,19 @@ public class CarController : MonoBehaviour
             backMotor.motorSpeed = speedBackward;
             frontMotor.motorSpeed = speedBackward;
 
-            backMotor.maxMotorTorque = Torque;
-            frontMotor.maxMotorTorque = Torque;
+            backMotor.maxMotorTorque = torqueBackward;
+            frontMotor.maxMotorTorque = torqueBackward;
 
             wheelFrontJoint.motor = frontMotor;
             wheelBackJoint.motor = backMotor;
         }
         else
         {
-            backMotor.motorSpeed = 0;
-            frontMotor.motorSpeed = 0;
+            backMotor.motorSpeed = speedFree;
+            frontMotor.motorSpeed = speedFree;
 
-            backMotor.maxMotorTorque = 1;
-            frontMotor.maxMotorTorque = 1;
+            backMotor.maxMotorTorque = torqueFree;
+            frontMotor.maxMotorTorque = torqueFree;
 
             wheelFrontJoint.motor = frontMotor;
             wheelBackJoint.motor = backMotor;                           

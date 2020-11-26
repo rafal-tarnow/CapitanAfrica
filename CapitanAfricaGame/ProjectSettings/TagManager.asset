@@ -42,6 +42,8 @@ TagManager:
   - CanvasAdjust
   - ButtonEditMode
   - ButtonPlayMode
+  - FrontTire
+  - BackTire
   layers:
   - Default
   - TransparentFX
