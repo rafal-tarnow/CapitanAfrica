@@ -114,16 +114,16 @@ public class GameLogics : MonoBehaviour {
         coinAmount = PlayerPrefs.GetInt("Coins",0);
         updateCoins();
 
-        DisableGC();
+        //DisableGC();
 
-        adjustManager.Start();
+        adjustManager.LoadAdjustPrefs();
     }
 
     private void OnDestroy() {
         PlayerPrefs.SetInt("Coins", coinAmount);
         PlayerPrefs.Save();  
 
-        EnableGC();
+        //EnableGC();
     }
 
     void OnApplicationQuit()
@@ -179,7 +179,7 @@ public class GameLogics : MonoBehaviour {
     }
     
     class AdjustManager{
-        public void Start()
+        public void LoadAdjustPrefs()
         {
             setAdjustValue(AdjustValue.Gravity, PlayerPrefs.GetFloat(AdjustValue.Gravity.ToString(),-9.81f));
             setAdjustValue(AdjustValue.TireFriction, PlayerPrefs.GetFloat(AdjustValue.TireFriction.ToString(),1.0f));
@@ -196,149 +196,162 @@ public class GameLogics : MonoBehaviour {
             setAdjustValue(AdjustValue.CarBodyMass, PlayerPrefs.GetFloat(AdjustValue.CarBodyMass.ToString(),0.08f));
         }
 
-        public void Save(AdjustValue name, float value)
+        public void SaveAdjustPrefs(AdjustValue valueName, float value)
         {
-            PlayerPrefs.SetFloat(name.ToString(), value);
+            PlayerPrefs.SetFloat(valueName.ToString(), value);
+            // Below code doesn't work because when save object doesn't exists
+            // PlayerPrefs.SetFloat(AdjustValue.Gravity.ToString(), getAdjustValue(AdjustValue.Gravity));
+            // PlayerPrefs.SetFloat(AdjustValue.TireFriction.ToString(), getAdjustValue(AdjustValue.TireFriction));
+            // PlayerPrefs.SetFloat(AdjustValue.GroundFriction.ToString(), getAdjustValue(AdjustValue.GroundFriction));
+            // PlayerPrefs.SetFloat(AdjustValue.SpeedForward.ToString(), getAdjustValue(AdjustValue.SpeedForward));
+            // PlayerPrefs.SetFloat(AdjustValue.TorqueForward.ToString(), getAdjustValue(AdjustValue.TorqueForward));
+            // PlayerPrefs.SetFloat(AdjustValue.SpeedBackward.ToString(), getAdjustValue(AdjustValue.SpeedBackward));
+            // PlayerPrefs.SetFloat(AdjustValue.TorqueBackward.ToString(), getAdjustValue(AdjustValue.TorqueBackward));
+            // PlayerPrefs.SetFloat(AdjustValue.SpeedFree.ToString(), getAdjustValue(AdjustValue.SpeedFree));
+            // PlayerPrefs.SetFloat(AdjustValue.TorqueFree.ToString(), getAdjustValue(AdjustValue.TorqueFree));
+            // PlayerPrefs.SetFloat(AdjustValue.TyreMass.ToString(), getAdjustValue(AdjustValue.TyreMass));
+            // PlayerPrefs.SetFloat(AdjustValue.Damping.ToString(), getAdjustValue(AdjustValue.Damping));
+            // PlayerPrefs.SetFloat(AdjustValue.Frequency.ToString(), getAdjustValue(AdjustValue.Frequency));
+            // PlayerPrefs.SetFloat(AdjustValue.CarBodyMass.ToString(), getAdjustValue(AdjustValue.CarBodyMass));
         }
 
         public void setAdjustValue(AdjustValue valueName, float value)
         {
-            Save(valueName, value);
-
-        if(valueName == AdjustValue.Gravity)
-        {
-            Physics2D.gravity = new Vector2(0, value);
-        }
-        else if(valueName == AdjustValue.TireFriction)
-        {
-            GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial.friction = value;
-            GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial.friction = value;
-
-            GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial;
-            GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial;
-        }
-        else if(valueName == AdjustValue.GroundFriction)
-        {
-            GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial.friction = value;
-
-            GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial;
-        }
-        else if(valueName == AdjustValue.SpeedForward)
-        {
-             GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedForward = value;
-        }
-        else if(valueName == AdjustValue.TorqueForward)
-        {
-             GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueForward = value;
-        }
-        else if(valueName == AdjustValue.SpeedBackward)
-        {
-            GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedBackward = value;
-        }
-        else if(valueName == AdjustValue.TorqueBackward)
-        {
-             GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueBackward = value;
-        }
-        else if(valueName == AdjustValue.SpeedFree)
-        {
-            GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedFree = value;
-        }
-        else if(valueName == AdjustValue.TorqueFree)
-        {
-            GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueFree = value;
-        }
-        else if(valueName == AdjustValue.TyreMass)
-        {
-            GameObject.FindGameObjectWithTag("FrontTire").GetComponent<Rigidbody2D>().mass = value;
-            GameObject.FindGameObjectWithTag("BackTire").GetComponent<Rigidbody2D>().mass = value;
-        }
-        else if(valueName == AdjustValue.Damping)
-        {
-            WheelJoint2D[] joints;
-            JointSuspension2D suspension;
-            joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
-            foreach (WheelJoint2D joint in joints)
+            SaveAdjustPrefs(valueName, value);
+            if(valueName == AdjustValue.Gravity)
             {
-                suspension = joint.suspension;
-                suspension.dampingRatio = value;
-                joint.suspension = suspension;
+                Physics2D.gravity = new Vector2(0, value);
             }
-        }
-        else if(valueName == AdjustValue.Frequency)
-        {
-            WheelJoint2D[] joints;
-            JointSuspension2D suspension;
-            joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
-            foreach (WheelJoint2D joint in joints)
+            else if(valueName == AdjustValue.TireFriction)
             {
-                suspension = joint.suspension;
-                suspension.frequency = value;
-                joint.suspension = suspension;
+                GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial.friction = value;
+                GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial.friction = value;
+
+                GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial;
+                GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial;
             }
-        }
-        else if(valueName == AdjustValue.CarBodyMass)
-        {
-            GameObject.FindGameObjectWithTag("CarController").GetComponent<Rigidbody2D>().mass = value;
-        }
+            else if(valueName == AdjustValue.GroundFriction)
+            {
+                GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial.friction = value;
+
+                GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial;
+            }
+            else if(valueName == AdjustValue.SpeedForward)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedForward = value;
+            }
+            else if(valueName == AdjustValue.TorqueForward)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueForward = value;
+            }
+            else if(valueName == AdjustValue.SpeedBackward)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedBackward = value;
+            }
+            else if(valueName == AdjustValue.TorqueBackward)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueBackward = value;
+            }
+            else if(valueName == AdjustValue.SpeedFree)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedFree = value;
+            }
+            else if(valueName == AdjustValue.TorqueFree)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueFree = value;
+            }
+            else if(valueName == AdjustValue.TyreMass)
+            {
+                GameObject.FindGameObjectWithTag("FrontTire").GetComponent<Rigidbody2D>().mass = value;
+                GameObject.FindGameObjectWithTag("BackTire").GetComponent<Rigidbody2D>().mass = value;
+            }
+            else if(valueName == AdjustValue.Damping)
+            {
+                WheelJoint2D[] joints;
+                JointSuspension2D suspension;
+                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
+                foreach (WheelJoint2D joint in joints)
+                {
+                    suspension = joint.suspension;
+                    suspension.dampingRatio = value;
+                    joint.suspension = suspension;
+                }
+            }
+            else if(valueName == AdjustValue.Frequency)
+            {
+                WheelJoint2D[] joints;
+                JointSuspension2D suspension;
+                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
+                foreach (WheelJoint2D joint in joints)
+                {
+                    suspension = joint.suspension;
+                    suspension.frequency = value;
+                    joint.suspension = suspension;
+                }
+            }
+            else if(valueName == AdjustValue.CarBodyMass)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<Rigidbody2D>().mass = value;
+            }
         }
 
         public float getAdjustValue(AdjustValue valueName)
-    {
-        GameObject gameObject;
-        if(valueName == AdjustValue.Gravity)
         {
-            return Physics2D.gravity.y;
+            GameObject gameObject;
+            if(valueName == AdjustValue.Gravity)
+            {
+                return Physics2D.gravity.y;
+            }
+            else if(valueName == AdjustValue.TireFriction)
+            {
+                return GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial.friction;
+            }
+            else if(valueName == AdjustValue.GroundFriction)
+            {
+                return GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial.friction;
+            }
+            else if(valueName == AdjustValue.SpeedForward)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedForward;
+            }
+            else if(valueName == AdjustValue.TorqueForward)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueForward;
+            }
+            else if(valueName == AdjustValue.SpeedBackward)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedBackward;
+            }
+            else if(valueName == AdjustValue.TorqueBackward)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueBackward;
+            }
+            else if(valueName == AdjustValue.SpeedFree)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedFree;
+            }
+            else if(valueName == AdjustValue.TorqueFree)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueFree;
+            }
+            else if(valueName == AdjustValue.TyreMass)
+            {
+                return GameObject.FindGameObjectWithTag("FrontTire").GetComponent<Rigidbody2D>().mass;
+            }
+            else if(valueName == AdjustValue.Damping)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<WheelJoint2D>().suspension.dampingRatio;
+            }
+            else if(valueName == AdjustValue.Frequency)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<WheelJoint2D>().suspension.frequency;
+            }
+            else if(valueName == AdjustValue.CarBodyMass)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<Rigidbody2D>().mass;
+            }
+            return 0.0f;
         }
-        else if(valueName == AdjustValue.TireFriction)
-        {
-            return GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial.friction;
-        }
-        else if(valueName == AdjustValue.GroundFriction)
-        {
-            return GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial.friction;
-        }
-        else if(valueName == AdjustValue.SpeedForward)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedForward;
-        }
-        else if(valueName == AdjustValue.TorqueForward)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueForward;
-        }
-        else if(valueName == AdjustValue.SpeedBackward)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedBackward;
-        }
-        else if(valueName == AdjustValue.TorqueBackward)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueBackward;
-        }
-        else if(valueName == AdjustValue.SpeedFree)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedFree;
-        }
-        else if(valueName == AdjustValue.TorqueFree)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueFree;
-        }
-        else if(valueName == AdjustValue.TyreMass)
-        {
-            return GameObject.FindGameObjectWithTag("FrontTire").GetComponent<Rigidbody2D>().mass;
-        }
-        else if(valueName == AdjustValue.Damping)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<WheelJoint2D>().suspension.dampingRatio;
-        }
-        else if(valueName == AdjustValue.Frequency)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<WheelJoint2D>().suspension.frequency;
-        }
-        else if(valueName == AdjustValue.CarBodyMass)
-        {
-            return GameObject.FindGameObjectWithTag("CarController").GetComponent<Rigidbody2D>().mass;
-        }
-        return 0.0f;
-    }
     }
     public void setAdjustValue(AdjustValue valueName, float value)
     {
