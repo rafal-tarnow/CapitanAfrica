@@ -15,7 +15,7 @@ public class AddFuel : MonoBehaviour
 
 
     private void OnTriggerEnter2D(Collider2D other) {
-        carController.fuel = 1.0f;
+        carController.setFuel(1.0f);
         Destroy(gameObject);
     }
 }

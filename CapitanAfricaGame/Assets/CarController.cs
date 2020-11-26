@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    public float fuel = 0.5f;
+    private float fuel = 1.0f;
+    private float previousFuel = 1.0f;
     public float fuelconsumption = 0.01f;
     public Rigidbody2D carRigidbody;
 
@@ -20,19 +21,6 @@ public class CarController : MonoBehaviour
     public float torqueBackward;
     public float torqueFree;
 
-    private static CustomButton buttonGas;
-    private static CustomButton buttonBrake;
-
-    void Awake() 
-    {
-        if (buttonGas == null)
-            buttonGas = GameObject.FindWithTag("ButtonGas").GetComponent<CustomButton>();
-        
-        if (buttonBrake == null)
-            buttonBrake = GameObject.FindWithTag("ButtonBrake").GetComponent<CustomButton>();
-        
-    }
-
     void Start()
     {
         startPosition = transform.position;
@@ -46,21 +34,31 @@ public class CarController : MonoBehaviour
     void Update()
     {
         //FUEL
-        image.fillAmount = fuel;
+        if(previousFuel - fuel > 0.1) // optymalization, dont update fuel image with small amount
+        {
+            previousFuel = fuel;
+            image.fillAmount = fuel;
+        }
         //DISTANCE
-        DistanceText.distance = Mathf.CeilToInt(transform.position.x);
+        //DistanceText.setDistance((int)(transform.position.x));
+        DistanceTextMP.setDistance((int)(transform.position.x));
     }
 
+    public void setFuel(float f)
+    {
+        fuel = f;
+        previousFuel = fuel;
+        image.fillAmount = fuel;
+    }
 
     void FixedUpdate() 
-    {
-        float gas = getGas();
-        
+    {   
+
+        getGas();
+
         if(fuel > 0.0f)
         {
-            applyGasToCar(gas);
-
-            fuel -= fuelconsumption*Mathf.Abs(gas)*Time.fixedDeltaTime;
+            fuel -= fuelconsumption*Time.fixedDeltaTime;
         }
         else
         {
@@ -69,15 +67,56 @@ public class CarController : MonoBehaviour
         
     }    
     
-    private float getGas()
-    {
-        if(buttonGas.buttonPressed)
-            return 1.0f;
-        if(buttonBrake.buttonPressed)
-            return -1.0f;
-        return 0.0f;
+    private bool keySlashPressed = false;
+    private bool keyZPressed = false;
 
-        //return(Input.GetAxis("Horizontal"));
+    private void getGas()
+    {     
+        if(Input.GetKeyDown(KeyCode.Slash))
+        {
+            keySlashPressed = true;
+
+            if(!keyZPressed)
+                setGas(1.0f);
+            else
+                setGas(1.0f);
+        }
+
+        if(Input.GetKeyUp(KeyCode.Slash))
+        {
+            keySlashPressed = false;
+
+            if(!keyZPressed)
+                setGas(0.0f);
+            else
+                setGas(-1.0f);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            keyZPressed = true;
+
+            if(!keySlashPressed)
+                setGas(-1.0f);
+            else
+                setGas(-1.0f);
+        }
+
+        if(Input.GetKeyUp(KeyCode.Z))
+        {
+            keyZPressed = false;
+
+            if(!keySlashPressed)
+                setGas(0.0f);
+            else
+                setGas(1.0f);
+        }
+    }
+
+    public void setGas(float gas)
+    {
+        if(fuel>0.0f)
+            applyGasToCar(gas);
     }
 
     private void applyGasToCar(float x)

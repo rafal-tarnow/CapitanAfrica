@@ -109,6 +109,16 @@ public class PanZoom : MonoBehaviour {
 
         //---------- START PAN ZOOM -----------
         //IF ONE FINGER IS PRESSED AND NO GUI
+        #warning TODO check EventSystem.current.IsPointerOverGameObject for mouse
+        if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && Input.GetKey(KeyCode.Space)/*&& !EventSystem.current.IsPointerOverGameObject (Input.mousePosition)*/) {
+            state = State.DRAG;
+            Debug.Log ("PanZoom drag started");
+            OnPanZoomActiveEvent?.Invoke (true);
+
+            touchDragStartPos_screen = Input.mousePosition;
+            touchDragStartPos_wordl = Camera.main.ScreenToWorldPoint (touchDragStartPos_screen);
+            return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
 
         if (((Input.touchCount == 1) && Input.GetTouch (0).phase == TouchPhase.Began) && (state == State.NONE) && !EventSystem.current.IsPointerOverGameObject (Input.GetTouch (0).fingerId)) {
             state = State.DRAG;
@@ -134,6 +144,14 @@ public class PanZoom : MonoBehaviour {
         //------------------------
 
         //--------- STOP PAN ZOOM -----------------
+
+        if ((Input.GetMouseButtonUp(0)) && (state != State.NONE)) {
+            state = State.NONE;
+
+            OnPanZoomActiveEvent?.Invoke (false);
+
+            return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
 
         if (((Input.touchCount == 1) && Input.GetTouch (0).phase == TouchPhase.Ended) && (state != State.NONE)) {
             state = State.NONE;
@@ -195,8 +213,16 @@ public class PanZoom : MonoBehaviour {
                 }
             case State.DRAG:
                 {
-                    Vector3 direction = touchDragStartPos_wordl - Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
-                    Camera.main.transform.position += direction;
+                    if(Input.touchCount == 0) // if no touch but in DRAG mode that means that mouse activated drag
+                    {
+                        Vector3 direction = touchDragStartPos_wordl - Camera.main.ScreenToWorldPoint (Input.mousePosition);
+                        Camera.main.transform.position += direction;
+                    }
+                    else
+                    {
+                        Vector3 direction = touchDragStartPos_wordl - Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
+                        Camera.main.transform.position += direction;
+                    }
                     break;
                 }
             case State.ZOOM:

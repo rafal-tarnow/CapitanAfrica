@@ -41,9 +41,9 @@ public class GameLogics : MonoBehaviour {
     public GameObject board_30Prefab;
     public GameObject board_m30Prefab;
 
-    private static GameLogics gameLogics;
     private GameObject groundEditable;
     private GameObject carController;
+    private CarController carControllerScript;
     private GameObject backgroundSprite;
 
     private GameObject buttonDrag;
@@ -55,7 +55,7 @@ public class GameLogics : MonoBehaviour {
     private GameObject canvasPlay;
     private GameObject canvasAdjust;
 
-    private CoinTextScript coinTextScript;
+    private CoinTextScriptMP coinTextScriptMP;
 
     float cameraStartupOrthographicSize;
 
@@ -63,7 +63,7 @@ public class GameLogics : MonoBehaviour {
 
     void Awake () {
         //Application.targetFrameRate = 200;
-        //UnityEngine.Debug.unityLogger.logEnabled = false;
+        UnityEngine.Debug.unityLogger.logEnabled = false;
 
         SaveSystem.Init ();
 
@@ -73,14 +73,22 @@ public class GameLogics : MonoBehaviour {
         if (carController == null)
             carController = GameObject.FindWithTag ("CarController");
 
+        if(carControllerScript == null)
+            carControllerScript = carController.GetComponent<CarController>();
+
         if (backgroundSprite == null)
             backgroundSprite = GameObject.FindWithTag ("BackgroundSprite");
 
         if (buttonDrag == null)
             buttonDrag = GameObject.FindWithTag ("ButtonDrag");
 
-        if (coinTextScript == null)
-            coinTextScript = GameObject.FindWithTag ("TextMoney").GetComponent<CoinTextScript>();
+        if (coinTextScriptMP == null)
+        {
+            Debug.Log("1 coinTextScriptMP == null");
+            coinTextScriptMP = GameObject.FindWithTag("TextMoneyMP").GetComponent<CoinTextScriptMP>();
+            if(coinTextScriptMP == null)
+                Debug.Log(" 2 coinTextScriptMP == null");
+        }
 
         if (buttonEditGround == null)
             buttonEditGround = GameObject.FindWithTag ("ButtonEditGround");
@@ -112,7 +120,7 @@ public class GameLogics : MonoBehaviour {
         updateUIState (true);
 
         coinAmount = PlayerPrefs.GetInt("Coins",0);
-        updateCoins();
+        updateCoinsText();
 
         //DisableGC();
 
@@ -173,8 +181,12 @@ public class GameLogics : MonoBehaviour {
         SpeedFree,
         TorqueFree,
         TyreMass,
-        Damping,
-        Frequency,
+        BothDamp,
+        BothFreq,
+        FrontDamp,
+        FrontFreq,
+        BackDamp,
+        BackFreq,
         CarBodyMass
     }
     
@@ -191,28 +203,30 @@ public class GameLogics : MonoBehaviour {
             setAdjustValue(AdjustValue.SpeedFree, PlayerPrefs.GetFloat(AdjustValue.SpeedFree.ToString(),0.0f));
             setAdjustValue(AdjustValue.TorqueFree, PlayerPrefs.GetFloat(AdjustValue.TorqueFree.ToString(),0.08f));
             setAdjustValue(AdjustValue.TyreMass, PlayerPrefs.GetFloat(AdjustValue.TyreMass.ToString(),0.2f));
-            setAdjustValue(AdjustValue.Damping, PlayerPrefs.GetFloat(AdjustValue.Damping.ToString(),0.7f));
-            setAdjustValue(AdjustValue.Frequency, PlayerPrefs.GetFloat(AdjustValue.Frequency.ToString(),2.0f));
+            //setAdjustValue(AdjustValue.BothDamp, PlayerPrefs.GetFloat(AdjustValue.BothDamp.ToString(),0.7f));
+            //setAdjustValue(AdjustValue.BothFreq, PlayerPrefs.GetFloat(AdjustValue.BothFreq.ToString(),2.0f));
+            setAdjustValue(AdjustValue.FrontDamp, PlayerPrefs.GetFloat(AdjustValue.FrontDamp.ToString(),0.7f));
+            setAdjustValue(AdjustValue.FrontFreq, PlayerPrefs.GetFloat(AdjustValue.FrontFreq.ToString(),2.0f));
+            setAdjustValue(AdjustValue.BackDamp, PlayerPrefs.GetFloat(AdjustValue.BackDamp.ToString(),0.7f));
+            setAdjustValue(AdjustValue.BackFreq, PlayerPrefs.GetFloat(AdjustValue.BackFreq.ToString(),2.0f));
             setAdjustValue(AdjustValue.CarBodyMass, PlayerPrefs.GetFloat(AdjustValue.CarBodyMass.ToString(),0.08f));
         }
 
         public void SaveAdjustPrefs(AdjustValue valueName, float value)
         {
+            if(valueName == AdjustValue.BothDamp)
+            {
+                PlayerPrefs.SetFloat(AdjustValue.FrontDamp.ToString(), value);
+                PlayerPrefs.SetFloat(AdjustValue.BackDamp.ToString(), value);
+                return;
+            }
+            if(valueName == AdjustValue.BothFreq)
+            {
+                PlayerPrefs.SetFloat(AdjustValue.FrontFreq.ToString(), value);
+                PlayerPrefs.SetFloat(AdjustValue.BackFreq.ToString(), value);
+                return;
+            }
             PlayerPrefs.SetFloat(valueName.ToString(), value);
-            // Below code doesn't work because when save object doesn't exists
-            // PlayerPrefs.SetFloat(AdjustValue.Gravity.ToString(), getAdjustValue(AdjustValue.Gravity));
-            // PlayerPrefs.SetFloat(AdjustValue.TireFriction.ToString(), getAdjustValue(AdjustValue.TireFriction));
-            // PlayerPrefs.SetFloat(AdjustValue.GroundFriction.ToString(), getAdjustValue(AdjustValue.GroundFriction));
-            // PlayerPrefs.SetFloat(AdjustValue.SpeedForward.ToString(), getAdjustValue(AdjustValue.SpeedForward));
-            // PlayerPrefs.SetFloat(AdjustValue.TorqueForward.ToString(), getAdjustValue(AdjustValue.TorqueForward));
-            // PlayerPrefs.SetFloat(AdjustValue.SpeedBackward.ToString(), getAdjustValue(AdjustValue.SpeedBackward));
-            // PlayerPrefs.SetFloat(AdjustValue.TorqueBackward.ToString(), getAdjustValue(AdjustValue.TorqueBackward));
-            // PlayerPrefs.SetFloat(AdjustValue.SpeedFree.ToString(), getAdjustValue(AdjustValue.SpeedFree));
-            // PlayerPrefs.SetFloat(AdjustValue.TorqueFree.ToString(), getAdjustValue(AdjustValue.TorqueFree));
-            // PlayerPrefs.SetFloat(AdjustValue.TyreMass.ToString(), getAdjustValue(AdjustValue.TyreMass));
-            // PlayerPrefs.SetFloat(AdjustValue.Damping.ToString(), getAdjustValue(AdjustValue.Damping));
-            // PlayerPrefs.SetFloat(AdjustValue.Frequency.ToString(), getAdjustValue(AdjustValue.Frequency));
-            // PlayerPrefs.SetFloat(AdjustValue.CarBodyMass.ToString(), getAdjustValue(AdjustValue.CarBodyMass));
         }
 
         public void setAdjustValue(AdjustValue valueName, float value)
@@ -265,7 +279,7 @@ public class GameLogics : MonoBehaviour {
                 GameObject.FindGameObjectWithTag("FrontTire").GetComponent<Rigidbody2D>().mass = value;
                 GameObject.FindGameObjectWithTag("BackTire").GetComponent<Rigidbody2D>().mass = value;
             }
-            else if(valueName == AdjustValue.Damping)
+            else if(valueName == AdjustValue.BothDamp)
             {
                 WheelJoint2D[] joints;
                 JointSuspension2D suspension;
@@ -277,7 +291,7 @@ public class GameLogics : MonoBehaviour {
                     joint.suspension = suspension;
                 }
             }
-            else if(valueName == AdjustValue.Frequency)
+            else if(valueName == AdjustValue.BothFreq)
             {
                 WheelJoint2D[] joints;
                 JointSuspension2D suspension;
@@ -289,6 +303,48 @@ public class GameLogics : MonoBehaviour {
                     joint.suspension = suspension;
                 }
             }
+            else if(valueName == AdjustValue.FrontDamp)
+            {
+                WheelJoint2D[] joints;
+                JointSuspension2D suspension;
+                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
+                
+                suspension = joints[0].suspension;
+                suspension.dampingRatio = value;
+                joints[0].suspension = suspension;
+                
+            }
+            else if(valueName == AdjustValue.FrontFreq)
+            {
+                WheelJoint2D[] joints;
+                JointSuspension2D suspension;
+                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
+                
+                suspension = joints[0].suspension;
+                suspension.frequency = value;
+                joints[0].suspension = suspension;
+            }
+            else if(valueName == AdjustValue.BackDamp)
+            {
+                WheelJoint2D[] joints;
+                JointSuspension2D suspension;
+                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
+                
+                suspension = joints[1].suspension;
+                suspension.dampingRatio = value;
+                joints[1].suspension = suspension;
+                
+            }
+            else if(valueName == AdjustValue.BackFreq)
+            {
+                WheelJoint2D[] joints;
+                JointSuspension2D suspension;
+                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
+                
+                suspension = joints[1].suspension;
+                suspension.frequency = value;
+                joints[1].suspension = suspension;
+            }
             else if(valueName == AdjustValue.CarBodyMass)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<Rigidbody2D>().mass = value;
@@ -297,7 +353,6 @@ public class GameLogics : MonoBehaviour {
 
         public float getAdjustValue(AdjustValue valueName)
         {
-            GameObject gameObject;
             if(valueName == AdjustValue.Gravity)
             {
                 return Physics2D.gravity.y;
@@ -338,13 +393,29 @@ public class GameLogics : MonoBehaviour {
             {
                 return GameObject.FindGameObjectWithTag("FrontTire").GetComponent<Rigidbody2D>().mass;
             }
-            else if(valueName == AdjustValue.Damping)
+            else if(valueName == AdjustValue.BothDamp)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<WheelJoint2D>().suspension.dampingRatio;
             }
-            else if(valueName == AdjustValue.Frequency)
+            else if(valueName == AdjustValue.BothFreq)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<WheelJoint2D>().suspension.frequency;
+            }
+            else if(valueName == AdjustValue.FrontDamp)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>()[0].suspension.dampingRatio;
+            }
+            else if(valueName == AdjustValue.FrontFreq)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>()[0].suspension.frequency;
+            }
+            else if(valueName == AdjustValue.BackDamp)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>()[1].suspension.dampingRatio;
+            }
+            else if(valueName == AdjustValue.BackFreq)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>()[1].suspension.frequency;
             }
             else if(valueName == AdjustValue.CarBodyMass)
             {
@@ -379,12 +450,12 @@ public class GameLogics : MonoBehaviour {
         Destroy(coin);     
         //Debug.Log("GameLogics::OnCoinTriggerEnter2D");
         coinAmount++;
-        updateCoins();
+        updateCoinsText();
     }
 
-    private void updateCoins()
+    private void updateCoinsText()
     {
-        coinTextScript.setCoins(coinAmount);
+        coinTextScriptMP.setCoins(coinAmount);
     }
 
     public void OnPanZoomActiveEvent (bool active) {
@@ -446,6 +517,63 @@ public class GameLogics : MonoBehaviour {
         } else {
             editSubMode = EditSubMode.NONE;
             updateUIState (true);
+        }
+    }
+
+
+    bool gassPressed = false;
+    bool brakePressed = false;
+
+    public void onGasButton(bool state)
+    {
+        gassPressed = state;
+
+        if(state && brakePressed)
+        {
+            carControllerScript.setGas(1.0f);
+            return;
+        }
+        if(state && !brakePressed)
+        {
+            carControllerScript.setGas(1.0f);
+            return;
+        }
+        if(!state && brakePressed)
+        {
+            carControllerScript.setGas(-1.0f);
+            return;
+        }
+        if(!state && !brakePressed)
+        {
+            carControllerScript.setGas(0.0f);
+            return;
+        }
+
+    }
+
+    public void onBrakeButton(bool state)
+    {
+        brakePressed = state;
+
+        if(state && gassPressed)
+        {
+            carControllerScript.setGas(-1.0f);
+            return;
+        }
+        if(state && !gassPressed)
+        {
+            carControllerScript.setGas(-1.0f);
+            return;
+        }
+        if(!state && gassPressed)
+        {
+            carControllerScript.setGas(1.0f);
+            return;
+        }
+        if(!state && !gassPressed)
+        {
+            carControllerScript.setGas(0.0f);
+            return;
         }
     }
 

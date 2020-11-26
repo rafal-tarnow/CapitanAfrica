@@ -44,6 +44,8 @@ TagManager:
   - ButtonPlayMode
   - FrontTire
   - BackTire
+  - TextDistanceMP
+  - TextMoneyMP
   layers:
   - Default
   - TransparentFX

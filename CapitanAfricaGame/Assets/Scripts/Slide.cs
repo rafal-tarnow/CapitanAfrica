@@ -8,8 +8,6 @@ public class Slide : MonoBehaviour
 {
     int count = 0;
     int prevCount = -1;
-    bool check1 = false;
-    bool check2 = false;
     public GameObject Right;
     public GameObject Left;
     public GameObject center;
