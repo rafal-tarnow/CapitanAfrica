@@ -46,6 +46,10 @@ TagManager:
   - BackTire
   - TextDistanceMP
   - TextMoneyMP
+  - DbgTxt_1
+  - DbgTxt_2
+  - DbgTxt_3
+  - DbgTxt_4
   layers:
   - Default
   - TransparentFX

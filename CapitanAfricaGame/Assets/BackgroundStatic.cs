@@ -53,20 +53,24 @@ public class BackgroundStatic : MonoBehaviour
     }
 
 
-    Vector3 prevPosition;
-    void LateUpdate(){
+    Vector3 futureCamPosition = new Vector3();
 
-        transform.position = follow_target.position + offset;    //camera follow
-        prevPosition = follow_target.position;
-        
-        
-        run = (transform.position.x/40.0f);
+    void Update(){
+        if (Physics2D.simulationMode == SimulationMode2D.Script)
+            Physics2D.Simulate(1.0f/60.0f);
+
+        futureCamPosition = follow_target.position + offset;
+        run = (futureCamPosition.x/40.0f);
 
         float howMany = Mathf.Floor(run/imageWidthAfterScale);
 
         run = run - howMany*imageWidthAfterScale;
-        image.transform.position = new Vector3(transform.position.x - run, transform.position.y, image.transform.position.z);
+        image.transform.position = new Vector3(futureCamPosition.x - run, futureCamPosition.y, image.transform.position.z);
         
+    }
+
+    private void LateUpdate() {
+        transform.position = follow_target.position + offset;    //camera follow
     }
 
 }

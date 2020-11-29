@@ -33,6 +33,16 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(fuel > 0.0f)
+        {
+            fuel -= fuelconsumption*Time.fixedDeltaTime;
+        }
+        else
+        {
+            applyGasToCar(0);
+        }
+
+        getGas();
         //FUEL
         if(previousFuel - fuel > 0.1) // optymalization, dont update fuel image with small amount
         {
@@ -50,22 +60,6 @@ public class CarController : MonoBehaviour
         previousFuel = fuel;
         image.fillAmount = fuel;
     }
-
-    void FixedUpdate() 
-    {   
-
-        getGas();
-
-        if(fuel > 0.0f)
-        {
-            fuel -= fuelconsumption*Time.fixedDeltaTime;
-        }
-        else
-        {
-            applyGasToCar(0);
-        }
-        
-    }    
     
     private bool keySlashPressed = false;
     private bool keyZPressed = false;

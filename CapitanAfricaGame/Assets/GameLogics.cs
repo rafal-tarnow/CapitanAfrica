@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
+using TMPro;
 
 
 
@@ -55,14 +56,17 @@ public class GameLogics : MonoBehaviour {
     private GameObject canvasPlay;
     private GameObject canvasAdjust;
 
+
+
     private CoinTextScriptMP coinTextScriptMP;
 
     float cameraStartupOrthographicSize;
 
     AdjustManager adjustManager = new AdjustManager();
+    DebugManager debugManager = new DebugManager();
 
     void Awake () {
-        //Application.targetFrameRate = 200;
+        //Application.targetFrameRate = 62;
         UnityEngine.Debug.unityLogger.logEnabled = false;
 
         SaveSystem.Init ();
@@ -84,10 +88,7 @@ public class GameLogics : MonoBehaviour {
 
         if (coinTextScriptMP == null)
         {
-            Debug.Log("1 coinTextScriptMP == null");
             coinTextScriptMP = GameObject.FindWithTag("TextMoneyMP").GetComponent<CoinTextScriptMP>();
-            if(coinTextScriptMP == null)
-                Debug.Log(" 2 coinTextScriptMP == null");
         }
 
         if (buttonEditGround == null)
@@ -125,6 +126,18 @@ public class GameLogics : MonoBehaviour {
         //DisableGC();
 
         adjustManager.LoadAdjustPrefs();
+        debugManager.Start();
+    }
+
+    private void OnApplicationPause(bool pauseStatus) 
+    {
+        Debug.Log("OnApplicationPause");
+    }
+
+    void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt("Coins", coinAmount);
+        PlayerPrefs.Save();
     }
 
     private void OnDestroy() {
@@ -134,11 +147,7 @@ public class GameLogics : MonoBehaviour {
         //EnableGC();
     }
 
-    void OnApplicationQuit()
-    {
-        PlayerPrefs.SetInt("Coins", coinAmount);
-        PlayerPrefs.Save();
-    }
+
 
     public void OnPrefabDropEvent (GameObject prefab) {
         UnityEngine.Debug.Log ("Game logics, on prefab drop event");
@@ -189,7 +198,68 @@ public class GameLogics : MonoBehaviour {
         BackFreq,
         CarBodyMass
     }
-    
+    class DebugManager
+    {
+        private bool debugEnable = true;
+        private TMP_Text text_0;
+        private TMP_Text text_1;
+        private TMP_Text text_2;
+        private TMP_Text text_3;
+
+        public void Start() 
+        {
+            if(!debugEnable)
+                return;
+
+            if(text_0 == null)
+                text_0 = GameObject.FindWithTag("DbgTxt_1").GetComponent<TMP_Text>();
+
+            if(text_1 == null)
+                text_1 = GameObject.FindWithTag("DbgTxt_2").GetComponent<TMP_Text>();
+
+            if(text_2 == null)
+                text_2 = GameObject.FindWithTag("DbgTxt_3").GetComponent<TMP_Text>();
+
+            if(text_3 == null)
+                text_3 = GameObject.FindWithTag("DbgTxt_4").GetComponent<TMP_Text>();
+
+
+        }
+
+        float fixedTime = 0;
+        public void FixedUpdate() 
+        {
+             if(!debugEnable)
+                 return;
+            
+            float deltaTime = Time.time - fixedTime;
+            fixedTime = Time.time;
+            text_0.SetText("FUDeltaTime  = {0}", deltaTime);
+        }
+
+        float updateTime = 0;
+        public void Update()
+         {
+             if(!debugEnable)
+                 return;
+
+            float deltaTime = Time.time - updateTime;
+            updateTime = Time.time;
+            text_1.SetText("UDeltaTime = {0}", deltaTime);
+            text_2.SetText("");
+            updateTime = Time.time;
+        }
+
+        float lateUpdate = 0;
+        public void LateUpdate()
+        {
+            float deltaTime = Time.time - fixedTime;
+            lateUpdate = Time.time;
+            text_3.SetText("FU to LU = {0}", deltaTime);
+        }
+
+
+    }
     class AdjustManager{
         public void LoadAdjustPrefs()
         {
@@ -969,11 +1039,22 @@ public class GameLogics : MonoBehaviour {
 
     // }
 
-    // // Update is called once per frame
-    // void Update()
-    // {
+    //  private void FixedUpdate() 
+    //  {
+    //     debugManager.FixedUpdate();
+    // }   
 
-    // }
+    void Update()
+    {
+        // Debug.Log("GameLogics " + Time.time.ToString());
+        debugManager.Update();
+    }
+
+    void LateUpdate()
+    {
+        debugManager.LateUpdate();
+    }
+
 
     private class SaveObject {
         public List<Vector3> splinePoints;
