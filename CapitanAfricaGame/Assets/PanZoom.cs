@@ -109,15 +109,17 @@ public class PanZoom : MonoBehaviour {
 
         //---------- START PAN ZOOM -----------
         //IF ONE FINGER IS PRESSED AND NO GUI
-        if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && (!EventSystem.current.IsPointerOverGameObject ())) {
-            state = State.DRAG;
-            Debug.Log ("PanZoom drag started");
-            OnPanZoomActiveEvent?.Invoke (true);
 
-            touchDragStartPos_screen = Input.mousePosition;
-            touchDragStartPos_wordl = Camera.main.ScreenToWorldPoint (touchDragStartPos_screen);
-            return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
-        }
+        #warning poprawic obsluge myszy
+        // if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && (!EventSystem.current.IsPointerOverGameObject ())) {
+        //     state = State.DRAG;
+        //     Debug.Log ("PanZoom drag started");
+        //     OnPanZoomActiveEvent?.Invoke (true);
+
+        //     touchDragStartPos_screen = Input.mousePosition;
+        //     touchDragStartPos_wordl = Camera.main.ScreenToWorldPoint (touchDragStartPos_screen);
+        //     return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        // }
 
         if (((Input.touchCount == 1) && Input.GetTouch (0).phase == TouchPhase.Began) && (state == State.NONE) && !EventSystem.current.IsPointerOverGameObject (Input.GetTouch (0).fingerId)) {
             state = State.DRAG;
@@ -143,14 +145,14 @@ public class PanZoom : MonoBehaviour {
         //------------------------
 
         //--------- STOP PAN ZOOM -----------------
+         #warning poprawic obsluge myszy
+        // if ((Input.GetMouseButtonUp(0)) && (state != State.NONE)) {
+        //     state = State.NONE;
 
-        if ((Input.GetMouseButtonUp(0)) && (state != State.NONE)) {
-            state = State.NONE;
+        //     OnPanZoomActiveEvent?.Invoke (false);
 
-            OnPanZoomActiveEvent?.Invoke (false);
-
-            return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
-        }
+        //     return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        // }
 
         if (((Input.touchCount == 1) && Input.GetTouch (0).phase == TouchPhase.Ended) && (state != State.NONE)) {
             state = State.NONE;

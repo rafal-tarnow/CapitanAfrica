@@ -56,7 +56,8 @@ public class GameLogics : MonoBehaviour {
     private GameObject canvasPlay;
     private GameObject canvasAdjust;
 
-
+    private AudioSource coinAudioSource;
+    private AudioSource musicAudioSource;
 
     private CoinTextScriptMP coinTextScriptMP;
 
@@ -67,7 +68,7 @@ public class GameLogics : MonoBehaviour {
 
     void Awake () {
         //Application.targetFrameRate = 62;
-        UnityEngine.Debug.unityLogger.logEnabled = false;
+        //UnityEngine.Debug.unityLogger.logEnabled = false;
 
         SaveSystem.Init ();
 
@@ -108,6 +109,13 @@ public class GameLogics : MonoBehaviour {
 
         if(canvasAdjust == null)
             canvasAdjust = GameObject.FindWithTag("CanvasAdjust");
+
+        if((coinAudioSource == null) || (musicAudioSource == null))
+        {   
+            var audios = this.GetComponents<AudioSource>();
+            coinAudioSource = audios[0];
+            musicAudioSource = audios[1];
+        }
 
     }
 
@@ -520,6 +528,8 @@ public class GameLogics : MonoBehaviour {
         Destroy(coin);     
         //Debug.Log("GameLogics::OnCoinTriggerEnter2D");
         coinAmount++;
+
+        coinAudioSource.Play();
         updateCoinsText();
     }
 
@@ -681,6 +691,7 @@ public class GameLogics : MonoBehaviour {
 
     private void updateUIState (bool alignInventory) {
         if (mode == MainMode.PLAY) {
+            musicAudioSource.Play();
 
             backgroundSprite.SetActive (true);
             Camera.main.GetComponent<BackgroundStatic> ().enabled = true;
@@ -704,6 +715,7 @@ public class GameLogics : MonoBehaviour {
 
 
         } else if (mode == MainMode.EDIT) {
+            musicAudioSource.Pause();
 
             //carController.GetComponent<FollowByCamera>().enabled = true;
             //carController.GetComponent<CarController>().enabled = false;

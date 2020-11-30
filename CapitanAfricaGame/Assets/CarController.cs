@@ -8,6 +8,8 @@ public class CarController : MonoBehaviour
     private float previousFuel = 1.0f;
     public float fuelconsumption = 0.01f;
     public Rigidbody2D carRigidbody;
+    private Rigidbody2D frontTireRigidbody;
+    private Rigidbody2D backTireRigidbody;
 
     public UnityEngine.UI.Image image;
     // Start is called before the first frame update
@@ -21,9 +23,22 @@ public class CarController : MonoBehaviour
     public float torqueBackward;
     public float torqueFree;
 
+    private AudioSource engineSound;
+
     void Start()
     {
         startPosition = transform.position;
+
+        if(engineSound == null)
+            engineSound = this.GetComponent<AudioSource>();
+
+        if(frontTireRigidbody == null)
+            frontTireRigidbody = GameObject.FindWithTag("FrontTire").GetComponent<Rigidbody2D>();
+
+        if(backTireRigidbody == null)
+            backTireRigidbody = GameObject.FindWithTag("BackTire").GetComponent<Rigidbody2D>();
+
+        //engineSound.Play();
     }
 
     public void resetPosition()
@@ -33,6 +48,26 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Debug.Log("FrontTireAngularVelocity = " + frontTireRigidbody.angularVelocity.ToString());
+
+        // float speedForwardAbs = Mathf.Abs(frontTireRigidbody.angularVelocity);
+        // float speedBackwardAbs = Mathf.Abs(backTireRigidbody.angularVelocity);
+
+        // float speedRatio;
+        // if(speedForwardAbs < speedBackwardAbs)
+        // {
+        //     speedRatio = (speedForwardAbs/-speedForward)*3.0f;
+        // }
+        // else
+        // {
+        //    speedRatio = (speedBackwardAbs/-speedForward)*3.0f;
+        // }
+        
+
+        // Debug.Log("SpeedRatio = " + speedRatio.ToString());
+
+        // engineSound.pitch = speedRatio + 0.6f;
+
         if(fuel > 0.0f)
         {
             fuel -= fuelconsumption*Time.fixedDeltaTime;
