@@ -109,8 +109,7 @@ public class PanZoom : MonoBehaviour {
 
         //---------- START PAN ZOOM -----------
         //IF ONE FINGER IS PRESSED AND NO GUI
-        #warning TODO check EventSystem.current.IsPointerOverGameObject for mouse
-        if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && Input.GetKey(KeyCode.Space)/*&& !EventSystem.current.IsPointerOverGameObject (Input.mousePosition)*/) {
+        if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && (!EventSystem.current.IsPointerOverGameObject ())) {
             state = State.DRAG;
             Debug.Log ("PanZoom drag started");
             OnPanZoomActiveEvent?.Invoke (true);

@@ -57,7 +57,10 @@ public class BackgroundStatic : MonoBehaviour
 
     void Update(){
         if (Physics2D.simulationMode == SimulationMode2D.Script)
+        {
             Physics2D.Simulate(1.0f/60.0f);
+            //Physics2D.Simulate(1.0f/120.0f);
+        }
 
         futureCamPosition = follow_target.position + offset;
         run = (futureCamPosition.x/40.0f);
