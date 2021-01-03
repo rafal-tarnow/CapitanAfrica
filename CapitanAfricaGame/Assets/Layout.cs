@@ -58,5 +58,6 @@ public class Layout : MonoBehaviour
         nextButton.sizeDelta = new Vector2 (calcWidth(0.2f), calcHeight(0.2f));
 
         textLvlCompleteRt.localPosition = new Vector3(calcXPos(0.5f),calcYPos(0.9f), 0);
+        textLvlCompleteRt.sizeDelta = new Vector2 (calcWidth(0.9f), calcHeight(1.0f));
     }
 }
