@@ -55,6 +55,7 @@ public class GameLogics : MonoBehaviour {
     private GameObject canvasEdit;
     private GameObject canvasPlay;
     private GameObject canvasAdjust;
+    private GameObject canvasMeta;
 
     private AudioSource coinAudioSource;
     private AudioSource musicAudioSource;
@@ -110,6 +111,12 @@ public class GameLogics : MonoBehaviour {
         if(canvasAdjust == null)
             canvasAdjust = GameObject.FindWithTag("CanvasAdjust");
 
+        if(canvasMeta == null)
+            canvasMeta = GameObject.FindWithTag("CanvasMeta");
+
+        if(canvasEdit == null)
+            canvasEdit = GameObject.FindWithTag("CanvasEdit");
+
         if((coinAudioSource == null) || (musicAudioSource == null))
         {   
             var audios = this.GetComponents<AudioSource>();
@@ -134,7 +141,6 @@ public class GameLogics : MonoBehaviour {
         //DisableGC();
 
         adjustManager.LoadAdjustPrefs();
-        debugManager.Start();
     }
 
     private void OnApplicationPause(bool pauseStatus) 
@@ -206,68 +212,7 @@ public class GameLogics : MonoBehaviour {
         BackFreq,
         CarBodyMass
     }
-    class DebugManager
-    {
-        private bool debugEnable = true;
-        private TMP_Text text_0;
-        private TMP_Text text_1;
-        private TMP_Text text_2;
-        private TMP_Text text_3;
 
-        public void Start() 
-        {
-            if(!debugEnable)
-                return;
-
-            if(text_0 == null)
-                text_0 = GameObject.FindWithTag("DbgTxt_1").GetComponent<TMP_Text>();
-
-            if(text_1 == null)
-                text_1 = GameObject.FindWithTag("DbgTxt_2").GetComponent<TMP_Text>();
-
-            if(text_2 == null)
-                text_2 = GameObject.FindWithTag("DbgTxt_3").GetComponent<TMP_Text>();
-
-            if(text_3 == null)
-                text_3 = GameObject.FindWithTag("DbgTxt_4").GetComponent<TMP_Text>();
-
-
-        }
-
-        float fixedTime = 0;
-        public void FixedUpdate() 
-        {
-             if(!debugEnable)
-                 return;
-            
-            float deltaTime = Time.time - fixedTime;
-            fixedTime = Time.time;
-            text_0.SetText("FUDeltaTime  = {0}", deltaTime);
-        }
-
-        float updateTime = 0;
-        public void Update()
-         {
-             if(!debugEnable)
-                 return;
-
-            float deltaTime = Time.time - updateTime;
-            updateTime = Time.time;
-            text_1.SetText("UDeltaTime = {0}", deltaTime);
-            text_2.SetText("");
-            updateTime = Time.time;
-        }
-
-        float lateUpdate = 0;
-        public void LateUpdate()
-        {
-            float deltaTime = Time.time - fixedTime;
-            lateUpdate = Time.time;
-            text_3.SetText("FU to LU = {0}", deltaTime);
-        }
-
-
-    }
     class AdjustManager{
         public void LoadAdjustPrefs()
         {
@@ -685,8 +630,17 @@ public class GameLogics : MonoBehaviour {
         // }
     }
 
-    public void onMetaReached () {
-        SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+    public void onMetaReached () 
+    {
+        //SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+
+        canvasMeta.SetActive(true);
+
+        if (Physics2D.simulationMode == SimulationMode2D.Script)
+        {
+            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+            Time.timeScale = 0;
+        }
     }
 
     private void updateUIState (bool alignInventory) {
@@ -709,6 +663,7 @@ public class GameLogics : MonoBehaviour {
             canvasEdit.SetActive(false);
             canvasPlay.SetActive(true);
             canvasAdjust.SetActive(false);
+            canvasMeta.SetActive(false);
 
             groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
             setAllFants_Opacity_Dragable_Deletable (1.0f, false, false);
@@ -734,6 +689,7 @@ public class GameLogics : MonoBehaviour {
             canvasPlay.SetActive(false);
             canvasEdit.SetActive(true);
             canvasAdjust.SetActive(false);
+            canvasMeta.SetActive(false);
 
             if (editSubMode == EditSubMode.ADD_FANT) {
                 buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
@@ -1059,12 +1015,11 @@ public class GameLogics : MonoBehaviour {
     void Update()
     {
         // Debug.Log("GameLogics " + Time.time.ToString());
-        debugManager.Update();
     }
 
     void LateUpdate()
     {
-        debugManager.LateUpdate();
+
     }
 
 

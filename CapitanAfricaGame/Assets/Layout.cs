@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Layout : MonoBehaviour
+public class Layout :  MonoBehaviour
 {
     // Start is called before the first frame update
     public RectTransform nextButton;
@@ -20,7 +21,6 @@ public class Layout : MonoBehaviour
     {
         if(transform == null)
             transform = GetComponent<RectTransform>();
-
 
     }
 
@@ -43,7 +43,8 @@ public class Layout : MonoBehaviour
     {
         return height*procent;
     }
-    // Update is called once per frame
+
+    #warning Read how to update sizez only on rezise changed
     void Update()
     {
         width = transform.rect.width;
