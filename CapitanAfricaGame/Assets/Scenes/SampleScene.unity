@@ -8875,7 +8875,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 496491686}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: restartCurrentScene
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &496491686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10286,7 +10298,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -10709,7 +10721,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -15408,8 +15420,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2135066041}
   m_HandleRect: {fileID: 2135066040}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.30814108
+  m_Value: 0.9999998
+  m_Size: 0.3203711
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -24873,7 +24885,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 227302620}
         m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
-        m_MethodName: onReloadButtonReleased
+        m_MethodName: restartCurrentScene
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -33617,7 +33629,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1987895658}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: onBackButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1987895658
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -68,7 +68,7 @@ public class GameLogics : MonoBehaviour {
     DebugManager debugManager = new DebugManager();
 
     void Awake () {
-        //Application.targetFrameRate = 62;
+        Application.targetFrameRate = 60;
         //UnityEngine.Debug.unityLogger.logEnabled = false;
 
         SaveSystem.Init ();
@@ -183,7 +183,9 @@ public class GameLogics : MonoBehaviour {
         canvasAdjust.SetActive(false);
     }
 
-    public void onReloadButtonReleased (bool pressed) {
+    public void restartCurrentScene(bool pressed) {
+        Physics2D.simulationMode = SimulationMode2D.Update;
+
         if (!pressed) // if released
             SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
     }
@@ -636,11 +638,12 @@ public class GameLogics : MonoBehaviour {
 
         canvasMeta.SetActive(true);
 
-        if (Physics2D.simulationMode == SimulationMode2D.Script)
-        {
-            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
-            Time.timeScale = 0;
-        }
+        // if (Physics2D.simulationMode == SimulationMode2D.Script)
+        // {
+        //     Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+        //     Time.timeScale = 0;
+        // }
+        Physics2D.simulationMode = SimulationMode2D.Script;
     }
 
     private void updateUIState (bool alignInventory) {
@@ -667,6 +670,8 @@ public class GameLogics : MonoBehaviour {
 
             groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
             setAllFants_Opacity_Dragable_Deletable (1.0f, false, false);
+
+            Physics2D.simulationMode = SimulationMode2D.Update;
 
 
         } else if (mode == MainMode.EDIT) {
