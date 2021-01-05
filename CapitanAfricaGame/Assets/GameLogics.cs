@@ -891,7 +891,7 @@ public class GameLogics : MonoBehaviour {
             saveObject.board_m30Angles.Add (board.transform.rotation.eulerAngles);
         }
 
-        SaveSystem.Save<SaveObject> (saveObject, "0.txt");
+        SaveSystem.Save<SaveObject> (saveObject, getCurrentLevelFileName());
     }
 
     private void loadFantsPositionsToSaveObjectByTag (ref SaveObject saveObject, string tag) {
@@ -912,6 +912,15 @@ public class GameLogics : MonoBehaviour {
         }
     }
 
+
+    string getCurrentLevelFileName()
+    {
+        int levelIndex = ScenesVariablePass.levelToRun;
+        string levelFileName = levelIndex.ToString() + ".txt";
+        return levelFileName;
+    }
+
+
     public void LoadLevel () {
 
         DestroyAllObjects ("Coin");
@@ -923,7 +932,9 @@ public class GameLogics : MonoBehaviour {
         DestroyAllObjects ("Board_30");
         DestroyAllObjects ("Board_m30");
 
-        SaveObject saveObject = SaveSystem.Load<SaveObject> ("0.txt");
+        
+        
+        SaveObject saveObject = SaveSystem.Load<SaveObject> (getCurrentLevelFileName());
 
         //LOAD GROUND
         if (saveObject == null)

@@ -35,7 +35,9 @@ public class Slide : MonoBehaviour
         foreach (var button in buttons)
         {
             if ((button.tag != "ButtonSelectLevelLeft") && (button.tag != "ButtonSelectLevelRight") && (button.tag != "ButtonBack"))
-                button.onClick.AddListener(onButtonPressed);
+            {
+                button.onClick.AddListener(() => runLevel(button.name));
+            }
         }
     }
 
@@ -119,10 +121,14 @@ public class Slide : MonoBehaviour
 
     }
 
-    public void onButtonPressed()
+
+    void runLevel(string text)
     {
+        string[] words = text.Split('_');
+        ScenesVariablePass.levelToRun = int.Parse(words[1]);
         SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
     }
+
 
     public void onBackButtonPressed()
     {
