@@ -65,5 +65,11 @@ build-*
 
 #other
 Reverse/
-CapitanAfricaCocos/
+
+CapitanAfricaCocos/*
+!CapitanAfricaCocos/Resources
+!CapitanAfricaCocos/Resources/*
+
+!CapitanAfricaCocos/Classes
+!CapitanAfricaCocos/Classes/*
 
