@@ -190,6 +190,14 @@ public class GameLogics : MonoBehaviour {
             SceneManager.LoadScene (SceneManager.GetActiveScene().name);
     }
 
+    public void runNextLevel()
+    {
+        Physics2D.simulationMode = SimulationMode2D.Update;
+        #warning 'Check is next level exist to run'
+        ScenesVariablePass.levelToRun++;
+        SceneManager.LoadScene (SceneManager.GetActiveScene().name);
+    }
+
     public void onButtonRelovadLevel () {
         LoadLevel ();
         updateUIState (true);
