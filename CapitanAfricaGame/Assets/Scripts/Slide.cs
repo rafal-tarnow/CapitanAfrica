@@ -122,13 +122,17 @@ public class Slide : MonoBehaviour
     }
 
 
-    void runLevel(string text)
+    void runLevel(string buttonName)
     {
-        string[] words = text.Split('_');
-        ScenesVariablePass.levelToRun = int.Parse(words[1]);
+        ScenesVariablePass.levelToRun = getLevelIndexFromButtonName(buttonName);
         SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
     }
 
+    private int getLevelIndexFromButtonName(string buttonName)
+    {
+        string[] words = buttonName.Split('_');
+        return int.Parse(words[1]);
+    }
 
     public void onBackButtonPressed()
     {

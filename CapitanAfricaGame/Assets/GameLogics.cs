@@ -187,7 +187,7 @@ public class GameLogics : MonoBehaviour {
         Physics2D.simulationMode = SimulationMode2D.Update;
 
         if (!pressed) // if released
-            SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+            SceneManager.LoadScene (SceneManager.GetActiveScene().name);
     }
 
     public void onButtonRelovadLevel () {
