@@ -642,8 +642,7 @@ public class GameLogics : MonoBehaviour {
 
     public void onMetaReached () 
     {
-        //SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
-
+        unlockNextLevel();
         canvasMeta.SetActive(true);
 
         // if (Physics2D.simulationMode == SimulationMode2D.Script)
@@ -653,6 +652,19 @@ public class GameLogics : MonoBehaviour {
         // }
         Physics2D.simulationMode = SimulationMode2D.Script;
     }
+
+
+    private void unlockNextLevel()
+    {   
+        int unlockedLevel = PlayerPrefs.GetInt("unlockedLevelIndex", 0);
+
+        if(unlockedLevel < ScenesVariablePass.levelToRun + 1)
+        {
+            PlayerPrefs.SetInt("unlockedLevelIndex", ScenesVariablePass.levelToRun + 1);
+            PlayerPrefs.Save();
+        }
+    }
+
 
     private void updateUIState (bool alignInventory) {
         if (mode == MainMode.PLAY) {

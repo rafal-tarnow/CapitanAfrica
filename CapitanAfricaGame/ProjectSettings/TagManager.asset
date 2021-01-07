@@ -51,6 +51,7 @@ TagManager:
   - DbgTxt_2
   - DbgTxt_3
   - DbgTxt_4
+  - ButtonLevel
   layers:
   - Default
   - TransparentFX

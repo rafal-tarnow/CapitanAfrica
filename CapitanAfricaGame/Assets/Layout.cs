@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class Layout :  MonoBehaviour
 {
     // Start is called before the first frame update
-    public RectTransform nextButton;
-    public RectTransform menuButton;
-    public RectTransform repeatButton;
+    public RectTransform rightButton;
+    public RectTransform centerButton;
+    public RectTransform leftButton;
 
-    public RectTransform textLvlCompleteRt;
+    public RectTransform titleTextRt;
 
     private RectTransform transform;
 
@@ -22,6 +22,7 @@ public class Layout :  MonoBehaviour
         if(transform == null)
             transform = GetComponent<RectTransform>();
 
+        Update();
     }
 
     float calcYPos(float procent)
@@ -50,15 +51,28 @@ public class Layout :  MonoBehaviour
         width = transform.rect.width;
         height = transform.rect.height;
 
-        repeatButton.localPosition = new Vector3(calcXPos(0.2f),calcYPos(0.2f),0);
-        menuButton.localPosition = new Vector3(calcXPos(0.5f),calcYPos(0.2f),0);
-        nextButton.localPosition = new Vector3(calcXPos(0.8f),calcYPos(0.2f),0);
+        if(leftButton != null)
+        {
+            leftButton.localPosition = new Vector3(calcXPos(0.2f),calcYPos(0.2f),0);
+            leftButton.sizeDelta = new Vector2 (calcWidth(0.2f), calcHeight(0.2f));
+        }
 
-        repeatButton.sizeDelta = new Vector2 (calcWidth(0.2f), calcHeight(0.2f));
-        menuButton.sizeDelta = new Vector2 (calcWidth(0.2f), calcHeight(0.2f));
-        nextButton.sizeDelta = new Vector2 (calcWidth(0.2f), calcHeight(0.2f));
+        if(centerButton != null)
+        {
+            centerButton.localPosition = new Vector3(calcXPos(0.5f),calcYPos(0.2f),0);
+            centerButton.sizeDelta = new Vector2 (calcWidth(0.2f), calcHeight(0.2f));
+        }
 
-        textLvlCompleteRt.localPosition = new Vector3(calcXPos(0.5f),calcYPos(0.9f), 0);
-        textLvlCompleteRt.sizeDelta = new Vector2 (calcWidth(0.9f), calcHeight(1.0f));
+        if(rightButton != null)
+        {
+            rightButton.localPosition = new Vector3(calcXPos(0.8f),calcYPos(0.2f),0);
+            rightButton.sizeDelta = new Vector2 (calcWidth(0.2f), calcHeight(0.2f));
+        }
+
+        if(titleTextRt != null)
+        {
+            titleTextRt.localPosition = new Vector3(calcXPos(0.5f),calcYPos(0.9f), 0);
+            titleTextRt.sizeDelta = new Vector2 (calcWidth(0.9f), calcHeight(1.0f));
+        }
     }
 }

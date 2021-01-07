@@ -10444,10 +10444,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69820d2797152319eb0ac5c7a0e8ef5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextButton: {fileID: 428353208}
-  menuButton: {fileID: 1987895656}
-  repeatButton: {fileID: 496491684}
-  textLvlCompleteRt: {fileID: 790691098}
+  rightButton: {fileID: 428353208}
+  centerButton: {fileID: 1987895656}
+  leftButton: {fileID: 496491684}
+  titleTextRt: {fileID: 790691098}
 --- !u!1 &590271117
 GameObject:
   m_ObjectHideFlags: 0
@@ -15433,7 +15433,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2135066040}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.34628218
+  m_Size: 0.32789987
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

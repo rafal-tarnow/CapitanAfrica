@@ -15,6 +15,8 @@ public class Slide : MonoBehaviour
     public GameObject obj2;
     public GameObject obj3;
 
+    public GameObject levelLockedPanel;
+
     public GameObject imageWorld_1;
     public GameObject imageWorld_2;
 
@@ -28,17 +30,28 @@ public class Slide : MonoBehaviour
     public Sprite leftButtonActiveSprite;
     public Sprite leftButtonInactiveSprite;
 
+    public Sprite lockButtonImage;
+
 
     void Start()
     {
-        var buttons = FindObjectsOfType<Button>();
-        foreach (var button in buttons)
+        var buttons = GameObject.FindGameObjectsWithTag("ButtonLevel");
+        int  unlockedLevelIndex = PlayerPrefs.GetInt("unlockedLevelIndex", 0);
+        Button button;
+        for(int i = 0; i < buttons.Length; i++)
         {
-            if ((button.tag != "ButtonSelectLevelLeft") && (button.tag != "ButtonSelectLevelRight") && (button.tag != "ButtonBack"))
-            {
-                button.onClick.AddListener(() => runLevel(button.name));
-            }
+                button = buttons[i].GetComponent<Button>();
+                string buttonName = button.name;
+
+                button.onClick.AddListener(() => runLevel(buttonName));
+                if(i > unlockedLevelIndex)
+                    button.GetComponent<ButtonLock>().setLock(true);
         }
+
+        if(levelLockedPanel ==  null)
+            levelLockedPanel = GameObject.Find("PanelLock");
+
+        levelLockedPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -124,8 +137,21 @@ public class Slide : MonoBehaviour
 
     void runLevel(string buttonName)
     {
-        ScenesVariablePass.levelToRun = getLevelIndexFromButtonName(buttonName);
-        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+        int  unlockedLevelIndex = PlayerPrefs.GetInt("unlockedLevelIndex", 0);
+        int level = getLevelIndexFromButtonName(buttonName);
+
+        Debug.Log("unlockedLevelIndex " +  unlockedLevelIndex.ToString());
+        Debug.Log("level " +  level.ToString());
+
+        if(level > unlockedLevelIndex)
+        {
+            levelLockedPanel.SetActive(true);
+        }
+        else
+        {
+            ScenesVariablePass.levelToRun = level;
+            SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+        }
     }
 
     private int getLevelIndexFromButtonName(string buttonName)
