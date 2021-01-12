@@ -150,7 +150,7 @@ public class Slide : MonoBehaviour
         else
         {
             ScenesVariablePass.levelToRun = level;
-            SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+            SceneManager.LoadScene("PlayScene", LoadSceneMode.Single);
         }
     }
 
