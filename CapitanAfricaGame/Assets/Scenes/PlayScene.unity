@@ -15432,8 +15432,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2135066041}
   m_HandleRect: {fileID: 2135066040}
   m_Direction: 2
-  m_Value: 0.9999998
-  m_Size: 0.25894672
+  m_Value: 1
+  m_Size: 0.28356224
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32588,6 +32588,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
+--- !u!1 &1940338431 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2213201550219466496, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+  m_PrefabInstance: {fileID: 2213201549973321881}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1940338433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1940338431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef38a1270f92880d58a6426c49d661e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1945745155
 GameObject:
   m_ObjectHideFlags: 0

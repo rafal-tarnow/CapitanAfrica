@@ -878,9 +878,8 @@ public class GameLogics : MonoBehaviour {
 
     void Update()
     {
-        Debug.Log("GameLogics Update");
+        //Debug.Log("GameLogics Update");
         // Debug.Log("GameLogics " + Time.time.ToString());
-        Debug.Log("File Exist = " + File.Exists("Assets/Resources/Levels/template_level.txt").ToString());
     }
 
     void LateUpdate()
