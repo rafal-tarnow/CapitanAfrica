@@ -66,6 +66,7 @@ public class GameLogics : MonoBehaviour {
 
     AdjustManager adjustManager = new AdjustManager();
     DebugManager debugManager = new DebugManager();
+    LevelLoader levelLoader;
 
     void Awake () {
         Application.targetFrameRate = 60;
@@ -131,6 +132,9 @@ public class GameLogics : MonoBehaviour {
 
         mode = MainMode.PLAY;
         editSubMode = EditSubMode.NONE;
+
+        if(levelLoader == null)
+            levelLoader = new LevelLoader(coinPrefab, canisterPrefab, metaPrefab, bombPrefab, boxPrefab, board_0Prefab, board_30Prefab, board_m30Prefab, groundEditable);
 
         LoadLevel ();
         updateUIState (true);
@@ -924,12 +928,9 @@ public class GameLogics : MonoBehaviour {
         }
     }
 
-    void DestroyAllObjects (string tag) {
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag (tag);
+    void Moved_DestroyAllObjects (string tag) 
+    {
 
-        for (var i = 0; i < gameObjects.Length; i++) {
-            Destroy (gameObjects[i]);
-        }
     }
 
 
@@ -941,87 +942,9 @@ public class GameLogics : MonoBehaviour {
     }
 
 
-    public void LoadLevel () {
-
-        DestroyAllObjects ("Coin");
-        DestroyAllObjects ("FuelCanister");
-        DestroyAllObjects ("Meta");
-        DestroyAllObjects ("Box");
-        DestroyAllObjects ("Bomb");
-        DestroyAllObjects ("Board_0");
-        DestroyAllObjects ("Board_30");
-        DestroyAllObjects ("Board_m30");
-
-        
-        
-        SaveObject saveObject = SaveSystem.Load<SaveObject> (getCurrentLevelFileName());
-
-        //LOAD GROUND
-        if (saveObject == null)
-            UnityEngine.Debug.Log ("Load retun null");
-        else
-            groundEditable.GetComponent<EditableGround> ().loadPoints (saveObject.splinePoints);
-
-        //LOAD COINS
-        Vector3[] coinsPos = saveObject.coinsPositions.ToArray ();
-
-        for (int i = 0; i < coinsPos.Length; i++) {
-            Instantiate (coinPrefab, coinsPos[i], Quaternion.identity);
-        }
-
-        //LOAD CANISTERS
-        Vector3[] canisterPos = saveObject.canisterPositions.ToArray ();
-
-        for (int i = 0; i < canisterPos.Length; i++) {
-            Instantiate (canisterPrefab, canisterPos[i], Quaternion.identity);
-        }
-
-        //LOAD META
-        Vector3[] metasPos = saveObject.metaPositions.ToArray ();
-
-        for (int i = 0; i < metasPos.Length; i++) {
-            Instantiate (metaPrefab, metasPos[i], Quaternion.identity);
-        }
-
-        //LOAD Bombs
-        Vector3[] bombsPos = saveObject.bombPositions.ToArray ();
-        Vector3[] bombsRot = saveObject.bombAngles.ToArray ();
-
-        for (int i = 0; i < bombsPos.Length; i++) {
-            Instantiate (bombPrefab, bombsPos[i], Quaternion.Euler (bombsRot[i].x, bombsRot[i].y, bombsRot[i].z));
-        }
-
-        //LOAD Boxes
-        Vector3[] boxesPos = saveObject.boxPositions.ToArray ();
-        Vector3[] boxesRot = saveObject.boxAngles.ToArray ();
-
-        for (int i = 0; i < boxesPos.Length; i++) {
-            Instantiate (boxPrefab, boxesPos[i], Quaternion.Euler (boxesRot[i].x, boxesRot[i].y, boxesRot[i].z));
-        }
-
-        //LOAD Board_0
-        Vector3[] board_0Pos = saveObject.board_0Positions.ToArray ();
-        Vector3[] board_0Rot = saveObject.board_0Angles.ToArray ();
-
-        for (int i = 0; i < board_0Pos.Length; i++) {
-            Instantiate (board_0Prefab, board_0Pos[i], Quaternion.Euler (board_0Rot[i].x, board_0Rot[i].y, board_0Rot[i].z));
-        }
-
-        //LOAD Board_30
-        Vector3[] board_30Pos = saveObject.board_30Positions.ToArray ();
-        Vector3[] board_30Rot = saveObject.board_30Angles.ToArray ();
-
-        for (int i = 0; i < board_30Pos.Length; i++) {
-            Instantiate (board_30Prefab, board_30Pos[i], Quaternion.Euler (board_30Rot[i].x, board_30Rot[i].y, board_30Rot[i].z));
-        }
-
-        //LOAD Board_m30
-        Vector3[] board_m30Pos = saveObject.board_m30Positions.ToArray ();
-        Vector3[] board_m30Rot = saveObject.board_m30Angles.ToArray ();
-
-        for (int i = 0; i < board_m30Pos.Length; i++) {
-            Instantiate (board_m30Prefab, board_m30Pos[i], Quaternion.Euler (board_m30Rot[i].x, board_m30Rot[i].y, board_m30Rot[i].z));
-        }
+    public void LoadLevel () 
+    {
+        levelLoader.LoadLevel(getCurrentLevelFileName());
     }
 
 
@@ -1059,7 +982,11 @@ public class GameLogics : MonoBehaviour {
     }
 
 
-    private class SaveObject {
+
+}
+
+
+    class SaveObject {
         public List<Vector3> splinePoints;
         public List<Vector3> coinsPositions;
         public List<Vector3> canisterPositions;
@@ -1081,7 +1008,6 @@ public class GameLogics : MonoBehaviour {
         public Dictionary<string, List<Vector3>> fantPositions;
 
     }
-}
 
 public class SerializedTransform {
     public float[] _position = new float[3];
