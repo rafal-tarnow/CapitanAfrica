@@ -68,11 +68,11 @@ public class GameLogics : MonoBehaviour {
     DebugManager debugManager = new DebugManager();
     LevelLoader levelLoader;
 
-    void Awake () {
+    void Awake () 
+    {
         Application.targetFrameRate = 60;
         //UnityEngine.Debug.unityLogger.logEnabled = false;
 
-        SaveSystem.Init ();
 
         if (groundEditable == null)
             groundEditable = GameObject.FindWithTag ("GroundEditable");
@@ -127,7 +127,8 @@ public class GameLogics : MonoBehaviour {
 
     }
 
-    private void Start () {
+    private void Start () 
+    {
         cameraStartupOrthographicSize = Camera.main.orthographicSize;
 
         mode = MainMode.PLAY;
@@ -137,6 +138,7 @@ public class GameLogics : MonoBehaviour {
             levelLoader = new LevelLoader(coinPrefab, canisterPrefab, metaPrefab, bombPrefab, boxPrefab, board_0Prefab, board_30Prefab, board_m30Prefab, groundEditable);
 
         LoadLevel ();
+
         updateUIState (true);
 
         coinAmount = PlayerPrefs.GetInt("Coins",0);
@@ -876,7 +878,9 @@ public class GameLogics : MonoBehaviour {
 
     void Update()
     {
+        Debug.Log("GameLogics Update");
         // Debug.Log("GameLogics " + Time.time.ToString());
+        Debug.Log("File Exist = " + File.Exists("Assets/Resources/Levels/template_level.txt").ToString());
     }
 
     void LateUpdate()
