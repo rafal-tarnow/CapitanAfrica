@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
-using UnityEditor;
 
 public static class SaveSystem
 {
@@ -50,7 +49,7 @@ public static class SaveSystem
 
         if(!File.Exists(SAVE_FOLDER + "/" + fileName))
         {
-            FileUtil.CopyFileOrDirectory("Assets/Resources/Levels/template_level.txt", (SAVE_FOLDER + "/" + fileName));
+            File.Copy("Assets/Resources/Levels/template_level.txt", (SAVE_FOLDER + "/" + fileName), false);
         }
 
         if(File.Exists(SAVE_FOLDER + "/" + fileName))
