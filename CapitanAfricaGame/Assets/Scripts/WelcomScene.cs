@@ -34,6 +34,6 @@ public class WelcomScene : MonoBehaviour
 
     public void onSettingsButton()
     {
-
+        SceneManager.LoadScene("Test_1_WebScene", LoadSceneMode.Single);
     }
 }
