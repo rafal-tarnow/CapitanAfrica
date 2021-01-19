@@ -19,7 +19,7 @@ public class TestImageUploader : MonoBehaviour
 			.OnComplete (text => Debug.Log (text))
 			.Upload ();
 
-		for(int i = 0; i < 100; i++)
+		for(int i = 0; i < 35; i++)
 		{
 		JSONUploader
 			.Initialize ()

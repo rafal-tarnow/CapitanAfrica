@@ -250,7 +250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageSprite: {fileID: 133040639}
   imageSprite2: {fileID: 1979517691}
-  serverUrl: http://192.168.0.177/uploader/index.php
+  serverUrl: http://192.168.0.181/uploader/index.php
 --- !u!1 &1587356974
 GameObject:
   m_ObjectHideFlags: 0

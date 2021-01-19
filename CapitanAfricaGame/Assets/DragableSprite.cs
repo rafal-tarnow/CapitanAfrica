@@ -8,61 +8,88 @@ public class DragableSprite : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public static GameObject gameLogics;
     private float startPosX;
     private float startPoxY;
+    private bool m_dragable = true;
+
+    public UnityEvent<GameObject> OnSpritePointerDown;
+    public UnityEvent<GameObject> OnSpritePointerUp;
 
     public UnityEvent<GameObject> OnSpriteDrag;
     public UnityEvent<GameObject> OnSpriteBeginDrag;
     public UnityEvent<GameObject> OnSpriteEndDrag;
     // Update is called once per frame
 
-    void Start () {
+    void Start () 
+    {
         if (gameLogics == null)
             gameLogics = GameObject.FindWithTag ("GameLogics");
     }
 
-    public void OnPointerDown (PointerEventData eventData) {
-        //Debug.Log ("Coin OnPointerDown()");
+    public void setDragable(bool dragable)
+    {
+        m_dragable = dragable;
+    }
 
-        Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D> ();
-        if (rigidbody != null) { //errors here
-            rigidbody.bodyType = RigidbodyType2D.Kinematic;
+    public void OnPointerDown (PointerEventData eventData) 
+    {
+        Debug.Log ("OnPointerDown()");
+        OnSpritePointerDown?.Invoke (this.gameObject);
+
+
+        if(m_dragable)
+        {
+            Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D> ();
+            if (rigidbody != null) { //errors here
+                rigidbody.bodyType = RigidbodyType2D.Kinematic;
+            }
+
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint (eventData.position);
+
+            startPosX = worldPos.x - this.transform.localPosition.x;
+            startPoxY = worldPos.y - this.transform.localPosition.y;
+        }       
+    }
+
+
+    public void OnPointerUp (PointerEventData eventData) 
+    {
+        Debug.Log ("OnPointerUp()");
+        OnSpritePointerUp?.Invoke (this.gameObject);
+        
+        if(m_dragable)
+        {
+            Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D> ();
+            if (rigidbody != null) { //errors here
+                rigidbody.bodyType = RigidbodyType2D.Static;
+            }
         }
+    }
 
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint (eventData.position);
 
-        startPosX = worldPos.x - this.transform.localPosition.x;
-        startPoxY = worldPos.y - this.transform.localPosition.y;
-
-        gameLogics.GetComponent<GameLogics> ().OnDragSprite (true);
+    public void OnBeginDrag (PointerEventData eventData) 
+    {
+        Debug.Log ("OnBeginDrag()");
         OnSpriteBeginDrag?.Invoke (this.gameObject);
     }
 
-    public void OnPointerUp (PointerEventData eventData) {
-        //Debug.Log ("Coin OnPointerUp()");
 
-        OnSpriteEndDrag?.Invoke (this.gameObject);
-        gameLogics.GetComponent<GameLogics> ().OnDragSprite (false);
+    public void OnDrag (PointerEventData eventData) 
+    {
+        Debug.Log ("OnDrag()");
 
-        Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D> ();
-        if (rigidbody != null) { //errors here
-            rigidbody.bodyType = RigidbodyType2D.Static;
+        if(m_dragable)
+        {
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint (eventData.position);
+            this.gameObject.transform.localPosition = new Vector3 (worldPos.x - startPosX, worldPos.y - startPoxY, 0);
         }
-    }
-
-    public void OnBeginDrag (PointerEventData eventData) {
-        //Debug.Log ("Coin OnBeginDrag()");
-    }
-
-    public void OnDrag (PointerEventData eventData) {
-        //Debug.Log ("Coin OnDrag()");
-
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint (eventData.position);
-
-        this.gameObject.transform.localPosition = new Vector3 (worldPos.x - startPosX, worldPos.y - startPoxY, 0);
+        
         OnSpriteDrag?.Invoke (this.gameObject);
     }
 
-    public void OnEndDrag (PointerEventData eventData) {
-        //Debug.Log ("Coin OnEndDrag()");
+
+    public void OnEndDrag (PointerEventData eventData) 
+    {
+        Debug.Log ("OnEndDrag()");
+        OnSpriteEndDrag?.Invoke (this.gameObject);
     }
 
 }

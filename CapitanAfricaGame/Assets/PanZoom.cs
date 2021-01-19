@@ -8,7 +8,7 @@ public class PanZoom : MonoBehaviour {
     public UnityEvent<bool> OnPanZoomActiveEvent;
 
     Vector3 touchStart;
-    public float zoomOutMin = 0.1f;
+    public float zoomOutMin = 0.001f;
     public float zoomOutMax = 50.0f;
 
     enum State {
@@ -111,15 +111,15 @@ public class PanZoom : MonoBehaviour {
         //IF ONE FINGER IS PRESSED AND NO GUI
 
         #warning poprawic obsluge myszy
-        // if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && (!EventSystem.current.IsPointerOverGameObject ())) {
-        //     state = State.DRAG;
-        //     Debug.Log ("PanZoom drag started");
-        //     OnPanZoomActiveEvent?.Invoke (true);
+        if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && (!EventSystem.current.IsPointerOverGameObject ())) {
+            state = State.DRAG;
+            Debug.Log ("PanZoom drag started");
+            OnPanZoomActiveEvent?.Invoke (true);
 
-        //     touchDragStartPos_screen = Input.mousePosition;
-        //     touchDragStartPos_wordl = Camera.main.ScreenToWorldPoint (touchDragStartPos_screen);
-        //     return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
-        // }
+            touchDragStartPos_screen = Input.mousePosition;
+            touchDragStartPos_wordl = Camera.main.ScreenToWorldPoint (touchDragStartPos_screen);
+            return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
 
         if (((Input.touchCount == 1) && Input.GetTouch (0).phase == TouchPhase.Began) && (state == State.NONE) && !EventSystem.current.IsPointerOverGameObject (Input.GetTouch (0).fingerId)) {
             state = State.DRAG;
@@ -146,13 +146,13 @@ public class PanZoom : MonoBehaviour {
 
         //--------- STOP PAN ZOOM -----------------
          #warning poprawic obsluge myszy
-        // if ((Input.GetMouseButtonUp(0)) && (state != State.NONE)) {
-        //     state = State.NONE;
+        if ((Input.GetMouseButtonUp(0)) && (state != State.NONE)) {
+            state = State.NONE;
 
-        //     OnPanZoomActiveEvent?.Invoke (false);
+            OnPanZoomActiveEvent?.Invoke (false);
 
-        //     return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
-        // }
+            return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        }
 
         if (((Input.touchCount == 1) && Input.GetTouch (0).phase == TouchPhase.Ended) && (state != State.NONE)) {
             state = State.NONE;
@@ -273,6 +273,7 @@ public class PanZoom : MonoBehaviour {
         // }
 
         // zoom(Input.GetAxis("Mouse ScrollWheel"));
+        zoom(Input.mouseScrollDelta.y);
     }
 
     void print (string txt, Vector3 v) {

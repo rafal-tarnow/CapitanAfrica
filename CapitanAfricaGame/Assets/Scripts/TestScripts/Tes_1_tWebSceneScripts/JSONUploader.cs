@@ -19,7 +19,7 @@ public class JSONUploader : MonoBehaviour
 
 	public static JSONUploader Initialize ()
 	{
-		return new GameObject ("ImageUploader").AddComponent <JSONUploader> ();
+		return new GameObject ("JSONUploader").AddComponent <JSONUploader> ();
 	}
 
 	public JSONUploader SetUrl (string serverUrl)

@@ -32,6 +32,8 @@ public class Slide : MonoBehaviour
 
     public Sprite lockButtonImage;
 
+    public string serverUrl;
+
 
     void Start()
     {
@@ -42,9 +44,10 @@ public class Slide : MonoBehaviour
         {
                 button = buttons[i].GetComponent<Button>();
                 string buttonName = button.name;
+                int buttonIndex = getLevelIndexFromButtonName(buttonName);
 
                 button.onClick.AddListener(() => runLevel(buttonName));
-                if(i > unlockedLevelIndex)
+                if(buttonIndex > unlockedLevelIndex)
                     button.GetComponent<ButtonLock>().setLock(true);
         }
 
@@ -163,6 +166,36 @@ public class Slide : MonoBehaviour
     public void onBackButtonPressed()
     {
         SceneManager.LoadScene("WelcomeScene", LoadSceneMode.Single);
+    }
+
+    public void onUploadButtonPressed()
+    {
+		for(int i = 0; i < 35; i++)
+		{
+		    JSONUploader
+			    .Initialize ()
+			    .SetUrl (serverUrl + "index.php")
+			    .SetJsonFilePath (Paths.LEVELS_EDIT + i.ToString() + ".txt")
+			    .SetFieldName ("myimage")
+			    .OnError (error => Debug.Log (error))
+			    .OnComplete (text => Toast.Instance.Show("SUCCES Uploading"))
+			    .Upload ();
+		}
+    }
+
+    public void onDownloadButtonPressed()
+    {
+		for(int i = 0; i < 35; i++)
+		{
+			JSONDownloader
+			.Initialize ()
+			.SetUrl (serverUrl + "uploaded_images/CapitanAfrica/" + i.ToString() + ".txt")
+			.SetJsonFilePath (Paths.LEVELS_EDIT + i.ToString() + ".txt")
+			.SetFieldName ("myimage")
+			.OnError (error => Debug.Log (error))
+			.OnComplete (text => Toast.Instance.Show("SUCCES Downloading"))
+			.Download();
+		}
     }
 }
 

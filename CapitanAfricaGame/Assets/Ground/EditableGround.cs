@@ -6,37 +6,48 @@ using System;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
+
 public class EditableGround : MonoBehaviour
 {
-    public UnityEvent<bool> OnDragRedDotEvent;
+
     private SpriteShapeController spriteShapeController;
     Vector3 lastPosition;
     float minimumDistance = 0.3f;
     Spline spline;
-    bool isEditingEnable = false;
     bool dragRedDotMode = false;
-    private GameObject redDot;
+    public GameObject redDotPrefab;
     private Vector3 touchStartPos;
+     private GameObject groundEditable;
 
     List<GameObject> redDotList = new List<GameObject>();
     Dictionary<GameObject, int> redDotMap = new Dictionary<GameObject, int>();
+
+    public enum Mode{
+        PLAY,
+        EDIT_INACTIVE,
+        EDIT_INACTIVE_DARK,
+        EDIT_DRAG_ADD_POINTS,
+        EDIT_DELETE_POINTS
+    }
+
+    Mode m_mode = Mode.PLAY;
+
+
     void Awake()
     {
-        if (redDot == null)
-        {
-            redDot = GameObject.FindWithTag("RedDot");
-            redDot.SetActive(false);
-        }
+        if (groundEditable == null)
+            groundEditable = GameObject.FindWithTag ("GroundEditable");
 
         spriteShapeController = gameObject.GetComponent<SpriteShapeController>();
         spline = spriteShapeController.spline;
-
     }
+
 
     void Start()
     {
 
     }
+
 
     public List<Vector3> getSplinesPointsPositions()
     {
@@ -47,16 +58,21 @@ public class EditableGround : MonoBehaviour
         }
         return points;
     }
+
+
     void OnDisable()
     {
         spriteShapeController.BakeCollider();
         destroyAllRedDots();
     }
 
+
     void OnEnable()
     {
         updateAllRedDots();
     }
+
+
     private void destroyAllRedDots()
     {
         redDotMap.Clear();
@@ -66,6 +82,8 @@ public class EditableGround : MonoBehaviour
         }
         redDotList.Clear();
     }
+
+
     private void activateAllRedDots(bool activate)
     {
         foreach (var obj in redDotList)
@@ -74,27 +92,39 @@ public class EditableGround : MonoBehaviour
         }
     }
 
+    private void dragableAllRedDots(bool dragable)
+    {
+        foreach(var obj in redDotList)
+        {
+            obj.GetComponent<DragableSprite>().setDragable(dragable);
+        }
+    }
+
+
     private void updateAllRedDots()
     {
         destroyAllRedDots();
 
-        //MAKE CLONE
-        if (redDot.activeSelf == false)
-            redDot.SetActive(true);
-
-
         for (int i = 0; i < spline.GetPointCount(); i++)
         {
-            GameObject cloneRedDot = Instantiate(redDot) as GameObject;
+            GameObject cloneRedDot = Instantiate(redDotPrefab) as GameObject;
             cloneRedDot.transform.position = spline.GetPosition(i);
+
             cloneRedDot.GetComponent<DragableSprite>().OnSpriteBeginDrag.AddListener(onRedDotBeginDrag);
             cloneRedDot.GetComponent<DragableSprite>().OnSpriteDrag.AddListener(onRedDotDrag);
             cloneRedDot.GetComponent<DragableSprite>().OnSpriteEndDrag.AddListener(onRedDotEndDrag);
+            cloneRedDot.GetComponent<DragableSprite>().OnSpritePointerDown.AddListener(onRedDotPointerDown);
+            cloneRedDot.GetComponent<DragableSprite>().OnSpritePointerUp.AddListener(onRedDotPointerUp);
+
             redDotList.Add(cloneRedDot);
             redDotMap.Add(cloneRedDot, i);
         }
 
-        redDot.SetActive(false);
+    }
+
+    private void deleteRedPoint()
+    {
+
     }
 
 
@@ -119,6 +149,7 @@ public class EditableGround : MonoBehaviour
         sc.spline.SetRightTangent(pointIndex, rightTangent);
     }
 
+
     private int addSplinePoint2_atEnd(Vector3 position)
     {
         spline.InsertPointAt(spline.GetPointCount(), position);
@@ -127,6 +158,7 @@ public class EditableGround : MonoBehaviour
         spline.SetHeight(newPointIndex, 1.0f);
         return newPointIndex;
     }
+
 
     private int insertSplinePoint(Vector3 position)
     {
@@ -186,6 +218,8 @@ public class EditableGround : MonoBehaviour
         spline.SetHeight(minDistanceIndex, 1.0f);
         return minDistanceIndex;
     }
+
+
     private int addSplinePoint(Vector3 position)
     {
         spline.InsertPointAt(spline.GetPointCount(), position);
@@ -196,41 +230,106 @@ public class EditableGround : MonoBehaviour
     }
 
 
-
     private void changeSplinePointPosition(Int32 index, Vector3 position)
     {
         spline.SetPosition(index, position);
         Smoothen(spriteShapeController, index - 1);
-
     }
 
+
+    public void onRedDotPointerDown(GameObject gameObject )
+    {
+        dragRedDotMode = true;
+    }
+
+    public void onRedDotPointerUp(GameObject gameObject) 
+    {
+        dragRedDotMode = false;
+
+        if(m_mode == Mode.EDIT_DELETE_POINTS)
+        {
+            spline.RemovePointAt(redDotMap[gameObject]);
+            updateAllRedDots();
+            dragableAllRedDots(false);
+            spriteShapeController.BakeCollider();
+        }    
+    }
 
     public void onRedDotBeginDrag(GameObject gameObject)
     {
-              OnDragRedDotEvent?.Invoke(true);
         dragRedDotMode = true;
     }
+
 
     public void onRedDotEndDrag(GameObject gameObject)
     {
         dragRedDotMode = false;
-        OnDragRedDotEvent?.Invoke(false);
     }
+
+
     public void onRedDotDrag(GameObject gameObject)
     {
         //Debug.Log("Red dot pos changed = " + position.ToString());
-        Int32 index = redDotMap[gameObject];
-        Vector3 position = gameObject.transform.localPosition;
+        if(m_mode == Mode.EDIT_DRAG_ADD_POINTS)
+        {
+            Int32 index = redDotMap[gameObject];
+            Vector3 position = gameObject.transform.localPosition;
 
-        changeSplinePointPosition(index, position);
+            changeSplinePointPosition(index, position);
+        }
     }
 
-    public void enableEditing(bool enableEditing)
+
+    public void setMode(Mode mode) 
     {
-        isEditingEnable = enableEditing;
-        activateAllRedDots(enableEditing);
+        m_mode = mode;
+
+        switch(m_mode)
+        {
+            case Mode.PLAY:
+                groundEditable.SetActive (true);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
+                groundEditable.GetComponent<EditableGround> ().enabled = false; // in play mode edition is disabled
+            break;
+            case Mode.EDIT_INACTIVE:
+            //common edit
+                groundEditable.SetActive (true);
+                groundEditable.GetComponent<EditableGround> ().enabled = true;
+            //
+                activateAllRedDots(false);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
+            break;
+            case Mode.EDIT_INACTIVE_DARK:
+                //common edit
+                groundEditable.SetActive (true);
+                groundEditable.GetComponent<EditableGround> ().enabled = true;
+                //
+                 activateAllRedDots(false);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 0.8f);
+            break;
+            case Mode.EDIT_DRAG_ADD_POINTS:
+            //common edit
+                groundEditable.SetActive (true);
+                groundEditable.GetComponent<EditableGround> ().enabled = true;
+            //
+                activateAllRedDots(true);
+                dragableAllRedDots(true);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1f);
+            break;
+            case Mode.EDIT_DELETE_POINTS:
+            //common edit
+                groundEditable.SetActive (true);
+                groundEditable.GetComponent<EditableGround> ().enabled = true;
+            //
+                 activateAllRedDots(true);
+                 dragableAllRedDots(false);
+                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 0.8f);
+            break;
+        }
     }
-    // Update is called once per frame
+
+
+    
     private bool IsPointerOverUIObject()
     {
         PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
@@ -251,9 +350,15 @@ public class EditableGround : MonoBehaviour
             if (splineIndex > 3)
                 Smoothen(spriteShapeController, splineIndex - 1);
         }
+
         updateAllRedDots();
-        activateAllRedDots(isEditingEnable);
+
+        if((m_mode == Mode.EDIT_DRAG_ADD_POINTS) ||  (m_mode == Mode.EDIT_DELETE_POINTS))
+            activateAllRedDots(true);
+        else
+            activateAllRedDots(false);
     }
+
 
     private float distanceInMilimeters(Vector3 p1, Vector3 p2)
     {
@@ -272,48 +377,15 @@ public class EditableGround : MonoBehaviour
         float distInMilimeters = distanceInInches * 25.4f;
         return distInMilimeters;
     }
+
+
     void Update()
     {
-        if (!isEditingEnable)
-        {
+        if(m_mode != Mode.EDIT_DRAG_ADD_POINTS)
             return;
-        }
 
         if (IsPointerOverUIObject())
             return;
-        // if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) // check touch over ui
-        // {
-        //     // Check if finger is over a UI element
-        //     //if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
-        //     if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
-        //     {
-        //         return;
-        //     }
-        // }
-
-        // if (Input.GetMouseButtonDown(0)) // check mouse click over ui
-        // {
-        //     // Check if the mouse was clicked over a UI element
-        //     if (EventSystem.current.IsPointerOverGameObject())
-        //     {
-        //         return;
-        //     }
-        // }
-
-
-
-        // var insertPoint = Input.mousePosition;
-        // insertPoint.z = 0.0f;
-        // insertPoint = Camera.main.ScreenToWorldPoint(insertPoint);
-        // insertPoint.z = 0.0f;  
-        // var m = Mathf.Abs((insertPoint - lastPosition).magnitude);
-        // if (Input.GetMouseButton(0) && m > minimumDistance)
-        // { 
-        //     int splineIndex = addSplinePoint2(insertPoint);
-
-        //     addRedDot(insertPoint, splineIndex);
-        //     lastPosition = insertPoint;
-        // }
 
 
         if(dragRedDotMode)
@@ -347,18 +419,5 @@ public class EditableGround : MonoBehaviour
                     lastPosition = mp;
                 }
         }
-
-
-
-        // if(index == spline.GetPointCount())
-        // {
-        //     index = 0;
-        // } 
-        // redDot.transform.position = spline.GetPosition(index);
-        // index++;
-        //Debug.Log("lastPosition = " + lastPosition.ToString());
-
-
-
     }
 }

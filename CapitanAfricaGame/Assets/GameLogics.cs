@@ -463,26 +463,25 @@ public class GameLogics : MonoBehaviour {
             return 0.0f;
         }
     }
+
+
     public void setAdjustValue(AdjustValue valueName, float value)
     {
         adjustManager.setAdjustValue(valueName, value);
     }
+
 
     public float getAdjustValue(AdjustValue valueName)
     {
         return adjustManager.getAdjustValue(valueName);
     }
 
-    public void OnUIInventoryDragEvent (bool isDragging) {
+
+    public void OnUIInventoryDragEvent (bool isDragging) 
+    {
         //Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if inventory is dragging disable pan zoom
     }
-    public void OnDragRedDotEvent (bool isDragging) {
-        //Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if red dot is dragging disable pan zoom
-    }
 
-    public void OnDragSprite (bool isDragging) {
-        //Camera.main.GetComponent<PanZoom>().enabled = !isDragging;
-    }
 
     public void OnCoinTriggerEnter2D(GameObject coin, Collider2D collider)
     {
@@ -494,10 +493,12 @@ public class GameLogics : MonoBehaviour {
         updateCoinsText();
     }
 
+
     private void updateCoinsText()
     {
         coinTextScriptMP.setCoins(coinAmount);
     }
+
 
     public void OnPanZoomActiveEvent (bool active) {
         //Debug.Log ("Game Logics OnPanZoomActiveEvent = " + active);
@@ -524,13 +525,16 @@ public class GameLogics : MonoBehaviour {
     //     NONE            updateUIState();
     }
 
-    public void onEditButton () {
+    public void onEditButton () 
+    {
         mode = MainMode.EDIT;
         LoadLevel ();
         updateUIState (true);
     }
 
-    public void onPlayButton () {
+
+    public void onPlayButton () 
+    {
         mode = MainMode.PLAY;
         SaveLevel ();
         updateUIState (true);
@@ -672,8 +676,10 @@ public class GameLogics : MonoBehaviour {
     }
 
 
-    private void updateUIState (bool alignInventory) {
-        if (mode == MainMode.PLAY) {
+    private void updateUIState (bool alignInventory) 
+    {
+        if (mode == MainMode.PLAY) 
+        {
             musicAudioSource.Play();
 
             backgroundSprite.SetActive (true);
@@ -681,8 +687,7 @@ public class GameLogics : MonoBehaviour {
             Camera.main.GetComponent<PanZoom> ().enabled = false;
             Camera.main.orthographicSize = cameraStartupOrthographicSize;
 
-            groundEditable.SetActive (true);
-            groundEditable.GetComponent<EditableGround> ().enabled = false; // in play mode edition is disabled
+            groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.PLAY);
 
             carController.SetActive (true);
             // carController.GetComponent<FollowByCamera>().enabled = false;
@@ -694,13 +699,14 @@ public class GameLogics : MonoBehaviour {
             canvasAdjust.SetActive(false);
             canvasMeta.SetActive(false);
 
-            groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
+            
             setAllFants_Opacity_Dragable_Deletable (1.0f, false, false);
 
             Physics2D.simulationMode = SimulationMode2D.Update;
 
-
-        } else if (mode == MainMode.EDIT) {
+        } 
+        else if (mode == MainMode.EDIT) 
+        {
             musicAudioSource.Pause();
 
             //carController.GetComponent<FollowByCamera>().enabled = true;
@@ -714,59 +720,62 @@ public class GameLogics : MonoBehaviour {
 
             backgroundSprite.SetActive (false);
 
-            groundEditable.SetActive (true);
-            groundEditable.GetComponent<EditableGround> ().enabled = true;
-
             canvasPlay.SetActive(false);
             canvasEdit.SetActive(true);
             canvasAdjust.SetActive(false);
             canvasMeta.SetActive(false);
 
-            if (editSubMode == EditSubMode.ADD_FANT) {
+            if (editSubMode == EditSubMode.ADD_FANT) 
+            {
                 buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
                 buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
                 buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
 
-                groundEditable.GetComponent<EditableGround> ().enableEditing (false);
-                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
+                groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.EDIT_INACTIVE);
+
                 inventoryUI.SetActive (true);
                 if(alignInventory)
                     inventoryUI.GetComponent<UnityEngine.UI.ScrollRect> ().horizontalNormalizedPosition = 1.0f;
                 
                 setAllFants_Opacity_Dragable_Deletable (1.0f, true, false);
-            } else if (editSubMode == EditSubMode.EDIT_GROUND) {
+            } 
+            else if (editSubMode == EditSubMode.EDIT_GROUND) 
+            {
                 buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
                 buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
                 buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
 
-                groundEditable.GetComponent<EditableGround> ().enableEditing (true);
-                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1f);
+                groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.EDIT_DRAG_ADD_POINTS);
+                
                 inventoryUI.SetActive (false);
 
                 setAllFants_Opacity_Dragable_Deletable (0.3f, false, false);
-            } else if (editSubMode == EditSubMode.DELETE_FANT) {
+            } 
+            else if (editSubMode == EditSubMode.DELETE_FANT) 
+            {
                 buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
                 buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
                 buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
 
-                groundEditable.GetComponent<EditableGround> ().enableEditing (false);
-                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 0.8f);
+                groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.EDIT_DELETE_POINTS);
+                
                 inventoryUI.SetActive (false);
 
                 setAllFants_Opacity_Dragable_Deletable (1.0f, false, true);
-            } else if (editSubMode == EditSubMode.NONE) {
+            } 
+            else if (editSubMode == EditSubMode.NONE) 
+            {
                 buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
                 buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
                 buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+               
+                groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.EDIT_INACTIVE);
 
-                groundEditable.GetComponent<EditableGround> ().enableEditing (false);
-                groundEditable.GetComponent<UnityEngine.U2D.SpriteShapeRenderer> ().color = new Color (1f, 1f, 1f, 1.0f);
                 inventoryUI.SetActive (false);
 
                 setAllFants_Opacity_Dragable_Deletable (0.3f, false, false);
             }
         }
-
     }
 
     void setAllFants_Dragable (bool dragable) {
