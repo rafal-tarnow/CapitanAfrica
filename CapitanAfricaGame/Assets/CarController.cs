@@ -45,6 +45,11 @@ public class CarController : MonoBehaviour
     {
         transform.position = startPosition;
     }
+
+    private void FixedUpdate() {
+        //carRigidbody.AddTorque(1.0f, ForceMode2D.Force);
+        carRigidbody.rotation += 50.0f*Time.fixedDeltaTime;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -184,5 +189,30 @@ public class CarController : MonoBehaviour
             wheelFrontJoint.motor = frontMotor;
             wheelBackJoint.motor = backMotor;                           
         }
+    }
+
+    public void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log("Car controller: OnTriggerEnter2D");
+    }
+
+    public void OnTriggerStay(Collider other) {
+        //Debug.Log("Car controller: OnTriggerStay");
+    }
+
+    public void OnTriggerExit2D(Collider2D other)
+    {
+        Debug.Log("Car controller: OnTriggerExit2D");
+    }
+    
+    public void OnCollisionEnter2D(Collision2D other) {
+        Debug.Log("Car controller: OnCollisionEnter2D");
+    }
+
+    public void OnCollisionStay2D(Collision2D other) {
+        //Debug.Log("Car controller: OnCollisionStay2D");
+    }
+
+    public void OnCollisionExit2D(Collision2D other) {
+        Debug.Log("Car controller: OnCollisionExit2D");
     }
 }
