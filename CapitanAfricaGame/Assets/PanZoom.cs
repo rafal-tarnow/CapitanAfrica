@@ -110,7 +110,7 @@ public class PanZoom : MonoBehaviour {
         //---------- START PAN ZOOM -----------
         //IF ONE FINGER IS PRESSED AND NO GUI
 
-        #warning poprawic obsluge myszy
+        #warning poprawic obsluge myszy gdy draguje sie inventory elementy to przesuwa sie swiat
         if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && (!EventSystem.current.IsPointerOverGameObject ())) {
             state = State.DRAG;
             Debug.Log ("PanZoom drag started");
@@ -145,7 +145,7 @@ public class PanZoom : MonoBehaviour {
         //------------------------
 
         //--------- STOP PAN ZOOM -----------------
-         #warning poprawic obsluge myszy
+         #warning poprawic obsluge myszy gdy draguje sie inventory elementy to przesuwa sie swiat
         if ((Input.GetMouseButtonUp(0)) && (state != State.NONE)) {
             state = State.NONE;
 
