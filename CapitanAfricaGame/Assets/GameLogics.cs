@@ -566,61 +566,17 @@ public class GameLogics : MonoBehaviour {
     }
 
 
-    bool gassPressed = false;
-    bool brakePressed = false;
-
     public void onGasButton(bool state)
     {
-        gassPressed = state;
-
-        if(state && brakePressed)
-        {
-            carControllerScript.setGas(1.0f);
-            return;
-        }
-        if(state && !brakePressed)
-        {
-            carControllerScript.setGas(1.0f);
-            return;
-        }
-        if(!state && brakePressed)
-        {
-            carControllerScript.setGas(-1.0f);
-            return;
-        }
-        if(!state && !brakePressed)
-        {
-            carControllerScript.setGas(0.0f);
-            return;
-        }
-
+        carControllerScript.onGasPedalPressedEvent(state);
     }
+
 
     public void onBrakeButton(bool state)
     {
-        brakePressed = state;
-
-        if(state && gassPressed)
-        {
-            carControllerScript.setGas(-1.0f);
-            return;
-        }
-        if(state && !gassPressed)
-        {
-            carControllerScript.setGas(-1.0f);
-            return;
-        }
-        if(!state && gassPressed)
-        {
-            carControllerScript.setGas(1.0f);
-            return;
-        }
-        if(!state && !gassPressed)
-        {
-            carControllerScript.setGas(0.0f);
-            return;
-        }
+        carControllerScript.onBrakePedalPressedEvent(state); 
     }
+
 
     public void onDragButton (bool state) {
         if (state) {
