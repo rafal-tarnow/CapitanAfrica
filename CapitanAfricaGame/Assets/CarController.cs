@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarController : MonoBehaviour
+public class CarController : MonoBehaviour//, IParentFromChildsCollisions
 {
     private float fuel = 1.0f;
     private float previousFuel = 1.0f;
@@ -23,7 +23,14 @@ public class CarController : MonoBehaviour
     public float torqueBackward;
     public float torqueFree;
 
+    private float m_currentGas = 0.0f;
+    bool m_gasPedalPressed = false;
+    bool m_brakePedalPressed = false;
+    bool m_isColliding = false;
+
     private AudioSource engineSound;
+    private Collider2D[] childColliders;
+
 
     void Start()
     {
@@ -39,18 +46,121 @@ public class CarController : MonoBehaviour
             backTireRigidbody = GameObject.FindWithTag("BackTire").GetComponent<Rigidbody2D>();
 
         //engineSound.Play();
+        childColliders = this.GetComponentsInChildren<Collider2D>();
     }
+
+
+    public void onGasPedalPressedEvent(bool pressed)
+    {
+        m_gasPedalPressed = pressed;
+
+        if(m_gasPedalPressed && m_brakePedalPressed)
+        {
+            this.setGasEvent(1.0f);
+            return;
+        }
+        if(m_gasPedalPressed && !m_brakePedalPressed)
+        {
+            this.setGasEvent(1.0f);
+            return;
+        }
+        if(!m_gasPedalPressed && m_brakePedalPressed)
+        {
+            this.setGasEvent(-1.0f);
+            return;
+        }
+        if(!m_gasPedalPressed && !m_brakePedalPressed)
+        {
+            this.setGasEvent(0.0f);
+            return;
+        }
+    }
+
+
+    public void onBrakePedalPressedEvent(bool pressed) 
+    {
+        m_brakePedalPressed = pressed;
+
+        if(m_brakePedalPressed && m_gasPedalPressed)
+        {
+            this.setGasEvent(-1.0f);
+            return;
+        }
+        if(m_brakePedalPressed && !m_gasPedalPressed)
+        {
+            this.setGasEvent(-1.0f);
+            return;
+        }
+        if(!m_brakePedalPressed && m_gasPedalPressed)
+        {
+            this.setGasEvent(1.0f);
+            return;
+        }
+        if(!m_brakePedalPressed && !m_gasPedalPressed)
+        {
+            this.setGasEvent(0.0f);
+            return;
+        }
+    }
+
 
     public void resetPosition()
     {
         transform.position = startPosition;
     }
 
-    private void FixedUpdate() {
-        //carRigidbody.AddTorque(1.0f, ForceMode2D.Force);
-        carRigidbody.rotation += 50.0f*Time.fixedDeltaTime;
+
+    private void setGasEvent(float gas)
+    {
+        // if(gas > 0.0f)
+        // {
+        //     carRigidbody.AddTorque(-5, ForceMode2D.Force);
+        // }
+        // else if(gas < 0.0f)
+        // {
+        //     carRigidbody.AddTorque(5, ForceMode2D.Force);
+        // }
+        // else
+        // {
+        //     //carRigidbody.AddTorque(0, ForceMode2D.Force);
+        // }
+        
+
+        m_currentGas = gas;
+        if(fuel>0.0f)
+            applyGasToCar(gas);
     }
-    // Update is called once per frame
+
+
+    private void FixedUpdate() 
+    {
+        //carRigidbody.rotation += 200.0f*Time.fixedDeltaTime;
+        //carRigidbody.AddTorque(-5, ForceMode2D.Force);
+        Debug.Log("Is child colliding = " + areChildsCollide().ToString());
+
+
+        #warning przerobic rotate z pool na event
+        if(areChildsCollide())
+        {
+            carRigidbody.AddTorque(0, ForceMode2D.Force);
+        }
+        else
+        {
+            if(m_currentGas > 0.0f)
+            {
+                if(carRigidbody.angularVelocity < 70)
+                    carRigidbody.AddTorque(500*Time.fixedDeltaTime, ForceMode2D.Force);
+            }
+            else if(m_currentGas < 0.0f)
+            {
+                if(carRigidbody.angularVelocity > -70)
+                    carRigidbody.AddTorque(-500*Time.fixedDeltaTime, ForceMode2D.Force);
+            }
+        }
+
+    }
+    
+
     void Update()
     {
         // Debug.Log("FrontTireAngularVelocity = " + frontTireRigidbody.angularVelocity.ToString());
@@ -82,15 +192,14 @@ public class CarController : MonoBehaviour
             applyGasToCar(0);
         }
 
-        getGas();
+        getGasFromKeyboard();
         //FUEL
         if(previousFuel - fuel > 0.1) // optymalization, dont update fuel image with small amount
         {
             previousFuel = fuel;
             image.fillAmount = fuel;
         }
-        //DISTANCE
-        //DistanceText.setDistance((int)(transform.position.x));
+
         DistanceTextMP.setDistance((int)(transform.position.x));
     }
 
@@ -101,57 +210,30 @@ public class CarController : MonoBehaviour
         image.fillAmount = fuel;
     }
     
-    private bool keySlashPressed = false;
-    private bool keyZPressed = false;
 
-    private void getGas()
+    private void getGasFromKeyboard()
     {     
         if(Input.GetKeyDown(KeyCode.Slash))
         {
-            keySlashPressed = true;
-
-            if(!keyZPressed)
-                setGas(1.0f);
-            else
-                setGas(1.0f);
+            onGasPedalPressedEvent(true);
         }
 
         if(Input.GetKeyUp(KeyCode.Slash))
         {
-            keySlashPressed = false;
-
-            if(!keyZPressed)
-                setGas(0.0f);
-            else
-                setGas(-1.0f);
+            onGasPedalPressedEvent(false);
         }
 
         if(Input.GetKeyDown(KeyCode.Z))
         {
-            keyZPressed = true;
-
-            if(!keySlashPressed)
-                setGas(-1.0f);
-            else
-                setGas(-1.0f);
+            onBrakePedalPressedEvent(true);
         }
 
         if(Input.GetKeyUp(KeyCode.Z))
         {
-            keyZPressed = false;
-
-            if(!keySlashPressed)
-                setGas(0.0f);
-            else
-                setGas(1.0f);
+            onBrakePedalPressedEvent(false);
         }
     }
 
-    public void setGas(float gas)
-    {
-        if(fuel>0.0f)
-            applyGasToCar(gas);
-    }
 
     private void applyGasToCar(float x)
     {
@@ -191,8 +273,18 @@ public class CarController : MonoBehaviour
         }
     }
 
+    bool areChildsCollide()
+    {
+        for(int i = 0; i < childColliders.Length; i++)
+        {
+            if(childColliders[i].IsTouchingLayers(Physics2D.AllLayers))
+                return true;
+        }
+        return false;
+    }
+
     public void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("Car controller: OnTriggerEnter2D");
+        //Debug.Log("Car controller: OnTriggerEnter2D");
     }
 
     public void OnTriggerStay(Collider other) {
@@ -201,11 +293,12 @@ public class CarController : MonoBehaviour
 
     public void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log("Car controller: OnTriggerExit2D");
+        //Debug.Log("Car controller: OnTriggerExit2D");
     }
     
     public void OnCollisionEnter2D(Collision2D other) {
-        Debug.Log("Car controller: OnCollisionEnter2D");
+        //Debug.Log("Car controller: OnCollisionEnter2D");
+        m_isColliding = true;
     }
 
     public void OnCollisionStay2D(Collision2D other) {
@@ -213,6 +306,7 @@ public class CarController : MonoBehaviour
     }
 
     public void OnCollisionExit2D(Collision2D other) {
-        Debug.Log("Car controller: OnCollisionExit2D");
+        //Debug.Log("Car controller: OnCollisionExit2D");
+        m_isColliding = false;
     }
 }
