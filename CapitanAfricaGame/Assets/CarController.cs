@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarController : MonoBehaviour//, IParentFromChildsCollisions
+public class CarController : MonoBehaviour
 {
     private float fuel = 1.0f;
     private float previousFuel = 1.0f;
@@ -283,30 +283,30 @@ public class CarController : MonoBehaviour//, IParentFromChildsCollisions
         return false;
     }
 
-    public void OnTriggerEnter2D(Collider2D other) {
-        //Debug.Log("Car controller: OnTriggerEnter2D");
-    }
+    // public void OnTriggerEnter2D(Collider2D other) {
+    //     //Debug.Log("Car controller: OnTriggerEnter2D");
+    // }
 
-    public void OnTriggerStay(Collider other) {
-        //Debug.Log("Car controller: OnTriggerStay");
-    }
+    // public void OnTriggerStay(Collider other) {
+    //     //Debug.Log("Car controller: OnTriggerStay");
+    // }
 
-    public void OnTriggerExit2D(Collider2D other)
-    {
-        //Debug.Log("Car controller: OnTriggerExit2D");
-    }
+    // public void OnTriggerExit2D(Collider2D other)
+    // {
+    //     //Debug.Log("Car controller: OnTriggerExit2D");
+    // }
     
-    public void OnCollisionEnter2D(Collision2D other) {
-        //Debug.Log("Car controller: OnCollisionEnter2D");
-        m_isColliding = true;
-    }
+    // public void OnCollisionEnter2D(Collision2D other) {
+    //     //Debug.Log("Car controller: OnCollisionEnter2D");
+    //     m_isColliding = true;
+    // }
 
-    public void OnCollisionStay2D(Collision2D other) {
-        //Debug.Log("Car controller: OnCollisionStay2D");
-    }
+    // public void OnCollisionStay2D(Collision2D other) {
+    //     //Debug.Log("Car controller: OnCollisionStay2D");
+    // }
 
-    public void OnCollisionExit2D(Collision2D other) {
-        //Debug.Log("Car controller: OnCollisionExit2D");
-        m_isColliding = false;
-    }
+    // public void OnCollisionExit2D(Collision2D other) {
+    //     //Debug.Log("Car controller: OnCollisionExit2D");
+    //     m_isColliding = false;
+    // }
 }
