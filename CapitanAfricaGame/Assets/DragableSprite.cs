@@ -5,7 +5,6 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class DragableSprite : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IEndDragHandler, IDragHandler {
-    public static GameObject gameLogics;
     private float startPosX;
     private float startPoxY;
     private bool m_dragable = true;
@@ -17,11 +16,11 @@ public class DragableSprite : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public UnityEvent<GameObject> OnSpriteBeginDrag;
     public UnityEvent<GameObject> OnSpriteEndDrag;
     // Update is called once per frame
+    private RigidbodyType2D m_previousBodyType = RigidbodyType2D.Static;
 
     void Start () 
     {
-        if (gameLogics == null)
-            gameLogics = GameObject.FindWithTag ("GameLogics");
+
     }
 
     public void setDragable(bool dragable)
@@ -39,6 +38,7 @@ public class DragableSprite : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D> ();
             if (rigidbody != null) { //errors here
+                m_previousBodyType = rigidbody.bodyType;
                 rigidbody.bodyType = RigidbodyType2D.Kinematic;
             }
 
@@ -59,7 +59,7 @@ public class DragableSprite : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             Rigidbody2D rigidbody = this.GetComponent<Rigidbody2D> ();
             if (rigidbody != null) { //errors here
-                rigidbody.bodyType = RigidbodyType2D.Static;
+                rigidbody.bodyType = m_previousBodyType;
             }
         }
     }
