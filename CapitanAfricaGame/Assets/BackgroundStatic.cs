@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BackgroundStatic : MonoBehaviour
 {
-    public CarController carController;
     public Transform follow_target; //camera follow
     private Vector3 offset; //camera follow
 
@@ -61,18 +60,21 @@ public class BackgroundStatic : MonoBehaviour
         //     Physics2D.Simulate(1.0f/60.0f);
         // }
 
-        futureCamPosition = follow_target.position + offset;
+   
+        
+    }
+
+    private void LateUpdate() {
+        transform.position = follow_target.position + offset;    //camera follow
+
+
+             futureCamPosition = follow_target.position + offset;
         run = (futureCamPosition.x/40.0f);
 
         float howMany = Mathf.Floor(run/imageWidthAfterScale);
 
         run = run - howMany*imageWidthAfterScale;
         image.transform.position = new Vector3(futureCamPosition.x - run, futureCamPosition.y, image.transform.position.z);
-        
-    }
-
-    private void LateUpdate() {
-        transform.position = follow_target.position + offset;    //camera follow
     }
 
 }

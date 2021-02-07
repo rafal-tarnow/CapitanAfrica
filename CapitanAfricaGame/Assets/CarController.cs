@@ -104,6 +104,62 @@ public class CarController : MonoBehaviour
     }
 
 
+    public void setCarParameter_FrontDampingRatio(float damping)
+    {
+        JointSuspension2D suspension;
+  
+        suspension = wheelFrontJoint.suspension;
+        suspension.dampingRatio = damping;
+        wheelFrontJoint.suspension = suspension;        
+    }
+
+    public void setCarParameter_BackDampingRatio(float damping)
+    {
+        JointSuspension2D suspension;
+  
+        suspension = wheelBackJoint.suspension;
+        suspension.dampingRatio = damping;
+        wheelBackJoint.suspension = suspension;        
+    }
+
+    public void setCarParameter_FrontFrequency(float freq)
+    {
+        JointSuspension2D suspension;
+  
+        suspension = wheelFrontJoint.suspension;
+        suspension.frequency = freq;
+        wheelFrontJoint.suspension = suspension;        
+    }
+
+    public void setCarParameter_BackFrequency(float freq)
+    {
+        JointSuspension2D suspension;
+  
+        suspension = wheelBackJoint.suspension;
+        suspension.frequency = freq;
+        wheelBackJoint.suspension = suspension;        
+    }
+
+    public float getCarParameter_FrontDampingRatio()
+    {
+        return wheelFrontJoint.suspension.dampingRatio;
+    }
+
+    public float getCarParameter_BackDampingRatio()
+    {
+        return wheelBackJoint.suspension.dampingRatio;
+    }
+
+    public float getCarParameter_FrontFrequency()
+    {
+        return wheelFrontJoint.suspension.frequency;
+    }
+
+    public float getCarParameter_BackFrequency()
+    {
+        return wheelBackJoint.suspension.frequency;
+    }
+
     public void resetPosition()
     {
         transform.position = startPosition;

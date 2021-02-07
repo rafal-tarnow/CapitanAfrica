@@ -52,6 +52,7 @@ TagManager:
   - DbgTxt_3
   - DbgTxt_4
   - ButtonLevel
+  - CarBody
   layers:
   - Default
   - TransparentFX
@@ -62,7 +63,7 @@ TagManager:
   - 
   - 
   - car
-  - 
+  - ground
   - 
   - 
   - 

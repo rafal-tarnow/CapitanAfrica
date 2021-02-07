@@ -320,69 +320,29 @@ public class GameLogics : MonoBehaviour {
             }
             else if(valueName == AdjustValue.BothDamp)
             {
-                WheelJoint2D[] joints;
-                JointSuspension2D suspension;
-                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
-                foreach (WheelJoint2D joint in joints)
-                {
-                    suspension = joint.suspension;
-                    suspension.dampingRatio = value;
-                    joint.suspension = suspension;
-                }
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontDampingRatio(value);
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackDampingRatio(value);
             }
             else if(valueName == AdjustValue.BothFreq)
             {
-                WheelJoint2D[] joints;
-                JointSuspension2D suspension;
-                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
-                foreach (WheelJoint2D joint in joints)
-                {
-                    suspension = joint.suspension;
-                    suspension.frequency = value;
-                    joint.suspension = suspension;
-                }
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontFrequency(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackFrequency(value); 
             }
             else if(valueName == AdjustValue.FrontDamp)
             {
-                WheelJoint2D[] joints;
-                JointSuspension2D suspension;
-                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
-                
-                suspension = joints[0].suspension;
-                suspension.dampingRatio = value;
-                joints[0].suspension = suspension;
-                
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontDampingRatio(value); 
             }
             else if(valueName == AdjustValue.FrontFreq)
             {
-                WheelJoint2D[] joints;
-                JointSuspension2D suspension;
-                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
-                
-                suspension = joints[0].suspension;
-                suspension.frequency = value;
-                joints[0].suspension = suspension;
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontFrequency(value); 
             }
             else if(valueName == AdjustValue.BackDamp)
             {
-                WheelJoint2D[] joints;
-                JointSuspension2D suspension;
-                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
-                
-                suspension = joints[1].suspension;
-                suspension.dampingRatio = value;
-                joints[1].suspension = suspension;
-                
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackDampingRatio(value);
             }
             else if(valueName == AdjustValue.BackFreq)
             {
-                WheelJoint2D[] joints;
-                JointSuspension2D suspension;
-                joints = GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>();
-                
-                suspension = joints[1].suspension;
-                suspension.frequency = value;
-                joints[1].suspension = suspension;
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackFrequency(value); 
             }
             else if(valueName == AdjustValue.CarBodyMass)
             {
@@ -434,27 +394,27 @@ public class GameLogics : MonoBehaviour {
             }
             else if(valueName == AdjustValue.BothDamp)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<WheelJoint2D>().suspension.dampingRatio;
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontDampingRatio();
             }
             else if(valueName == AdjustValue.BothFreq)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<WheelJoint2D>().suspension.frequency;
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontFrequency(); 
             }
             else if(valueName == AdjustValue.FrontDamp)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>()[0].suspension.dampingRatio;
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontDampingRatio();
             }
             else if(valueName == AdjustValue.FrontFreq)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>()[0].suspension.frequency;
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontFrequency(); 
             }
             else if(valueName == AdjustValue.BackDamp)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>()[1].suspension.dampingRatio;
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_BackDampingRatio();
             }
             else if(valueName == AdjustValue.BackFreq)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponents<WheelJoint2D>()[1].suspension.frequency;
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_BackFrequency(); 
             }
             else if(valueName == AdjustValue.CarBodyMass)
             {
