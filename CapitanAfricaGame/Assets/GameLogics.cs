@@ -70,7 +70,6 @@ public class GameLogics : MonoBehaviour {
 
     void Awake () 
     {
-        Application.targetFrameRate = 60;
         //UnityEngine.Debug.unityLogger.logEnabled = false;
 
 
@@ -226,7 +225,14 @@ public class GameLogics : MonoBehaviour {
         FrontFreq,
         BackDamp,
         BackFreq,
-        CarBodyMass
+        CarBodyMass,
+        DriverBodyMass,
+        DriverBodyFrequency,
+        DriverBodyDamping,
+        DriverHeadMass,
+        DriverHeadFrequency,
+        DriverHeadDamping,
+        DriverHeadBreakForce
     }
 
     class AdjustManager{
@@ -249,6 +255,15 @@ public class GameLogics : MonoBehaviour {
             setAdjustValue(AdjustValue.BackDamp, PlayerPrefs.GetFloat(AdjustValue.BackDamp.ToString(),0.7f));
             setAdjustValue(AdjustValue.BackFreq, PlayerPrefs.GetFloat(AdjustValue.BackFreq.ToString(),2.0f));
             setAdjustValue(AdjustValue.CarBodyMass, PlayerPrefs.GetFloat(AdjustValue.CarBodyMass.ToString(),0.08f));
+
+            setAdjustValue(AdjustValue.DriverBodyMass, PlayerPrefs.GetFloat(AdjustValue.DriverBodyMass.ToString(),0.05f));
+            setAdjustValue(AdjustValue.DriverBodyFrequency, PlayerPrefs.GetFloat(AdjustValue.DriverBodyFrequency.ToString(),110.0f));
+            setAdjustValue(AdjustValue.DriverBodyDamping, PlayerPrefs.GetFloat(AdjustValue.DriverBodyDamping.ToString(),0.1f));
+            setAdjustValue(AdjustValue.DriverHeadMass, PlayerPrefs.GetFloat(AdjustValue.DriverHeadMass.ToString(),0.005f));
+            setAdjustValue(AdjustValue.DriverHeadFrequency, PlayerPrefs.GetFloat(AdjustValue.DriverHeadFrequency.ToString(),3.0f));
+            setAdjustValue(AdjustValue.DriverHeadDamping, PlayerPrefs.GetFloat(AdjustValue.DriverHeadDamping.ToString(),1.0f));
+            setAdjustValue(AdjustValue.DriverHeadBreakForce, PlayerPrefs.GetFloat(AdjustValue.DriverHeadBreakForce.ToString(),10.0f));
+        
         }
 
         public void SaveAdjustPrefs(AdjustValue valueName, float value)
@@ -277,11 +292,8 @@ public class GameLogics : MonoBehaviour {
             }
             else if(valueName == AdjustValue.TireFriction)
             {
-                GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial.friction = value;
-                GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial.friction = value;
-
-                GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial;
-                GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("BackTire").GetComponent<CircleCollider2D>().sharedMaterial;
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontTireFriction(value);
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackTireFriction(value);
             }
             else if(valueName == AdjustValue.GroundFriction)
             {
@@ -346,8 +358,36 @@ public class GameLogics : MonoBehaviour {
             }
             else if(valueName == AdjustValue.CarBodyMass)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<Rigidbody2D>().mass = value;
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyMass(value); 
             }
+            else if(valueName == AdjustValue.DriverBodyMass)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyMass(value); 
+            }
+            else if(valueName == AdjustValue.DriverBodyFrequency)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyFrequency(value); 
+            }
+            else if(valueName == AdjustValue.DriverBodyDamping)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyDamping(value); 
+            }
+            else if(valueName == AdjustValue.DriverHeadMass)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadMass(value); 
+            }
+            else if(valueName == AdjustValue.DriverHeadFrequency)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadFrequency(value); 
+            }
+            else if(valueName == AdjustValue.DriverHeadDamping)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadDamping(value); 
+            }
+            else if(valueName == AdjustValue.DriverHeadBreakForce)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadBreakForce(value); 
+            }        
         }
 
         public float getAdjustValue(AdjustValue valueName)
@@ -418,7 +458,35 @@ public class GameLogics : MonoBehaviour {
             }
             else if(valueName == AdjustValue.CarBodyMass)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<Rigidbody2D>().mass;
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyMass(); 
+            }
+            else if(valueName == AdjustValue.DriverBodyMass)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyMass(); 
+            }
+            else if(valueName == AdjustValue.DriverBodyFrequency)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyFrequency(); 
+            }
+            else if(valueName == AdjustValue.DriverBodyDamping)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyDamping(); 
+            }
+            else if(valueName == AdjustValue.DriverHeadMass)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadMass(); 
+            }
+            else if(valueName == AdjustValue.DriverHeadFrequency)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadFrequency(); 
+            }
+            else if(valueName == AdjustValue.DriverHeadDamping)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadDamping(); 
+            }
+            else if(valueName == AdjustValue.DriverHeadBreakForce)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadBreakForce(); 
             }
             return 0.0f;
         }

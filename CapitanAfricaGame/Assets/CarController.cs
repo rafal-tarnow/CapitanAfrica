@@ -18,6 +18,12 @@ public class CarController : MonoBehaviour
     //--------------------
     private JointMotor2D backMotor, frontMotor;
     public WheelJoint2D wheelFrontJoint, wheelBackJoint;
+    public CircleCollider2D whellFrontCollider, whellBackCollider;
+    public Rigidbody2D carBody;
+    public Rigidbody2D driverBody;
+    public SpringJoint2D driverBodySpring;
+    public Rigidbody2D driverHead;
+    public SpringJoint2D driverHeadSpring;
     public float speedForward, speedBackward, speedFree;
     public float torqueForward;
     public float torqueBackward;
@@ -131,12 +137,106 @@ public class CarController : MonoBehaviour
         wheelFrontJoint.suspension = suspension;        
     }
 
+    public void setCarParameter_FrontTireFriction(float friction)
+    {
+        whellFrontCollider.sharedMaterial.friction = friction;
+        whellFrontCollider.sharedMaterial = whellFrontCollider.sharedMaterial;
+    }
+
+    public void setCarParameter_CarBodyMass(float param) 
+    {
+        carBody.mass = param;
+    }
+
+    public void setCarParameter_DriverBodyMass(float param) 
+    {
+        driverBody.mass = param;
+    }
+
+    public float getCarParameter_DriverBodyMass() 
+    {
+        return driverBody.mass;
+    }
+
+    public void setCarParameter_DriverBodyFrequency(float param)
+    {
+        driverBodySpring.frequency = param;
+    }
+
+    public float getCarParameter_DriverBodyFrequency()
+    {
+        return driverBodySpring.frequency;
+    }
+
+    public void setCarParameter_DriverBodyDamping(float param)
+    {
+        driverBodySpring.dampingRatio = param;
+    }
+
+    public float getCarParameter_DriverBodyDamping()
+    {
+        return driverBodySpring.dampingRatio;
+    }
+ 
+    public void setCarParameter_DriverHeadMass(float param)
+    {
+        driverHead.mass = param;
+    }
+
+    public float getCarParameter_DriverHeadMass()
+    {
+        return driverHead.mass;
+    }
+
+    public void setCarParameter_DriverHeadFrequency(float param) 
+    {
+        driverHeadSpring.frequency = param;
+    }
+
+    public float getCarParameter_DriverHeadFrequency()
+    {
+        return driverHeadSpring.frequency;
+    }
+
+    public void setCarParameter_DriverHeadDamping(float param) 
+    {
+        driverHeadSpring.dampingRatio = param;
+    }
+
+    public float getCarParameter_DriverHeadDamping()
+    {
+        return driverHeadSpring.dampingRatio;
+    }
+
+    public void setCarParameter_DriverHeadBreakForce(float param)
+    {
+        driverHeadSpring.breakForce = param;
+    }
+
+    public float getCarParameter_DriverHeadBreakForce()
+    {
+        return driverHeadSpring.breakForce;
+    }
+
+
+    public float getCarParameter_CarBodyMass() 
+    {
+        return carBody.mass;
+    }
+
+    public void setCarParameter_BackTireFriction(float friction)
+    {
+        whellBackCollider.sharedMaterial.friction = friction;
+        whellBackCollider.sharedMaterial = whellBackCollider.sharedMaterial;
+    }
+
     public void setCarParameter_BackFrequency(float freq)
     {
         JointSuspension2D suspension;
   
         suspension = wheelBackJoint.suspension;
         suspension.frequency = freq;
+
         wheelBackJoint.suspension = suspension;        
     }
 
