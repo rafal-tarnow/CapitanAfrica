@@ -226,6 +226,9 @@ public class GameLogics : MonoBehaviour {
         BackDamp,
         BackFreq,
         CarBodyMass,
+        CarBodyFriction,
+        CarBodyTorque,
+        CarBodyMaxAngVel,
         DriverBodyMass,
         DriverBodyFrequency,
         DriverBodyDamping,
@@ -255,6 +258,10 @@ public class GameLogics : MonoBehaviour {
             setAdjustValue(AdjustValue.BackDamp, PlayerPrefs.GetFloat(AdjustValue.BackDamp.ToString(),0.7f));
             setAdjustValue(AdjustValue.BackFreq, PlayerPrefs.GetFloat(AdjustValue.BackFreq.ToString(),2.0f));
             setAdjustValue(AdjustValue.CarBodyMass, PlayerPrefs.GetFloat(AdjustValue.CarBodyMass.ToString(),0.08f));
+
+            setAdjustValue(AdjustValue.CarBodyFriction, PlayerPrefs.GetFloat(AdjustValue.CarBodyFriction.ToString(),0.001f));
+            setAdjustValue(AdjustValue.CarBodyTorque, PlayerPrefs.GetFloat(AdjustValue.CarBodyTorque.ToString(),500.0f));
+            setAdjustValue(AdjustValue.CarBodyMaxAngVel, PlayerPrefs.GetFloat(AdjustValue.CarBodyMaxAngVel.ToString(),70.0f));
 
             setAdjustValue(AdjustValue.DriverBodyMass, PlayerPrefs.GetFloat(AdjustValue.DriverBodyMass.ToString(),0.05f));
             setAdjustValue(AdjustValue.DriverBodyFrequency, PlayerPrefs.GetFloat(AdjustValue.DriverBodyFrequency.ToString(),110.0f));
@@ -360,6 +367,18 @@ public class GameLogics : MonoBehaviour {
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyMass(value); 
             }
+            else if(valueName == AdjustValue.CarBodyFriction)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyFriction(value); 
+            }
+            else if(valueName == AdjustValue.CarBodyTorque)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyTorque(value); 
+            }
+            else if(valueName == AdjustValue.CarBodyMaxAngVel)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyMaxAngVel(value); 
+            }
             else if(valueName == AdjustValue.DriverBodyMass)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyMass(value); 
@@ -459,6 +478,18 @@ public class GameLogics : MonoBehaviour {
             else if(valueName == AdjustValue.CarBodyMass)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyMass(); 
+            }
+            else if(valueName == AdjustValue.CarBodyFriction)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyFriction(); 
+            }
+            else if(valueName == AdjustValue.CarBodyTorque)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyTorque(); 
+            }
+            else if(valueName == AdjustValue.CarBodyMaxAngVel)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyMaxAngVel(); 
             }
             else if(valueName == AdjustValue.DriverBodyMass)
             {

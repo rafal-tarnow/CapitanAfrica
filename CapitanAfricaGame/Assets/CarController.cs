@@ -7,6 +7,8 @@ public class CarController : MonoBehaviour
     private float fuel = 1.0f;
     private float previousFuel = 1.0f;
     public float fuelconsumption = 0.01f;
+    private float car_body_torque = 500.0f;
+    private float car_body_max_ang_vel = 70;
     public Rigidbody2D carRigidbody;
     private Rigidbody2D frontTireRigidbody;
     private Rigidbody2D backTireRigidbody;
@@ -19,6 +21,7 @@ public class CarController : MonoBehaviour
     private JointMotor2D backMotor, frontMotor;
     public WheelJoint2D wheelFrontJoint, wheelBackJoint;
     public CircleCollider2D whellFrontCollider, whellBackCollider;
+    public BoxCollider2D carBodyCollider;
     public Rigidbody2D carBody;
     public Rigidbody2D driverBody;
     public SpringJoint2D driverBodySpring;
@@ -80,12 +83,14 @@ public class CarController : MonoBehaviour
             this.setGasEvent(0.0f);
             return;
         }
+        
     }
 
 
     public void onBrakePedalPressedEvent(bool pressed) 
     {
         m_brakePedalPressed = pressed;
+
 
         if(m_brakePedalPressed && m_gasPedalPressed)
         {
@@ -107,6 +112,7 @@ public class CarController : MonoBehaviour
             this.setGasEvent(0.0f);
             return;
         }
+        
     }
 
 
@@ -141,6 +147,37 @@ public class CarController : MonoBehaviour
     {
         whellFrontCollider.sharedMaterial.friction = friction;
         whellFrontCollider.sharedMaterial = whellFrontCollider.sharedMaterial;
+    }
+
+    public void setCarParameter_CarBodyFriction(float value)
+    {
+        carBodyCollider.sharedMaterial.friction = value;
+        carBodyCollider.sharedMaterial = carBodyCollider.sharedMaterial;
+    }
+
+    public void setCarParameter_CarBodyTorque(float value)
+    {
+        car_body_torque = value;
+    }
+
+    public void setCarParameter_CarBodyMaxAngVel(float value)
+    {
+        car_body_max_ang_vel = value;
+    }
+
+    public float getCarParameter_CarBodyFriction()
+    {
+        return carBodyCollider.sharedMaterial.friction;
+    }
+
+    public float getCarParameter_CarBodyTorque()
+    {
+        return car_body_torque;
+    }
+
+    public float getCarParameter_CarBodyMaxAngVel()
+    {
+        return car_body_max_ang_vel;
     }
 
     public void setCarParameter_CarBodyMass(float param) 
@@ -302,15 +339,15 @@ public class CarController : MonoBehaviour
         }
         else
         {
-            if(m_currentGas > 0.0f)
+            if(m_gasPedalPressed)
             {
-                if(carRigidbody.angularVelocity < 70)
-                    carRigidbody.AddTorque(500*Time.fixedDeltaTime, ForceMode2D.Force);
+                if(carRigidbody.angularVelocity < car_body_max_ang_vel)
+                    carRigidbody.AddTorque(car_body_torque*Time.fixedDeltaTime, ForceMode2D.Force);
             }
-            else if(m_currentGas < 0.0f)
+            else if(m_brakePedalPressed)
             {
-                if(carRigidbody.angularVelocity > -70)
-                    carRigidbody.AddTorque(-500*Time.fixedDeltaTime, ForceMode2D.Force);
+                if(carRigidbody.angularVelocity > -car_body_max_ang_vel)
+                    carRigidbody.AddTorque(-car_body_torque*Time.fixedDeltaTime, ForceMode2D.Force);
             }
         }
 

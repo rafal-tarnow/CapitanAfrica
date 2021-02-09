@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "3300ee7592eb631f",
         "name": "com.DefaultCompany.CapitanAfricaGame",
-        "processId": 16307,
+        "processId": 29551,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -48,6 +48,30 @@
             "deviceId": "3300ee7592eb631f",
             "name": "com.DefaultCompany.CapitanAfricaGame",
             "processId": 16307,
+            "exited": false
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 18853,
+            "exited": true
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 21092,
+            "exited": false
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 26913,
+            "exited": false
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 29551,
             "exited": false
         },
         {
