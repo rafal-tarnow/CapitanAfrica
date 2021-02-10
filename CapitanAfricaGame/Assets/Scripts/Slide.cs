@@ -38,20 +38,20 @@ public class Slide : MonoBehaviour
     void Start()
     {
         var buttons = GameObject.FindGameObjectsWithTag("ButtonLevel");
-        int  unlockedLevelIndex = PlayerPrefs.GetInt("unlockedLevelIndex", 0);
+        int unlockedLevelIndex = PlayerPrefs.GetInt("unlockedLevelIndex", 0);
         Button button;
-        for(int i = 0; i < buttons.Length; i++)
+        for (int i = 0; i < buttons.Length; i++)
         {
-                button = buttons[i].GetComponent<Button>();
-                string buttonName = button.name;
-                int buttonIndex = getLevelIndexFromButtonName(buttonName);
+            button = buttons[i].GetComponent<Button>();
+            string buttonName = button.name;
+            int buttonIndex = getLevelIndexFromButtonName(buttonName);
 
-                button.onClick.AddListener(() => runLevel(buttonName));
-                if(buttonIndex > unlockedLevelIndex)
-                    button.GetComponent<ButtonLock>().setLock(true);
+            button.onClick.AddListener(() => runLevel(buttonName));
+            if (buttonIndex > unlockedLevelIndex)
+                button.GetComponent<ButtonLock>().setLock(true);
         }
 
-        if(levelLockedPanel ==  null)
+        if (levelLockedPanel == null)
             levelLockedPanel = GameObject.Find("PanelLock");
 
         levelLockedPanel.SetActive(false);
@@ -140,13 +140,13 @@ public class Slide : MonoBehaviour
 
     void runLevel(string buttonName)
     {
-        int  unlockedLevelIndex = PlayerPrefs.GetInt("unlockedLevelIndex", 0);
+        int unlockedLevelIndex = PlayerPrefs.GetInt("unlockedLevelIndex", 0);
         int level = getLevelIndexFromButtonName(buttonName);
 
-        Debug.Log("unlockedLevelIndex " +  unlockedLevelIndex.ToString());
-        Debug.Log("level " +  level.ToString());
+        Debug.Log("unlockedLevelIndex " + unlockedLevelIndex.ToString());
+        Debug.Log("level " + level.ToString());
 
-        if(level > unlockedLevelIndex)
+        if (level > unlockedLevelIndex)
         {
             levelLockedPanel.SetActive(true);
         }
@@ -170,32 +170,50 @@ public class Slide : MonoBehaviour
 
     public void onUploadButtonPressed()
     {
-		for(int i = 0; i < 35; i++)
-		{
-		    JSONUploader
-			    .Initialize ()
-			    .SetUrl (serverUrl + "index.php")
-			    .SetJsonFilePath (Paths.LEVELS_EDIT + i.ToString() + ".txt")
-			    .SetFieldName ("myimage")
-			    .OnError (error => Debug.Log (error))
-			    .OnComplete (text => Toast.Instance.Show("SUCCES Uploading"))
-			    .Upload ();
-		}
+        for (int i = 0; i < 35; i++)
+        {
+            JSONUploader
+                .Initialize()
+                .SetUrl(serverUrl + "index.php")
+                .SetJsonFilePath(Paths.LEVELS_EDIT + i.ToString() + ".txt")
+                .SetFieldName("level_file")
+                .OnError(error => Debug.Log(error))
+                .OnComplete(text => Toast.Instance.Show("SUCCES Uploading"))
+                .Upload();
+        }
+
+        JSONUploader
+    .Initialize()
+    .SetUrl(serverUrl + "index.php")
+    .SetJsonFilePath(Paths.LEVELS_EDIT + "adjust.json")
+    .SetFieldName("adjust_file")
+    .OnError(error => Debug.Log(error))
+    .OnComplete(text => Toast.Instance.Show("SUCCES Uploading"))
+    .Upload();
     }
 
     public void onDownloadButtonPressed()
     {
-		for(int i = 0; i < 35; i++)
-		{
-			JSONDownloader
-			.Initialize ()
-			.SetUrl (serverUrl + "uploaded_images/CapitanAfrica/" + i.ToString() + ".txt")
-			.SetJsonFilePath (Paths.LEVELS_EDIT + i.ToString() + ".txt")
-			.SetFieldName ("myimage")
-			.OnError (error => Debug.Log (error))
-			.OnComplete (text => Toast.Instance.Show("SUCCES Downloading"))
-			.Download();
-		}
+        for (int i = 0; i < 35; i++)
+        {
+            JSONDownloader
+            .Initialize()
+            .SetUrl(serverUrl + "uploaded_images/CapitanAfrica/" + i.ToString() + ".txt")
+            .SetJsonFilePath(Paths.LEVELS_EDIT + i.ToString() + ".txt")
+            .SetFieldName("level_file")
+            .OnError(error => Debug.Log(error))
+            .OnComplete(text => Toast.Instance.Show("SUCCES Downloading"))
+            .Download();
+        }
+
+                    JSONDownloader
+            .Initialize()
+            .SetUrl(serverUrl + "uploaded_images/CapitanAfrica/adjust.json")
+            .SetJsonFilePath(Paths.LEVELS_EDIT + "adjust.json")
+            .SetFieldName("adjust_file")
+            .OnError(error => Debug.Log(error))
+            .OnComplete(text => Toast.Instance.Show("SUCCES Downloading"))
+            .Download();
     }
 }
 

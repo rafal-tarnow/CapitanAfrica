@@ -52,7 +52,7 @@ public class LevelLoader
 
         
         
-        SaveObject saveObject = SaveSystem.Load<SaveObject> (levelFileName);
+        SaveObject saveObject = SaveSystem.Load<SaveObject> (Paths.LEVELS_EDIT + levelFileName, Paths.TEMPLATES + "template_level.txt");
 
         //LOAD GROUND
         if (saveObject == null)
@@ -227,7 +227,7 @@ public class LevelLoader
             saveObject.board_m30Angles.Add (board.transform.rotation.eulerAngles);
         }
 
-        SaveSystem.Save<SaveObject> (saveObject, levelFileName);
+        SaveSystem.Save<SaveObject> (saveObject, Paths.LEVELS_EDIT + levelFileName);
     }
 
 }

@@ -111,15 +111,15 @@ public class PanZoom : MonoBehaviour {
         //IF ONE FINGER IS PRESSED AND NO GUI
 
         #warning poprawic obsluge myszy gdy draguje sie inventory elementy to przesuwa sie swiat
-        if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && (!EventSystem.current.IsPointerOverGameObject ())) {
-            state = State.DRAG;
-            Debug.Log ("PanZoom drag started");
-            OnPanZoomActiveEvent?.Invoke (true);
+        // if ((Input.GetMouseButtonDown(0)) && (state == State.NONE) && (!EventSystem.current.IsPointerOverGameObject ())) {
+        //     state = State.DRAG;
+        //     Debug.Log ("PanZoom drag started");
+        //     OnPanZoomActiveEvent?.Invoke (true);
 
-            touchDragStartPos_screen = Input.mousePosition;
-            touchDragStartPos_wordl = Camera.main.ScreenToWorldPoint (touchDragStartPos_screen);
-            return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
-        }
+        //     touchDragStartPos_screen = Input.mousePosition;
+        //     touchDragStartPos_wordl = Camera.main.ScreenToWorldPoint (touchDragStartPos_screen);
+        //     return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        // }
 
         if (((Input.touchCount == 1) && Input.GetTouch (0).phase == TouchPhase.Began) && (state == State.NONE) && !EventSystem.current.IsPointerOverGameObject (Input.GetTouch (0).fingerId)) {
             state = State.DRAG;
@@ -146,13 +146,13 @@ public class PanZoom : MonoBehaviour {
 
         //--------- STOP PAN ZOOM -----------------
          #warning poprawic obsluge myszy gdy draguje sie inventory elementy to przesuwa sie swiat
-        if ((Input.GetMouseButtonUp(0)) && (state != State.NONE)) {
-            state = State.NONE;
+        // if ((Input.GetMouseButtonUp(0)) && (state != State.NONE)) {
+        //     state = State.NONE;
 
-            OnPanZoomActiveEvent?.Invoke (false);
+        //     OnPanZoomActiveEvent?.Invoke (false);
 
-            return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
-        }
+        //     return; //return po to zeby przy zmianie stanu nie wplywac na transformacje poźnie i zaaktualizowac wszystko
+        // }
 
         if (((Input.touchCount == 1) && Input.GetTouch (0).phase == TouchPhase.Ended) && (state != State.NONE)) {
             state = State.NONE;

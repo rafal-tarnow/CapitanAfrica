@@ -9,15 +9,18 @@ using TMPro;
 
 
 
-public class GameLogics : MonoBehaviour {
+public class GameLogics : MonoBehaviour
+{
 
-    enum MainMode {
+    enum MainMode
+    {
         PLAY,
         EDIT,
     }
     MainMode mode = MainMode.PLAY;
 
-    enum EditSubMode {
+    enum EditSubMode
+    {
         ADD_FANT,
         EDIT_GROUND,
         DELETE_FANT,
@@ -68,25 +71,25 @@ public class GameLogics : MonoBehaviour {
     DebugManager debugManager = new DebugManager();
     LevelLoader levelLoader;
 
-    void Awake () 
+    void Awake()
     {
         //UnityEngine.Debug.unityLogger.logEnabled = false;
 
 
         if (groundEditable == null)
-            groundEditable = GameObject.FindWithTag ("GroundEditable");
+            groundEditable = GameObject.FindWithTag("GroundEditable");
 
         if (carController == null)
-            carController = GameObject.FindWithTag ("CarController");
+            carController = GameObject.FindWithTag("CarController");
 
-        if(carControllerScript == null)
+        if (carControllerScript == null)
             carControllerScript = carController.GetComponent<CarController>();
 
         if (backgroundSprite == null)
-            backgroundSprite = GameObject.FindWithTag ("BackgroundSprite");
+            backgroundSprite = GameObject.FindWithTag("BackgroundSprite");
 
         if (buttonDrag == null)
-            buttonDrag = GameObject.FindWithTag ("ButtonDrag");
+            buttonDrag = GameObject.FindWithTag("ButtonDrag");
 
         if (coinTextScriptMP == null)
         {
@@ -94,31 +97,31 @@ public class GameLogics : MonoBehaviour {
         }
 
         if (buttonEditGround == null)
-            buttonEditGround = GameObject.FindWithTag ("ButtonEditGround");
+            buttonEditGround = GameObject.FindWithTag("ButtonEditGround");
 
         if (buttonTrash == null)
-            buttonTrash = GameObject.FindWithTag ("ButtonTrash");
+            buttonTrash = GameObject.FindWithTag("ButtonTrash");
 
         if (inventoryUI == null)
-            inventoryUI = GameObject.FindWithTag ("InventoryUI");
+            inventoryUI = GameObject.FindWithTag("InventoryUI");
 
-        if(canvasPlay == null)
+        if (canvasPlay == null)
             canvasPlay = GameObject.FindWithTag("CanvasPlay");
 
-        if(canvasEdit == null)
+        if (canvasEdit == null)
             canvasEdit = GameObject.FindWithTag("CanvasEdit");
 
-        if(canvasAdjust == null)
+        if (canvasAdjust == null)
             canvasAdjust = GameObject.FindWithTag("CanvasAdjust");
 
-        if(canvasMeta == null)
+        if (canvasMeta == null)
             canvasMeta = GameObject.FindWithTag("CanvasMeta");
 
-        if(canvasEdit == null)
+        if (canvasEdit == null)
             canvasEdit = GameObject.FindWithTag("CanvasEdit");
 
-        if((coinAudioSource == null) || (musicAudioSource == null))
-        {   
+        if ((coinAudioSource == null) || (musicAudioSource == null))
+        {
             var audios = this.GetComponents<AudioSource>();
             coinAudioSource = audios[0];
             musicAudioSource = audios[1];
@@ -126,21 +129,21 @@ public class GameLogics : MonoBehaviour {
 
     }
 
-    private void Start () 
+    private void Start()
     {
         cameraStartupOrthographicSize = Camera.main.orthographicSize;
 
         mode = MainMode.PLAY;
         editSubMode = EditSubMode.NONE;
 
-        if(levelLoader == null)
+        if (levelLoader == null)
             levelLoader = new LevelLoader(coinPrefab, canisterPrefab, metaPrefab, bombPrefab, boxPrefab, board_0Prefab, board_30Prefab, board_m30Prefab, groundEditable);
 
-        LoadLevel ();
+        LoadLevel();
 
-        updateUIState (true);
+        updateUIState(true);
 
-        coinAmount = PlayerPrefs.GetInt("Coins",0);
+        coinAmount = PlayerPrefs.GetInt("Coins", 0);
         updateCoinsText();
 
         //DisableGC();
@@ -148,7 +151,7 @@ public class GameLogics : MonoBehaviour {
         adjustManager.LoadAdjustPrefs();
     }
 
-    private void OnApplicationPause(bool pauseStatus) 
+    private void OnApplicationPause(bool pauseStatus)
     {
         Debug.Log("OnApplicationPause");
     }
@@ -159,23 +162,26 @@ public class GameLogics : MonoBehaviour {
         PlayerPrefs.Save();
     }
 
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
         PlayerPrefs.SetInt("Coins", coinAmount);
-        PlayerPrefs.Save();  
+        PlayerPrefs.Save();
 
         //EnableGC();
     }
 
 
 
-    public void OnPrefabDropEvent (GameObject prefab) {
-        UnityEngine.Debug.Log ("Game logics, on prefab drop event");
+    public void OnPrefabDropEvent(GameObject prefab)
+    {
+        UnityEngine.Debug.Log("Game logics, on prefab drop event");
         //Instantiate(prefab, new Vector3(5, 0, 0), Quaternion.identity);
 
     }
 
-    public void onBackButtonPressed () {
-        SceneManager.LoadScene ("LevelSelectScene", LoadSceneMode.Single);
+    public void onBackButtonPressed()
+    {
+        SceneManager.LoadScene("LevelSelectScene", LoadSceneMode.Single);
     }
 
     public void onButtonAdjustPressed()
@@ -186,29 +192,33 @@ public class GameLogics : MonoBehaviour {
     public void onButtonCloseAdjustCanvas()
     {
         canvasAdjust.SetActive(false);
+        adjustManager.SaveAdjustPrefs();
     }
 
-    public void restartCurrentScene(bool pressed) {
+    public void restartCurrentScene(bool pressed)
+    {
         Physics2D.simulationMode = SimulationMode2D.Update;
 
         if (!pressed) // if released
-            SceneManager.LoadScene (SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void runNextLevel()
     {
         Physics2D.simulationMode = SimulationMode2D.Update;
-        #warning 'Check is next level exist to run'
+#warning 'Check is next level exist to run'
         ScenesVariablePass.levelToRun++;
-        SceneManager.LoadScene (SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void onButtonRelovadLevel () {
-        LoadLevel ();
-        updateUIState (true);
+    public void onButtonRelovadLevel()
+    {
+        LoadLevel();
+        updateUIState(true);
     }
 
-    public enum AdjustValue{
+    public enum AdjustValue
+    {
         Gravity,
         TireFriction,
         GroundFriction,
@@ -238,286 +248,388 @@ public class GameLogics : MonoBehaviour {
         DriverHeadBreakForce
     }
 
-    class AdjustManager{
-        public void LoadAdjustPrefs()
+    class AdjustManager
+    {
+        class SaveAdjust
         {
-            setAdjustValue(AdjustValue.Gravity, PlayerPrefs.GetFloat(AdjustValue.Gravity.ToString(),-9.81f));
-            setAdjustValue(AdjustValue.TireFriction, PlayerPrefs.GetFloat(AdjustValue.TireFriction.ToString(),1.0f));
-            setAdjustValue(AdjustValue.GroundFriction, PlayerPrefs.GetFloat(AdjustValue.GroundFriction.ToString(),1.0f));
-            setAdjustValue(AdjustValue.SpeedForward, PlayerPrefs.GetFloat(AdjustValue.SpeedForward.ToString(),-1400.0f));
-            setAdjustValue(AdjustValue.TorqueForward, PlayerPrefs.GetFloat(AdjustValue.TorqueForward.ToString(),0.7f));
-            setAdjustValue(AdjustValue.SpeedBackward, PlayerPrefs.GetFloat(AdjustValue.SpeedBackward.ToString(),1400.0f));
-            setAdjustValue(AdjustValue.TorqueBackward, PlayerPrefs.GetFloat(AdjustValue.TorqueBackward.ToString(),0.7f));
-            setAdjustValue(AdjustValue.SpeedFree, PlayerPrefs.GetFloat(AdjustValue.SpeedFree.ToString(),0.0f));
-            setAdjustValue(AdjustValue.TorqueFree, PlayerPrefs.GetFloat(AdjustValue.TorqueFree.ToString(),0.08f));
-            setAdjustValue(AdjustValue.TyreMass, PlayerPrefs.GetFloat(AdjustValue.TyreMass.ToString(),0.2f));
-            //setAdjustValue(AdjustValue.BothDamp, PlayerPrefs.GetFloat(AdjustValue.BothDamp.ToString(),0.7f));
-            //setAdjustValue(AdjustValue.BothFreq, PlayerPrefs.GetFloat(AdjustValue.BothFreq.ToString(),2.0f));
-            setAdjustValue(AdjustValue.FrontDamp, PlayerPrefs.GetFloat(AdjustValue.FrontDamp.ToString(),0.7f));
-            setAdjustValue(AdjustValue.FrontFreq, PlayerPrefs.GetFloat(AdjustValue.FrontFreq.ToString(),2.0f));
-            setAdjustValue(AdjustValue.BackDamp, PlayerPrefs.GetFloat(AdjustValue.BackDamp.ToString(),0.7f));
-            setAdjustValue(AdjustValue.BackFreq, PlayerPrefs.GetFloat(AdjustValue.BackFreq.ToString(),2.0f));
-            setAdjustValue(AdjustValue.CarBodyMass, PlayerPrefs.GetFloat(AdjustValue.CarBodyMass.ToString(),0.08f));
-
-            setAdjustValue(AdjustValue.CarBodyFriction, PlayerPrefs.GetFloat(AdjustValue.CarBodyFriction.ToString(),0.001f));
-            setAdjustValue(AdjustValue.CarBodyTorque, PlayerPrefs.GetFloat(AdjustValue.CarBodyTorque.ToString(),500.0f));
-            setAdjustValue(AdjustValue.CarBodyMaxAngVel, PlayerPrefs.GetFloat(AdjustValue.CarBodyMaxAngVel.ToString(),70.0f));
-
-            setAdjustValue(AdjustValue.DriverBodyMass, PlayerPrefs.GetFloat(AdjustValue.DriverBodyMass.ToString(),0.05f));
-            setAdjustValue(AdjustValue.DriverBodyFrequency, PlayerPrefs.GetFloat(AdjustValue.DriverBodyFrequency.ToString(),110.0f));
-            setAdjustValue(AdjustValue.DriverBodyDamping, PlayerPrefs.GetFloat(AdjustValue.DriverBodyDamping.ToString(),0.1f));
-            setAdjustValue(AdjustValue.DriverHeadMass, PlayerPrefs.GetFloat(AdjustValue.DriverHeadMass.ToString(),0.005f));
-            setAdjustValue(AdjustValue.DriverHeadFrequency, PlayerPrefs.GetFloat(AdjustValue.DriverHeadFrequency.ToString(),3.0f));
-            setAdjustValue(AdjustValue.DriverHeadDamping, PlayerPrefs.GetFloat(AdjustValue.DriverHeadDamping.ToString(),1.0f));
-            setAdjustValue(AdjustValue.DriverHeadBreakForce, PlayerPrefs.GetFloat(AdjustValue.DriverHeadBreakForce.ToString(),10.0f));
-        
+            public float Gravity = -9.81f;
+            public float TireFriction = 1.0f;
+            public float GroundFriction = 1.0f;
+            public float SpeedForward = -1400.0f;
+            public float TorqueForward = 0.7f;
+            public float SpeedBackward = 1400.0f;
+            public float TorqueBackward = 0.7f;
+            public float SpeedFree = 0.0f;
+            public float TorqueFree = 0.08f;
+            public float TyreMass = 0.2f;
+            public float FrontDamp = 0.7f;
+            public float FrontFreq = 2.0f;
+            public float BackDamp = 0.7f;
+            public float BackFreq = 2.0f;
+            public float CarBodyMass = 0.08f;
+            public float CarBodyFriction = 0.001f;
+            public float CarBodyTorque = 500.0f;
+            public float CarBodyMaxAngVel = 70.0f;
+            public float DriverBodyMass = 0.05f;
+            public float DriverBodyFrequency = 110.0f;
+            public float DriverBodyDamping = 0.1f;
+            public float DriverHeadMass = 0.005f;
+            public float DriverHeadFrequency = 3.0f;
+            public float DriverHeadDamping = 1.0f;
+            public float DriverHeadBreakForce = 10.0f;
         }
 
-        public void SaveAdjustPrefs(AdjustValue valueName, float value)
+        SaveAdjust saveObject;
+
+        public void LoadAdjustPrefs()
         {
-            if(valueName == AdjustValue.BothDamp)
+            saveObject = SaveSystem.Load<SaveAdjust>(Paths.LEVELS_EDIT + "adjust.json", Paths.TEMPLATES + "template_adjust.txt");
+
+
+            setAdjustValue(AdjustValue.Gravity, saveObject.Gravity);
+            setAdjustValue(AdjustValue.TireFriction, saveObject.TireFriction);
+            setAdjustValue(AdjustValue.GroundFriction, saveObject.GroundFriction);
+            setAdjustValue(AdjustValue.SpeedForward, saveObject.SpeedForward);
+            setAdjustValue(AdjustValue.TorqueForward, saveObject.TorqueForward);
+            setAdjustValue(AdjustValue.SpeedBackward, saveObject.SpeedBackward);
+            setAdjustValue(AdjustValue.TorqueBackward, saveObject.TorqueBackward);
+            setAdjustValue(AdjustValue.SpeedFree, saveObject.SpeedFree);
+            setAdjustValue(AdjustValue.TorqueFree, saveObject.TorqueFree);
+            setAdjustValue(AdjustValue.TyreMass, saveObject.TyreMass);
+            //setAdjustValue(AdjustValue.BothDamp, saveObject.BothDamp);
+            //setAdjustValue(AdjustValue.BothFreq, saveObject.BothFreq);
+            setAdjustValue(AdjustValue.FrontDamp, saveObject.FrontDamp);
+            setAdjustValue(AdjustValue.FrontFreq, saveObject.FrontFreq);
+            setAdjustValue(AdjustValue.BackDamp, saveObject.BackDamp);
+            setAdjustValue(AdjustValue.BackFreq, saveObject.BackFreq);
+            setAdjustValue(AdjustValue.CarBodyMass, saveObject.CarBodyMass);
+
+            setAdjustValue(AdjustValue.CarBodyFriction, saveObject.CarBodyFriction);
+            setAdjustValue(AdjustValue.CarBodyTorque, saveObject.CarBodyTorque);
+            setAdjustValue(AdjustValue.CarBodyMaxAngVel, saveObject.CarBodyMaxAngVel);
+
+            setAdjustValue(AdjustValue.DriverBodyMass, saveObject.DriverBodyMass);
+            setAdjustValue(AdjustValue.DriverBodyFrequency, saveObject.DriverBodyFrequency);
+            setAdjustValue(AdjustValue.DriverBodyDamping, saveObject.DriverBodyDamping);
+            setAdjustValue(AdjustValue.DriverHeadMass, saveObject.DriverHeadMass);
+            setAdjustValue(AdjustValue.DriverHeadFrequency, saveObject.DriverHeadFrequency);
+            setAdjustValue(AdjustValue.DriverHeadDamping, saveObject.DriverHeadDamping);
+            setAdjustValue(AdjustValue.DriverHeadBreakForce, saveObject.DriverHeadBreakForce);
+
+        }
+
+        public void SaveAdjustPrefs()
+        {
+            SaveSystem.Save<SaveAdjust>(saveObject, Paths.LEVELS_EDIT + "adjust.json");
+        }
+
+
+        public void setAdjustPrefs(AdjustValue valueName, float value)
+        {
+            if (valueName == AdjustValue.BothDamp)
             {
-                PlayerPrefs.SetFloat(AdjustValue.FrontDamp.ToString(), value);
-                PlayerPrefs.SetFloat(AdjustValue.BackDamp.ToString(), value);
+                setValueInSaveObject(AdjustValue.FrontDamp, value);
+                setValueInSaveObject(AdjustValue.BackDamp, value);
                 return;
             }
-            if(valueName == AdjustValue.BothFreq)
+            if (valueName == AdjustValue.BothFreq)
             {
-                PlayerPrefs.SetFloat(AdjustValue.FrontFreq.ToString(), value);
-                PlayerPrefs.SetFloat(AdjustValue.BackFreq.ToString(), value);
+                setValueInSaveObject(AdjustValue.FrontFreq, value);
+                setValueInSaveObject(AdjustValue.BackFreq, value);
                 return;
             }
-            PlayerPrefs.SetFloat(valueName.ToString(), value);
+            setValueInSaveObject(valueName, value);
+        }
+
+        public void setValueInSaveObject(AdjustValue valueName, float value)
+        {
+            var propertyInfo = saveObject.GetType().GetProperty(valueName.ToString());
+            if (propertyInfo != null)  //this probably works. Yes it is
+            {
+                propertyInfo.SetValue(saveObject, value, null);
+            }
+
+
+            if (valueName.ToString() == "Gravity")
+                saveObject.Gravity = value;
+            else if (valueName.ToString() == "TireFriction")
+                saveObject.TireFriction = value;
+            else if (valueName.ToString() == "GroundFriction")
+                saveObject.GroundFriction = value;
+            else if (valueName.ToString() == "SpeedForward")
+                saveObject.SpeedForward = value;
+            else if (valueName.ToString() == "TorqueForward")
+                saveObject.TorqueForward = value;
+            else if (valueName.ToString() == "SpeedBackward")
+                saveObject.SpeedBackward = value;
+            else if (valueName.ToString() == "TorqueBackward")
+                saveObject.TorqueBackward = value;
+            else if (valueName.ToString() == "SpeedFree")
+                saveObject.SpeedFree = value;
+            else if (valueName.ToString() == "TorqueFree")
+                saveObject.TorqueFree = value;
+            else if (valueName.ToString() == "TyreMass")
+                saveObject.TyreMass = value;
+            else if (valueName.ToString() == "FrontDamp")
+                saveObject.FrontDamp = value;
+            else if (valueName.ToString() == "FrontFreq")
+                saveObject.FrontFreq = value;
+            else if (valueName.ToString() == "BackDamp")
+                saveObject.BackDamp = value;
+            else if (valueName.ToString() == "BackFreq")
+                saveObject.BackFreq = value;
+            else if (valueName.ToString() == "CarBodyMass")
+                saveObject.CarBodyMass = value;
+            else if (valueName.ToString() == "CarBodyFriction")
+                saveObject.CarBodyFriction = value;
+            else if (valueName.ToString() == "CarBodyTorque")
+                saveObject.CarBodyTorque = value;
+            else if (valueName.ToString() == "CarBodyMaxAngVel")
+                saveObject.CarBodyMaxAngVel = value;
+            else if (valueName.ToString() == "DriverBodyMass")
+                saveObject.DriverBodyMass = value;
+            else if (valueName.ToString() == "DriverBodyFrequency")
+                saveObject.DriverBodyFrequency = value;
+            else if (valueName.ToString() == "DriverBodyDamping")
+                saveObject.DriverBodyDamping = value;
+            else if (valueName.ToString() == "DriverHeadMass")
+                saveObject.DriverHeadMass = value;
+            else if (valueName.ToString() == "DriverHeadFrequency")
+                saveObject.DriverHeadFrequency = value;
+            else if (valueName.ToString() == "DriverHeadDamping")
+                saveObject.DriverHeadDamping = value;
+            else if (valueName.ToString() == "DriverHeadBreakForce")
+                saveObject.DriverHeadBreakForce = value;
         }
 
         public void setAdjustValue(AdjustValue valueName, float value)
         {
-            SaveAdjustPrefs(valueName, value);
-            if(valueName == AdjustValue.Gravity)
+            setAdjustPrefs(valueName, value);
+            if (valueName == AdjustValue.Gravity)
             {
                 Physics2D.gravity = new Vector2(0, value);
             }
-            else if(valueName == AdjustValue.TireFriction)
+            else if (valueName == AdjustValue.TireFriction)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontTireFriction(value);
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackTireFriction(value);
             }
-            else if(valueName == AdjustValue.GroundFriction)
+            else if (valueName == AdjustValue.GroundFriction)
             {
                 GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial.friction = value;
 
                 GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial = GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial;
             }
-            else if(valueName == AdjustValue.SpeedForward)
+            else if (valueName == AdjustValue.SpeedForward)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedForward = value;
             }
-            else if(valueName == AdjustValue.TorqueForward)
+            else if (valueName == AdjustValue.TorqueForward)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueForward = value;
             }
-            else if(valueName == AdjustValue.SpeedBackward)
+            else if (valueName == AdjustValue.SpeedBackward)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedBackward = value;
             }
-            else if(valueName == AdjustValue.TorqueBackward)
+            else if (valueName == AdjustValue.TorqueBackward)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueBackward = value;
             }
-            else if(valueName == AdjustValue.SpeedFree)
+            else if (valueName == AdjustValue.SpeedFree)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedFree = value;
             }
-            else if(valueName == AdjustValue.TorqueFree)
+            else if (valueName == AdjustValue.TorqueFree)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueFree = value;
             }
-            else if(valueName == AdjustValue.TyreMass)
+            else if (valueName == AdjustValue.TyreMass)
             {
                 GameObject.FindGameObjectWithTag("FrontTire").GetComponent<Rigidbody2D>().mass = value;
                 GameObject.FindGameObjectWithTag("BackTire").GetComponent<Rigidbody2D>().mass = value;
             }
-            else if(valueName == AdjustValue.BothDamp)
+            else if (valueName == AdjustValue.BothDamp)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontDampingRatio(value);
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackDampingRatio(value);
             }
-            else if(valueName == AdjustValue.BothFreq)
+            else if (valueName == AdjustValue.BothFreq)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontFrequency(value); 
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackFrequency(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontFrequency(value);
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackFrequency(value);
             }
-            else if(valueName == AdjustValue.FrontDamp)
+            else if (valueName == AdjustValue.FrontDamp)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontDampingRatio(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontDampingRatio(value);
             }
-            else if(valueName == AdjustValue.FrontFreq)
+            else if (valueName == AdjustValue.FrontFreq)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontFrequency(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_FrontFrequency(value);
             }
-            else if(valueName == AdjustValue.BackDamp)
+            else if (valueName == AdjustValue.BackDamp)
             {
                 GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackDampingRatio(value);
             }
-            else if(valueName == AdjustValue.BackFreq)
+            else if (valueName == AdjustValue.BackFreq)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackFrequency(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_BackFrequency(value);
             }
-            else if(valueName == AdjustValue.CarBodyMass)
+            else if (valueName == AdjustValue.CarBodyMass)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyMass(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyMass(value);
             }
-            else if(valueName == AdjustValue.CarBodyFriction)
+            else if (valueName == AdjustValue.CarBodyFriction)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyFriction(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyFriction(value);
             }
-            else if(valueName == AdjustValue.CarBodyTorque)
+            else if (valueName == AdjustValue.CarBodyTorque)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyTorque(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyTorque(value);
             }
-            else if(valueName == AdjustValue.CarBodyMaxAngVel)
+            else if (valueName == AdjustValue.CarBodyMaxAngVel)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyMaxAngVel(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_CarBodyMaxAngVel(value);
             }
-            else if(valueName == AdjustValue.DriverBodyMass)
+            else if (valueName == AdjustValue.DriverBodyMass)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyMass(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyMass(value);
             }
-            else if(valueName == AdjustValue.DriverBodyFrequency)
+            else if (valueName == AdjustValue.DriverBodyFrequency)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyFrequency(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyFrequency(value);
             }
-            else if(valueName == AdjustValue.DriverBodyDamping)
+            else if (valueName == AdjustValue.DriverBodyDamping)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyDamping(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverBodyDamping(value);
             }
-            else if(valueName == AdjustValue.DriverHeadMass)
+            else if (valueName == AdjustValue.DriverHeadMass)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadMass(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadMass(value);
             }
-            else if(valueName == AdjustValue.DriverHeadFrequency)
+            else if (valueName == AdjustValue.DriverHeadFrequency)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadFrequency(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadFrequency(value);
             }
-            else if(valueName == AdjustValue.DriverHeadDamping)
+            else if (valueName == AdjustValue.DriverHeadDamping)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadDamping(value); 
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadDamping(value);
             }
-            else if(valueName == AdjustValue.DriverHeadBreakForce)
+            else if (valueName == AdjustValue.DriverHeadBreakForce)
             {
-                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadBreakForce(value); 
-            }        
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_DriverHeadBreakForce(value);
+            }
         }
 
         public float getAdjustValue(AdjustValue valueName)
         {
-            if(valueName == AdjustValue.Gravity)
+            if (valueName == AdjustValue.Gravity)
             {
                 return Physics2D.gravity.y;
             }
-            else if(valueName == AdjustValue.TireFriction)
+            else if (valueName == AdjustValue.TireFriction)
             {
                 return GameObject.FindGameObjectWithTag("FrontTire").GetComponent<CircleCollider2D>().sharedMaterial.friction;
             }
-            else if(valueName == AdjustValue.GroundFriction)
+            else if (valueName == AdjustValue.GroundFriction)
             {
                 return GameObject.FindGameObjectWithTag("GroundEditable").GetComponent<EdgeCollider2D>().sharedMaterial.friction;
             }
-            else if(valueName == AdjustValue.SpeedForward)
+            else if (valueName == AdjustValue.SpeedForward)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedForward;
             }
-            else if(valueName == AdjustValue.TorqueForward)
+            else if (valueName == AdjustValue.TorqueForward)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueForward;
             }
-            else if(valueName == AdjustValue.SpeedBackward)
+            else if (valueName == AdjustValue.SpeedBackward)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedBackward;
             }
-            else if(valueName == AdjustValue.TorqueBackward)
+            else if (valueName == AdjustValue.TorqueBackward)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueBackward;
             }
-            else if(valueName == AdjustValue.SpeedFree)
+            else if (valueName == AdjustValue.SpeedFree)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().speedFree;
             }
-            else if(valueName == AdjustValue.TorqueFree)
+            else if (valueName == AdjustValue.TorqueFree)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().torqueFree;
             }
-            else if(valueName == AdjustValue.TyreMass)
+            else if (valueName == AdjustValue.TyreMass)
             {
                 return GameObject.FindGameObjectWithTag("FrontTire").GetComponent<Rigidbody2D>().mass;
             }
-            else if(valueName == AdjustValue.BothDamp)
+            else if (valueName == AdjustValue.BothDamp)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontDampingRatio();
             }
-            else if(valueName == AdjustValue.BothFreq)
+            else if (valueName == AdjustValue.BothFreq)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontFrequency(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontFrequency();
             }
-            else if(valueName == AdjustValue.FrontDamp)
+            else if (valueName == AdjustValue.FrontDamp)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontDampingRatio();
             }
-            else if(valueName == AdjustValue.FrontFreq)
+            else if (valueName == AdjustValue.FrontFreq)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontFrequency(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_FrontFrequency();
             }
-            else if(valueName == AdjustValue.BackDamp)
+            else if (valueName == AdjustValue.BackDamp)
             {
                 return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_BackDampingRatio();
             }
-            else if(valueName == AdjustValue.BackFreq)
+            else if (valueName == AdjustValue.BackFreq)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_BackFrequency(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_BackFrequency();
             }
-            else if(valueName == AdjustValue.CarBodyMass)
+            else if (valueName == AdjustValue.CarBodyMass)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyMass(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyMass();
             }
-            else if(valueName == AdjustValue.CarBodyFriction)
+            else if (valueName == AdjustValue.CarBodyFriction)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyFriction(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyFriction();
             }
-            else if(valueName == AdjustValue.CarBodyTorque)
+            else if (valueName == AdjustValue.CarBodyTorque)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyTorque(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyTorque();
             }
-            else if(valueName == AdjustValue.CarBodyMaxAngVel)
+            else if (valueName == AdjustValue.CarBodyMaxAngVel)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyMaxAngVel(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_CarBodyMaxAngVel();
             }
-            else if(valueName == AdjustValue.DriverBodyMass)
+            else if (valueName == AdjustValue.DriverBodyMass)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyMass(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyMass();
             }
-            else if(valueName == AdjustValue.DriverBodyFrequency)
+            else if (valueName == AdjustValue.DriverBodyFrequency)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyFrequency(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyFrequency();
             }
-            else if(valueName == AdjustValue.DriverBodyDamping)
+            else if (valueName == AdjustValue.DriverBodyDamping)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyDamping(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverBodyDamping();
             }
-            else if(valueName == AdjustValue.DriverHeadMass)
+            else if (valueName == AdjustValue.DriverHeadMass)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadMass(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadMass();
             }
-            else if(valueName == AdjustValue.DriverHeadFrequency)
+            else if (valueName == AdjustValue.DriverHeadFrequency)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadFrequency(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadFrequency();
             }
-            else if(valueName == AdjustValue.DriverHeadDamping)
+            else if (valueName == AdjustValue.DriverHeadDamping)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadDamping(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadDamping();
             }
-            else if(valueName == AdjustValue.DriverHeadBreakForce)
+            else if (valueName == AdjustValue.DriverHeadBreakForce)
             {
-                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadBreakForce(); 
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_DriverHeadBreakForce();
             }
             return 0.0f;
         }
@@ -536,7 +648,7 @@ public class GameLogics : MonoBehaviour {
     }
 
 
-    public void OnUIInventoryDragEvent (bool isDragging) 
+    public void OnUIInventoryDragEvent(bool isDragging)
     {
         //Camera.main.GetComponent<PanZoom>().enabled = !isDragging; //if inventory is dragging disable pan zoom
     }
@@ -544,7 +656,7 @@ public class GameLogics : MonoBehaviour {
 
     public void OnCoinTriggerEnter2D(GameObject coin, Collider2D collider)
     {
-        Destroy(coin);     
+        Destroy(coin);
         //Debug.Log("GameLogics::OnCoinTriggerEnter2D");
         coinAmount++;
 
@@ -559,68 +671,79 @@ public class GameLogics : MonoBehaviour {
     }
 
 
-    public void OnPanZoomActiveEvent (bool active) {
+    public void OnPanZoomActiveEvent(bool active)
+    {
         //Debug.Log ("Game Logics OnPanZoomActiveEvent = " + active);
-        if(active)
+        if (active)
             setAllFants_Dragable(false);
         else
             updateUIState(false);
 
-    //     if(active)
-    //         setAllFants_Dragable(false);
-    //     else
-    //     {
-    //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
+        //     if(active)
+        //         setAllFants_Dragable(false);
+        //     else
+        //     {
+        //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
 
-    //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
+        //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
 
-    //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
+        //         if((mode == MainMode.EDIT) && (editSubMode == EditSubMode.NONE))
 
 
 
-    //    ADD_FANT,
-    //     EDIT_GROUND,
-    //     DELETE_FANT,
-    //     NONE            updateUIState();
+        //    ADD_FANT,
+        //     EDIT_GROUND,
+        //     DELETE_FANT,
+        //     NONE            updateUIState();
     }
 
-    public void onEditButton () 
+    public void onEditButton()
     {
         mode = MainMode.EDIT;
-        LoadLevel ();
-        updateUIState (true);
+        LoadLevel();
+        updateUIState(true);
     }
 
 
-    public void onPlayButton () 
+    public void onPlayButton()
     {
         mode = MainMode.PLAY;
-        SaveLevel ();
-        updateUIState (true);
+        SaveLevel();
+        updateUIState(true);
         carController.transform.position = Camera.main.transform.position;
     }
 
-    public void onEditGroundButton (bool state) {
-        if (state) {
-            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.EDIT_GROUND)) {
+    public void onEditGroundButton(bool state)
+    {
+        if (state)
+        {
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.EDIT_GROUND))
+            {
                 editSubMode = EditSubMode.EDIT_GROUND;
-                updateUIState (true);
+                updateUIState(true);
             }
-        } else {
+        }
+        else
+        {
             editSubMode = EditSubMode.NONE;
-            updateUIState (true);
+            updateUIState(true);
         }
     }
 
-    public void onTrashButton (bool state) {
-        if (state) {
-            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.DELETE_FANT)) {
+    public void onTrashButton(bool state)
+    {
+        if (state)
+        {
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.DELETE_FANT))
+            {
                 editSubMode = EditSubMode.DELETE_FANT;
-                updateUIState (true);
+                updateUIState(true);
             }
-        } else {
+        }
+        else
+        {
             editSubMode = EditSubMode.NONE;
-            updateUIState (true);
+            updateUIState(true);
         }
     }
 
@@ -633,23 +756,29 @@ public class GameLogics : MonoBehaviour {
 
     public void onBrakeButton(bool state)
     {
-        carControllerScript.onBrakePedalPressedEvent(state); 
+        carControllerScript.onBrakePedalPressedEvent(state);
     }
 
 
-    public void onDragButton (bool state) {
-        if (state) {
-            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.ADD_FANT)) {
+    public void onDragButton(bool state)
+    {
+        if (state)
+        {
+            if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.ADD_FANT))
+            {
                 editSubMode = EditSubMode.ADD_FANT;
-                updateUIState (true);
+                updateUIState(true);
             }
-        } else {
+        }
+        else
+        {
             editSubMode = EditSubMode.NONE;
-            updateUIState (true);
+            updateUIState(true);
         }
     }
 
-    public void onPanZoomButton (bool state) {
+    public void onPanZoomButton(bool state)
+    {
         // if (state)
         // {
         //     if ((mode == MainMode.EDIT) && (editSubMode != EditSubMode.EDIT_PAN_ZOOM))
@@ -665,7 +794,7 @@ public class GameLogics : MonoBehaviour {
         // }
     }
 
-    public void onMetaReached () 
+    public void onMetaReached()
     {
         unlockNextLevel();
         canvasMeta.SetActive(true);
@@ -680,10 +809,10 @@ public class GameLogics : MonoBehaviour {
 
 
     private void unlockNextLevel()
-    {   
+    {
         int unlockedLevel = PlayerPrefs.GetInt("unlockedLevelIndex", 0);
 
-        if(unlockedLevel < ScenesVariablePass.levelToRun + 1)
+        if (unlockedLevel < ScenesVariablePass.levelToRun + 1)
         {
             PlayerPrefs.SetInt("unlockedLevelIndex", ScenesVariablePass.levelToRun + 1);
             PlayerPrefs.Save();
@@ -691,20 +820,20 @@ public class GameLogics : MonoBehaviour {
     }
 
 
-    private void updateUIState (bool alignInventory) 
+    private void updateUIState(bool alignInventory)
     {
-        if (mode == MainMode.PLAY) 
+        if (mode == MainMode.PLAY)
         {
             musicAudioSource.Play();
 
-            backgroundSprite.SetActive (true);
-            Camera.main.GetComponent<BackgroundStatic> ().enabled = true;
-            Camera.main.GetComponent<PanZoom> ().enabled = false;
+            backgroundSprite.SetActive(true);
+            Camera.main.GetComponent<BackgroundStatic>().enabled = true;
+            Camera.main.GetComponent<PanZoom>().enabled = false;
             Camera.main.orthographicSize = cameraStartupOrthographicSize;
 
             groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.PLAY);
 
-            carController.SetActive (true);
+            carController.SetActive(true);
             // carController.GetComponent<FollowByCamera>().enabled = false;
             // carController.GetComponent<CarController>().enabled = true;
 
@@ -714,151 +843,159 @@ public class GameLogics : MonoBehaviour {
             canvasAdjust.SetActive(false);
             canvasMeta.SetActive(false);
 
-            
-            setAllFants_Opacity_Dragable_Deletable (1.0f, false, false);
+
+            setAllFants_Opacity_Dragable_Deletable(1.0f, false, false);
 
             Physics2D.simulationMode = SimulationMode2D.Update;
 
-        } 
-        else if (mode == MainMode.EDIT) 
+        }
+        else if (mode == MainMode.EDIT)
         {
             musicAudioSource.Pause();
 
             //carController.GetComponent<FollowByCamera>().enabled = true;
             //carController.GetComponent<CarController>().enabled = false;
             //carController.GetComponent<Rigidbody2D>().isKinematic = true;
-            carController.transform.eulerAngles = new Vector3 (0, 0, 0);
-            carController.SetActive (false);
+            carController.transform.eulerAngles = new Vector3(0, 0, 0);
+            carController.SetActive(false);
 
-            Camera.main.GetComponent<BackgroundStatic> ().enabled = false;
-            Camera.main.GetComponent<PanZoom> ().enabled = true;
+            Camera.main.GetComponent<BackgroundStatic>().enabled = false;
+            Camera.main.GetComponent<PanZoom>().enabled = true;
 
-            backgroundSprite.SetActive (false);
+            backgroundSprite.SetActive(false);
 
             canvasPlay.SetActive(false);
             canvasEdit.SetActive(true);
             canvasAdjust.SetActive(false);
             canvasMeta.SetActive(false);
 
-            if (editSubMode == EditSubMode.ADD_FANT) 
+            if (editSubMode == EditSubMode.ADD_FANT)
             {
-                buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
-                buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
-                buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
+                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
 
                 groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.EDIT_INACTIVE);
 
-                inventoryUI.SetActive (true);
-                if(alignInventory)
-                    inventoryUI.GetComponent<UnityEngine.UI.ScrollRect> ().horizontalNormalizedPosition = 1.0f;
-                
-                setAllFants_Opacity_Dragable_Deletable (1.0f, true, false);
-            } 
-            else if (editSubMode == EditSubMode.EDIT_GROUND) 
+                inventoryUI.SetActive(true);
+                if (alignInventory)
+                    inventoryUI.GetComponent<UnityEngine.UI.ScrollRect>().horizontalNormalizedPosition = 1.0f;
+
+                setAllFants_Opacity_Dragable_Deletable(1.0f, true, false);
+            }
+            else if (editSubMode == EditSubMode.EDIT_GROUND)
             {
-                buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
-                buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
-                buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
+                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
+                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
 
                 groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.EDIT_DRAG_ADD_POINTS);
-                
-                inventoryUI.SetActive (false);
 
-                setAllFants_Opacity_Dragable_Deletable (0.3f, false, false);
-            } 
-            else if (editSubMode == EditSubMode.DELETE_FANT) 
+                inventoryUI.SetActive(false);
+
+                setAllFants_Opacity_Dragable_Deletable(0.3f, false, false);
+            }
+            else if (editSubMode == EditSubMode.DELETE_FANT)
             {
-                buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
-                buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
-                buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (true);
+                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(true);
 
                 groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.EDIT_DELETE_POINTS);
-                
-                inventoryUI.SetActive (false);
 
-                setAllFants_Opacity_Dragable_Deletable (1.0f, false, true);
-            } 
-            else if (editSubMode == EditSubMode.NONE) 
+                inventoryUI.SetActive(false);
+
+                setAllFants_Opacity_Dragable_Deletable(1.0f, false, true);
+            }
+            else if (editSubMode == EditSubMode.NONE)
             {
-                buttonDrag.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
-                buttonEditGround.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
-                buttonTrash.GetComponent<ButtonBistable> ().SetStateWithoutEvent (false);
-               
+                buttonDrag.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonEditGround.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+                buttonTrash.GetComponent<ButtonBistable>().SetStateWithoutEvent(false);
+
                 groundEditable.GetComponent<EditableGround>().setMode(EditableGround.Mode.EDIT_INACTIVE);
 
-                inventoryUI.SetActive (false);
+                inventoryUI.SetActive(false);
 
-                setAllFants_Opacity_Dragable_Deletable (0.3f, false, false);
+                setAllFants_Opacity_Dragable_Deletable(0.3f, false, false);
             }
         }
     }
 
-    void setAllFants_Dragable (bool dragable) {
+    void setAllFants_Dragable(bool dragable)
+    {
         UnityEngine.Debug.Log("GameLogics::setAllFantsDragable = " + dragable);
-        setGivenTagFantsDragable ("FuelCanister", dragable);
-        setGivenTagFantsDragable ("Coin", dragable);
-        setGivenTagFantsDragable ("Meta", dragable);
-        setGivenTagFantsDragable ("Bomb", dragable);
-        setGivenTagFantsDragable ("Box", dragable);
-        setGivenTagFantsDragable ("Board_0", dragable);
-        setGivenTagFantsDragable ("Board_30", dragable);
-        setGivenTagFantsDragable ("Board_m30", dragable);
+        setGivenTagFantsDragable("FuelCanister", dragable);
+        setGivenTagFantsDragable("Coin", dragable);
+        setGivenTagFantsDragable("Meta", dragable);
+        setGivenTagFantsDragable("Bomb", dragable);
+        setGivenTagFantsDragable("Box", dragable);
+        setGivenTagFantsDragable("Board_0", dragable);
+        setGivenTagFantsDragable("Board_30", dragable);
+        setGivenTagFantsDragable("Board_m30", dragable);
     }
 
-    void setAllFants_Opacity_Dragable_Deletable (float opacity, bool dragable, bool deletable) {
-        setGivenTagFantsOpacityAndDragable ("FuelCanister", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable ("Coin", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable ("Meta", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable ("Bomb", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable ("Box", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable ("Board_0", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable ("Board_30", opacity, dragable, deletable);
-        setGivenTagFantsOpacityAndDragable ("Board_m30", opacity, dragable, deletable);
+    void setAllFants_Opacity_Dragable_Deletable(float opacity, bool dragable, bool deletable)
+    {
+        setGivenTagFantsOpacityAndDragable("FuelCanister", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Coin", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Meta", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Bomb", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Box", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Board_0", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Board_30", opacity, dragable, deletable);
+        setGivenTagFantsOpacityAndDragable("Board_m30", opacity, dragable, deletable);
 
     }
 
-    void setGivenTagFantsDragable (string tag, bool dragable) {
+    void setGivenTagFantsDragable(string tag, bool dragable)
+    {
         GameObject[] fants;
-        fants = GameObject.FindGameObjectsWithTag (tag);
-        foreach (var fant in fants) {
+        fants = GameObject.FindGameObjectsWithTag(tag);
+        foreach (var fant in fants)
+        {
             if (dragable == false)
-                Destroy (fant.GetComponent<DragableSprite> ());
+                Destroy(fant.GetComponent<DragableSprite>());
             else
-                fant.AddComponent<DragableSprite> ();
+                fant.AddComponent<DragableSprite>();
 
         }
     }
 
-    void setGivenTagFantsOpacityAndDragable (string tag, float opacity, bool dragable, bool deletable) {
+    void setGivenTagFantsOpacityAndDragable(string tag, float opacity, bool dragable, bool deletable)
+    {
         GameObject[] fants;
-        fants = GameObject.FindGameObjectsWithTag (tag);
-        foreach (var fant in fants) {
-            fant.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, opacity);
+        fants = GameObject.FindGameObjectsWithTag(tag);
+        foreach (var fant in fants)
+        {
+            fant.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, opacity);
 
             if (dragable == false)
-                Destroy (fant.GetComponent<DragableSprite> ());
+                Destroy(fant.GetComponent<DragableSprite>());
             else
-                fant.AddComponent<DragableSprite> ();
+                fant.AddComponent<DragableSprite>();
 
             if (deletable == false)
-                Destroy (fant.GetComponent<TouchDeleteSprite> ());
+                Destroy(fant.GetComponent<TouchDeleteSprite>());
             else
-                fant.AddComponent<TouchDeleteSprite> ();
+                fant.AddComponent<TouchDeleteSprite>();
         }
     }
 
-    public void SaveLevel () 
+    public void SaveLevel()
     {
         levelLoader.SaveLevel(getCurrentLevelFileName());
     }
 
-    private void loadFantsPositionsToSaveObjectByTag (ref SaveObject saveObject, string tag) {
+    private void loadFantsPositionsToSaveObjectByTag(ref SaveObject saveObject, string tag)
+    {
         GameObject[] fants;
-        fants = GameObject.FindGameObjectsWithTag (tag);
-        saveObject.fantPositions[tag] = new List<Vector3> ();
+        fants = GameObject.FindGameObjectsWithTag(tag);
+        saveObject.fantPositions[tag] = new List<Vector3>();
 
-        foreach (var fant in fants) {
-            saveObject.fantPositions[tag].Add (fant.transform.position);
+        foreach (var fant in fants)
+        {
+            saveObject.fantPositions[tag].Add(fant.transform.position);
         }
     }
 
@@ -871,7 +1008,7 @@ public class GameLogics : MonoBehaviour {
     }
 
 
-    public void LoadLevel () 
+    public void LoadLevel()
     {
         levelLoader.LoadLevel(getCurrentLevelFileName());
     }
@@ -916,4 +1053,3 @@ public class GameLogics : MonoBehaviour {
 }
 
 
-    

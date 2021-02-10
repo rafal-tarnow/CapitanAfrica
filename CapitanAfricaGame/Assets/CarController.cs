@@ -329,7 +329,7 @@ public class CarController : MonoBehaviour
     {
         //carRigidbody.rotation += 200.0f*Time.fixedDeltaTime;
         //carRigidbody.AddTorque(-5, ForceMode2D.Force);
-        Debug.Log("Is child colliding = " + areChildsCollide().ToString());
+        //Debug.Log("Is child colliding = " + areChildsCollide().ToString());
 
 
         #warning przerobic rotate z pool na event

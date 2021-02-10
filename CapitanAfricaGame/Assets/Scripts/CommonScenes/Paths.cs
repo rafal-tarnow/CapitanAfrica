@@ -12,7 +12,7 @@ public class Paths : MonoBehaviour
     }
 
     public static string LEVELS_EDIT;
-    public static string LEVEL_TEMPLATE = "Assets/Resources/Levels/";
+    public static string TEMPLATES = "Assets/Resources/Templates/";
 
     private static bool inited = false;
 

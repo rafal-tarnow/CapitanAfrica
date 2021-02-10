@@ -11,29 +11,34 @@ public static class SaveSystem
         Debug.Log("Init save system");
     }
 
-    public static void Save<T>(T saveObject, string fileName)
+    public static void Save<T>(T saveObject, string filePath)
     {
         string jsonString = JsonUtility.ToJson(saveObject);    
-        File.WriteAllText(Paths.LEVELS_EDIT + fileName, jsonString);
+        File.WriteAllText(filePath, jsonString);
     }
 
-    public static T Load<T>(string fileName)
+    public static T Load<T>(string filePath, string templateFilePath) where T : new()
     {
-
-        if(!File.Exists(Paths.LEVELS_EDIT + fileName))
+        if(!File.Exists(filePath))
         {
-            File.Copy(Paths.LEVEL_TEMPLATE + "template_level.txt", (Paths.LEVELS_EDIT + fileName), false);
+            if(File.Exists(templateFilePath))
+                File.Copy(templateFilePath, filePath, false);
         }
 
-        if(File.Exists(Paths.LEVELS_EDIT + fileName))
+        if(File.Exists(filePath))
         {
-            string saveString = File.ReadAllText(Paths.LEVELS_EDIT + fileName);
+            string saveString = File.ReadAllText(filePath);
             T loadedObject = JsonUtility.FromJson<T>(saveString);
-            return loadedObject;
+
+            if(loadedObject != null)
+                return loadedObject;
+            else
+                return new T();
+
         }
         else 
         {
-            return default(T);
+            return new T();
         }
     }
 }
