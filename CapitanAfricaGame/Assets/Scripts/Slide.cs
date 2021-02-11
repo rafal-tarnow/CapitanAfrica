@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -206,7 +206,7 @@ public class Slide : MonoBehaviour
             .Download();
         }
 
-                    JSONDownloader
+            JSONDownloader
             .Initialize()
             .SetUrl(serverUrl + "uploaded_images/CapitanAfrica/adjust.json")
             .SetJsonFilePath(Paths.LEVELS_EDIT + "adjust.json")

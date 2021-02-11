@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
+    private bool param_rotateWhellsWhenFly = false;
     private float fuel = 1.0f;
     private float previousFuel = 1.0f;
     public float fuelconsumption = 0.01f;
     private float car_body_torque = 500.0f;
     private float car_body_max_ang_vel = 70;
+    private bool whellsCollide = false;
+    private bool prevWhellsCollide = false;
     public Rigidbody2D carRigidbody;
     private Rigidbody2D frontTireRigidbody;
     private Rigidbody2D backTireRigidbody;
@@ -45,102 +48,111 @@ public class CarController : MonoBehaviour
     {
         startPosition = transform.position;
 
-        if(engineSound == null)
+        if (engineSound == null)
             engineSound = this.GetComponent<AudioSource>();
 
-        if(frontTireRigidbody == null)
+        if (frontTireRigidbody == null)
             frontTireRigidbody = GameObject.FindWithTag("FrontTire").GetComponent<Rigidbody2D>();
 
-        if(backTireRigidbody == null)
+        if (backTireRigidbody == null)
             backTireRigidbody = GameObject.FindWithTag("BackTire").GetComponent<Rigidbody2D>();
 
         //engineSound.Play();
         childColliders = this.GetComponentsInChildren<Collider2D>();
     }
+    public void onWhellsCollideEvent(bool touch)
+    {
+        Debug.Log("onWhellsCollideEvent() = " + touch.ToString());
 
+        if(!param_rotateWhellsWhenFly)
+        {
+            if (whellsCollide)
+                updateGasState();
+        }
+
+    }
 
     public void onGasPedalPressedEvent(bool pressed)
     {
         m_gasPedalPressed = pressed;
 
-        if(m_gasPedalPressed && m_brakePedalPressed)
+        if (param_rotateWhellsWhenFly)
         {
-            this.setGasEvent(1.0f);
-            return;
+            updateGasState();
         }
-        if(m_gasPedalPressed && !m_brakePedalPressed)
+        else
         {
-            this.setGasEvent(1.0f);
-            return;
+            if (whellsCollide) //// apply gas only when car is touching ground
+                updateGasState();
         }
-        if(!m_gasPedalPressed && m_brakePedalPressed)
-        {
-            this.setGasEvent(-1.0f);
-            return;
-        }
-        if(!m_gasPedalPressed && !m_brakePedalPressed)
-        {
-            this.setGasEvent(0.0f);
-            return;
-        }
-        
     }
 
 
-    public void onBrakePedalPressedEvent(bool pressed) 
+    public void onBrakePedalPressedEvent(bool pressed)
     {
         m_brakePedalPressed = pressed;
 
+        if (param_rotateWhellsWhenFly)
+        {
+            updateGasState();
+        }
+        else
+        {
+            if (whellsCollide) //// apply gas only when car is touching ground
+                updateGasState();
+        }
+    }
 
-        if(m_brakePedalPressed && m_gasPedalPressed)
+    void updateGasState()
+    {
+        if (m_brakePedalPressed && m_gasPedalPressed)
         {
             this.setGasEvent(-1.0f);
             return;
         }
-        if(m_brakePedalPressed && !m_gasPedalPressed)
+        if (m_brakePedalPressed && !m_gasPedalPressed)
         {
             this.setGasEvent(-1.0f);
             return;
         }
-        if(!m_brakePedalPressed && m_gasPedalPressed)
+        if (!m_brakePedalPressed && m_gasPedalPressed)
         {
             this.setGasEvent(1.0f);
             return;
         }
-        if(!m_brakePedalPressed && !m_gasPedalPressed)
+        if (!m_brakePedalPressed && !m_gasPedalPressed)
         {
             this.setGasEvent(0.0f);
             return;
         }
-        
     }
 
 
     public void setCarParameter_FrontDampingRatio(float damping)
     {
         JointSuspension2D suspension;
-  
+
         suspension = wheelFrontJoint.suspension;
         suspension.dampingRatio = damping;
-        wheelFrontJoint.suspension = suspension;        
+        wheelFrontJoint.suspension = suspension;
     }
 
     public void setCarParameter_BackDampingRatio(float damping)
     {
         JointSuspension2D suspension;
-  
+
         suspension = wheelBackJoint.suspension;
         suspension.dampingRatio = damping;
-        wheelBackJoint.suspension = suspension;        
+        wheelBackJoint.suspension = suspension;
     }
 
     public void setCarParameter_FrontFrequency(float freq)
     {
         JointSuspension2D suspension;
-  
+
         suspension = wheelFrontJoint.suspension;
         suspension.frequency = freq;
-        wheelFrontJoint.suspension = suspension;        
+        wheelFrontJoint.suspension = suspension;
     }
 
     public void setCarParameter_FrontTireFriction(float friction)
@@ -180,17 +192,17 @@ public class CarController : MonoBehaviour
         return car_body_max_ang_vel;
     }
 
-    public void setCarParameter_CarBodyMass(float param) 
+    public void setCarParameter_CarBodyMass(float param)
     {
         carBody.mass = param;
     }
 
-    public void setCarParameter_DriverBodyMass(float param) 
+    public void setCarParameter_DriverBodyMass(float param)
     {
         driverBody.mass = param;
     }
 
-    public float getCarParameter_DriverBodyMass() 
+    public float getCarParameter_DriverBodyMass()
     {
         return driverBody.mass;
     }
@@ -214,7 +226,7 @@ public class CarController : MonoBehaviour
     {
         return driverBodySpring.dampingRatio;
     }
- 
+
     public void setCarParameter_DriverHeadMass(float param)
     {
         driverHead.mass = param;
@@ -225,7 +237,7 @@ public class CarController : MonoBehaviour
         return driverHead.mass;
     }
 
-    public void setCarParameter_DriverHeadFrequency(float param) 
+    public void setCarParameter_DriverHeadFrequency(float param)
     {
         driverHeadSpring.frequency = param;
     }
@@ -235,7 +247,7 @@ public class CarController : MonoBehaviour
         return driverHeadSpring.frequency;
     }
 
-    public void setCarParameter_DriverHeadDamping(float param) 
+    public void setCarParameter_DriverHeadDamping(float param)
     {
         driverHeadSpring.dampingRatio = param;
     }
@@ -256,7 +268,16 @@ public class CarController : MonoBehaviour
     }
 
 
-    public float getCarParameter_CarBodyMass() 
+    public void setCarParameter_RotateWhellsWhenFly(bool val)
+    {
+        param_rotateWhellsWhenFly = val;
+    }
+    public bool getCarParameter_RotateWhellsWhenFly()
+    {
+        return param_rotateWhellsWhenFly;
+    }
+
+    public float getCarParameter_CarBodyMass()
     {
         return carBody.mass;
     }
@@ -270,11 +291,11 @@ public class CarController : MonoBehaviour
     public void setCarParameter_BackFrequency(float freq)
     {
         JointSuspension2D suspension;
-  
+
         suspension = wheelBackJoint.suspension;
         suspension.frequency = freq;
 
-        wheelBackJoint.suspension = suspension;        
+        wheelBackJoint.suspension = suspension;
     }
 
     public float getCarParameter_FrontDampingRatio()
@@ -317,42 +338,42 @@ public class CarController : MonoBehaviour
         // {
         //     //carRigidbody.AddTorque(0, ForceMode2D.Force);
         // }
-        
+
 
         m_currentGas = gas;
-        if(fuel>0.0f)
+        if (fuel > 0.0f)
             applyGasToCar(gas);
     }
 
 
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
         //carRigidbody.rotation += 200.0f*Time.fixedDeltaTime;
         //carRigidbody.AddTorque(-5, ForceMode2D.Force);
         //Debug.Log("Is child colliding = " + areChildsCollide().ToString());
+        checkWhellsCollide();
 
-
-        #warning przerobic rotate z pool na event
-        if(areChildsCollide())
+#warning przerobic rotate z pool na event
+        if (whellsCollide)
         {
             carRigidbody.AddTorque(0, ForceMode2D.Force);
         }
         else
         {
-            if(m_gasPedalPressed)
+            if (m_gasPedalPressed)
             {
-                if(carRigidbody.angularVelocity < car_body_max_ang_vel)
-                    carRigidbody.AddTorque(car_body_torque*Time.fixedDeltaTime, ForceMode2D.Force);
+                if (carRigidbody.angularVelocity < car_body_max_ang_vel)
+                    carRigidbody.AddTorque(car_body_torque * Time.fixedDeltaTime, ForceMode2D.Force);
             }
-            else if(m_brakePedalPressed)
+            else if (m_brakePedalPressed)
             {
-                if(carRigidbody.angularVelocity > -car_body_max_ang_vel)
-                    carRigidbody.AddTorque(-car_body_torque*Time.fixedDeltaTime, ForceMode2D.Force);
+                if (carRigidbody.angularVelocity > -car_body_max_ang_vel)
+                    carRigidbody.AddTorque(-car_body_torque * Time.fixedDeltaTime, ForceMode2D.Force);
             }
         }
 
     }
-    
+
 
     void Update()
     {
@@ -370,24 +391,30 @@ public class CarController : MonoBehaviour
         // {
         //    speedRatio = (speedBackwardAbs/-speedForward)*3.0f;
         // }
-        
+
 
         // Debug.Log("SpeedRatio = " + speedRatio.ToString());
 
         // engineSound.pitch = speedRatio + 0.6f;
 
-        if(fuel > 0.0f)
+        if (fuel > 0.0f)
         {
-            fuel -= fuelconsumption*Time.fixedDeltaTime;
+            fuel -= fuelconsumption * Time.fixedDeltaTime;
         }
         else
         {
             applyGasToCar(0);
         }
 
-        getGasFromKeyboard();
+
+        if (Application.platform != RuntimePlatform.Android)
+        {
+            getGasFromKeyboard();
+        }
+
+        
         //FUEL
-        if(previousFuel - fuel > 0.1) // optymalization, dont update fuel image with small amount
+        if (previousFuel - fuel > 0.1) // optymalization, dont update fuel image with small amount
         {
             previousFuel = fuel;
             image.fillAmount = fuel;
@@ -402,26 +429,26 @@ public class CarController : MonoBehaviour
         previousFuel = fuel;
         image.fillAmount = fuel;
     }
-    
+
 
     private void getGasFromKeyboard()
-    {     
-        if(Input.GetKeyDown(KeyCode.Slash))
+    {
+        if (Input.GetKeyDown(KeyCode.Slash))
         {
             onGasPedalPressedEvent(true);
         }
 
-        if(Input.GetKeyUp(KeyCode.Slash))
+        if (Input.GetKeyUp(KeyCode.Slash))
         {
             onGasPedalPressedEvent(false);
         }
 
-        if(Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             onBrakePedalPressedEvent(true);
         }
 
-        if(Input.GetKeyUp(KeyCode.Z))
+        if (Input.GetKeyUp(KeyCode.Z))
         {
             onBrakePedalPressedEvent(false);
         }
@@ -430,7 +457,7 @@ public class CarController : MonoBehaviour
 
     private void applyGasToCar(float x)
     {
-     if(x > 0)
+        if (x > 0)
         {
             backMotor.motorSpeed = speedForward;
             frontMotor.motorSpeed = speedForward;
@@ -442,7 +469,7 @@ public class CarController : MonoBehaviour
             wheelBackJoint.motor = backMotor;
 
         }
-        else if(x < 0)
+        else if (x < 0)
         {
             backMotor.motorSpeed = speedBackward;
             frontMotor.motorSpeed = speedBackward;
@@ -462,18 +489,34 @@ public class CarController : MonoBehaviour
             frontMotor.maxMotorTorque = torqueFree;
 
             wheelFrontJoint.motor = frontMotor;
-            wheelBackJoint.motor = backMotor;                           
+            wheelBackJoint.motor = backMotor;
         }
     }
 
-    bool areChildsCollide()
+    bool checkWhellsCollide()
     {
-        for(int i = 0; i < childColliders.Length; i++)
+#warning TODO this collicsion detection detect all collisions not only with ground
+
+        if (whellFrontCollider.IsTouchingLayers(Physics2D.AllLayers) || whellBackCollider.IsTouchingLayers(Physics2D.AllLayers))
         {
-            if(childColliders[i].IsTouchingLayers(Physics2D.AllLayers))
-                return true;
+            whellsCollide = true;
+            if (prevWhellsCollide != whellsCollide)
+            {
+                prevWhellsCollide = whellsCollide;
+                onWhellsCollideEvent(whellsCollide);
+            }
+            return true;
         }
-        return false;
+        else
+        {
+            whellsCollide = false;
+            if (prevWhellsCollide != whellsCollide)
+            {
+                prevWhellsCollide = whellsCollide;
+                onWhellsCollideEvent(whellsCollide);
+            }
+            return false;
+        }
     }
 
     // public void OnTriggerEnter2D(Collider2D other) {
@@ -488,7 +531,7 @@ public class CarController : MonoBehaviour
     // {
     //     //Debug.Log("Car controller: OnTriggerExit2D");
     // }
-    
+
     // public void OnCollisionEnter2D(Collision2D other) {
     //     //Debug.Log("Car controller: OnCollisionEnter2D");
     //     m_isColliding = true;

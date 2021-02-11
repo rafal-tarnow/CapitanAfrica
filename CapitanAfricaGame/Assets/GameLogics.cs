@@ -235,6 +235,7 @@ public class GameLogics : MonoBehaviour
         FrontFreq,
         BackDamp,
         BackFreq,
+        RotateWhellsWhenFly,
         CarBodyMass,
         CarBodyFriction,
         CarBodyTorque,
@@ -266,6 +267,7 @@ public class GameLogics : MonoBehaviour
             public float FrontFreq = 2.0f;
             public float BackDamp = 0.7f;
             public float BackFreq = 2.0f;
+            public bool RotateWhellsWhenFly = false;
             public float CarBodyMass = 0.08f;
             public float CarBodyFriction = 0.001f;
             public float CarBodyTorque = 500.0f;
@@ -302,6 +304,7 @@ public class GameLogics : MonoBehaviour
             setAdjustValue(AdjustValue.FrontFreq, saveObject.FrontFreq);
             setAdjustValue(AdjustValue.BackDamp, saveObject.BackDamp);
             setAdjustValue(AdjustValue.BackFreq, saveObject.BackFreq);
+            setAdjustValue(AdjustValue.RotateWhellsWhenFly, saveObject.RotateWhellsWhenFly);
             setAdjustValue(AdjustValue.CarBodyMass, saveObject.CarBodyMass);
 
             setAdjustValue(AdjustValue.CarBodyFriction, saveObject.CarBodyFriction);
@@ -341,13 +344,30 @@ public class GameLogics : MonoBehaviour
             setValueInSaveObject(valueName, value);
         }
 
+        public void setAdjustPrefs(AdjustValue valueName, bool value)
+        {
+            setValueInSaveObject(valueName, value);
+        }
+
+        public void setValueInSaveObject(AdjustValue valueName, bool value)
+        {
+            // var propertyInfo = saveObject.GetType().GetProperty(valueName.ToString());
+            // if (propertyInfo != null)  //this probably works. Yes it is
+            // {
+            //     propertyInfo.SetValue(saveObject, value, null);
+            // }
+
+            if (valueName.ToString() == "RotateWhellsWhenFly")
+                 saveObject.RotateWhellsWhenFly = value;
+        }
+
         public void setValueInSaveObject(AdjustValue valueName, float value)
         {
-            var propertyInfo = saveObject.GetType().GetProperty(valueName.ToString());
-            if (propertyInfo != null)  //this probably works. Yes it is
-            {
-                propertyInfo.SetValue(saveObject, value, null);
-            }
+            // var propertyInfo = saveObject.GetType().GetProperty(valueName.ToString());
+            // if (propertyInfo != null)  //this probably works. Yes it is
+            // {
+            //     propertyInfo.SetValue(saveObject, value, null);
+            // }
 
 
             if (valueName.ToString() == "Gravity")
@@ -521,7 +541,16 @@ public class GameLogics : MonoBehaviour
             }
         }
 
-        public float getAdjustValue(AdjustValue valueName)
+        public void setAdjustValue(AdjustValue valueName, bool value)
+        {
+            setAdjustPrefs(valueName, value);
+            if (valueName == AdjustValue.RotateWhellsWhenFly)
+            {
+                GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().setCarParameter_RotateWhellsWhenFly(value);
+            }
+        }
+
+        public float getFloatAdjustValue(AdjustValue valueName)
         {
             if (valueName == AdjustValue.Gravity)
             {
@@ -633,6 +662,16 @@ public class GameLogics : MonoBehaviour
             }
             return 0.0f;
         }
+
+        public bool getBoolAdjustValue(AdjustValue valueName)
+        {
+            if (valueName == AdjustValue.RotateWhellsWhenFly)
+            {
+                return GameObject.FindGameObjectWithTag("CarController").GetComponent<CarController>().getCarParameter_RotateWhellsWhenFly();
+            }
+
+            return false;
+        }
     }
 
 
@@ -641,10 +680,20 @@ public class GameLogics : MonoBehaviour
         adjustManager.setAdjustValue(valueName, value);
     }
 
-
-    public float getAdjustValue(AdjustValue valueName)
+    public void setAdjustValue(AdjustValue valueName, bool value)
     {
-        return adjustManager.getAdjustValue(valueName);
+        adjustManager.setAdjustValue(valueName, value);
+    }
+
+
+    public float getFloatAdjustValue(AdjustValue valueName)
+    {
+        return adjustManager.getFloatAdjustValue(valueName);
+    }
+
+    public bool getBoolAdjustValue(AdjustValue valueName)
+    {
+        return adjustManager.getBoolAdjustValue(valueName);
     }
 
 
