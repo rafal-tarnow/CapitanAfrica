@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3048459756654317369}
   - component: {fileID: 1235762692407863630}
   - component: {fileID: -4702208515575888642}
+  - component: {fileID: -3646852854086289964}
   m_Layer: 0
   m_Name: bomb
   m_TagString: Bomb
@@ -113,13 +114,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9feac2be35ba35eba2b613bce323ab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnPositionChanged:
+  OnSpritePointerDown:
     m_PersistentCalls:
       m_Calls: []
-  OnBeginDrag:
+  OnSpritePointerUp:
     m_PersistentCalls:
       m_Calls: []
-  OnEndDrag:
+  OnSpriteDrag:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpriteBeginDrag:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpriteEndDrag:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &-4702208515575888642
@@ -132,5 +139,17 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd757afa2a8147b31938f6aa693911d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-3646852854086289964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048459756654317370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13efead70efc2beca9e61b8486bb3316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
