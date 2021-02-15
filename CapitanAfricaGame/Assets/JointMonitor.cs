@@ -1,14 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class JointMonitor : MonoBehaviour
 {
     // Start is called before the first frame update    
+    public UnityEvent jointBreakEvent;
+
+    private void Start() {
+        if(jointBreakEvent == null)
+            jointBreakEvent = new UnityEvent();    
+    }
     void OnJointBreak2D(Joint2D brokenJoint)
     {
-        Debug.Log("A joint has just been broken!");
-        Debug.Log("The broken joint exerted a reaction force of " + brokenJoint.reactionForce);
-        Debug.Log("The broken joint exerted a reaction torque of " + brokenJoint.reactionTorque);
+        Debug.Log("JointMonitor on joint break");
+        jointBreakEvent.Invoke();
     }
 }

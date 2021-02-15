@@ -846,14 +846,41 @@ public class GameLogics : MonoBehaviour
     public void onMetaReached()
     {
         unlockNextLevel();
+        canvasMeta.GetComponent<CanvasMetaLogics>().setType(CanvasMetaLogics.Type.META_REACHED);
         canvasMeta.SetActive(true);
-
         // if (Physics2D.simulationMode == SimulationMode2D.Script)
         // {
         //     Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
         //     Time.timeScale = 0;
         // }
         Physics2D.simulationMode = SimulationMode2D.Script;
+    }
+
+    public void onCrash()
+    {
+     
+        carControllerScript.setPedalsActive(false);
+        StartCoroutine(ExecuteAfterTime(3));
+
+        // if (Physics2D.simulationMode == SimulationMode2D.Script)
+        // {
+        //     Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+        //     Time.timeScale = 0;
+        // }
+       
+    }
+
+
+    // Usage StartCoroutine(ExecuteAfterTime(2));
+     IEnumerator ExecuteAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+ 
+        canvasMeta.GetComponent<CanvasMetaLogics>().setType(CanvasMetaLogics.Type.CRASH);
+        canvasMeta.SetActive(true);
+
+         Physics2D.simulationMode = SimulationMode2D.Script;
+
     }
 
 

@@ -11674,7 +11674,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 588375269}
+      - m_Target: {fileID: 612304328}
         m_TargetAssemblyTypeName: CanvasMetaLogics, Assembly-CSharp
         m_MethodName: onNextLevelButtonPressed
         m_Mode: 1
@@ -13602,7 +13602,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 588375269}
+      - m_Target: {fileID: 612304328}
         m_TargetAssemblyTypeName: CanvasMetaLogics, Assembly-CSharp
         m_MethodName: onRetryButtonPressed
         m_Mode: 1
@@ -17086,7 +17086,6 @@ GameObject:
   - component: {fileID: 588375265}
   - component: {fileID: 588375267}
   - component: {fileID: 588375268}
-  - component: {fileID: 588375269}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -17185,33 +17184,9 @@ MonoBehaviour:
   centerButton: {fileID: 1987895656}
   leftButton: {fileID: 496491684}
   titleTextRt: {fileID: 790691098}
---- !u!114 &588375269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588375263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9eaba9c7416851966939c5b5076e91ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  retryEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 227302620}
-        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
-        m_MethodName: restartCurrentScene
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  buttonLeftPos: {x: 0.2, y: 0.2}
+  buttonCenterPos: {x: 0.5, y: 0.2}
+  buttonRightPos: {x: 0.8, y: 0.2}
 --- !u!1 &589466349
 GameObject:
   m_ObjectHideFlags: 0
@@ -17970,6 +17945,7 @@ GameObject:
   - component: {fileID: 612304326}
   - component: {fileID: 612304325}
   - component: {fileID: 612304324}
+  - component: {fileID: 612304328}
   m_Layer: 5
   m_Name: CanvasMeta
   m_TagString: CanvasMeta
@@ -18058,6 +18034,68 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &612304328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 612304323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eaba9c7416851966939c5b5076e91ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 790691099}
+  layout: {fileID: 588375268}
+  retryEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: restartCurrentScene
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  menuEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: onBackButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  nextLevelEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: runNextLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  buttonRetryGO: {fileID: 496491683}
+  buttonMenuGO: {fileID: 1987895655}
+  buttonNextGO: {fileID: 428353207}
 --- !u!1 &617168122
 GameObject:
   m_ObjectHideFlags: 0
@@ -24662,6 +24700,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f168a8f5ffff6fccfbe9e2603fbcfeb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointBreakEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 985913992}
+        m_TargetAssemblyTypeName: CarController, Assembly-CSharp
+        m_MethodName: OnChildJointBreak
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &920999371
 GameObject:
   m_ObjectHideFlags: 0
@@ -25681,8 +25734,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2135066041}
   m_HandleRect: {fileID: 2135066040}
   m_Direction: 2
-  m_Value: 0.99999994
-  m_Size: 0.21378723
+  m_Value: 0.9999998
+  m_Size: 0.19935197
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -26447,6 +26500,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975578822}
   m_CullTransparentMesh: 0
+--- !u!114 &985913992 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2213201549961173763, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+  m_PrefabInstance: {fileID: 2213201549973321881}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61c790acd87ef148088894923f52d73d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &991535694
 GameObject:
   m_ObjectHideFlags: 0
@@ -50765,7 +50829,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 588375269}
+      - m_Target: {fileID: 612304328}
         m_TargetAssemblyTypeName: CanvasMetaLogics, Assembly-CSharp
         m_MethodName: onMenuButtonPressed
         m_Mode: 1
@@ -54871,6 +54935,34 @@ PrefabInstance:
       propertyPath: image
       value: 
       objectReference: {fileID: 1884064126}
+    - target: {fileID: 2213201549961173763, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+      propertyPath: crashEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213201549961173763, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+      propertyPath: crashEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213201549961173763, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+      propertyPath: crashEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 227302620}
+    - target: {fileID: 2213201549961173763, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+      propertyPath: crashEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213201549961173763, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+      propertyPath: crashEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: onCrash
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213201549961173763, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+      propertyPath: crashEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameLogics, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213201549961173763, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+      propertyPath: crashEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2213201549961173765, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
       propertyPath: m_RootOrder
       value: 2

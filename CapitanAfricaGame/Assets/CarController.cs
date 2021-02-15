@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CarController : MonoBehaviour
 {
+    public UnityEvent crashEvent;
     private bool param_rotateWhellsWhenFly = false;
+    private bool m_pedals_active = true;
     private float fuel = 1.0f;
     private float previousFuel = 1.0f;
     public float fuelconsumption = 0.01f;
@@ -48,6 +51,9 @@ public class CarController : MonoBehaviour
     {
         startPosition = transform.position;
 
+        if(crashEvent == null)
+            crashEvent = new UnityEvent();
+
         if (engineSound == null)
             engineSound = this.GetComponent<AudioSource>();
 
@@ -74,6 +80,9 @@ public class CarController : MonoBehaviour
 
     public void onGasPedalPressedEvent(bool pressed)
     {
+        if(!m_pedals_active)
+            return;
+
         m_gasPedalPressed = pressed;
 
         if (param_rotateWhellsWhenFly)
@@ -87,9 +96,22 @@ public class CarController : MonoBehaviour
         }
     }
 
+    public void setPedalsActive(bool active)
+    {
+        if(active == false)
+        {
+            onGasPedalPressedEvent(false);
+            onBrakePedalPressedEvent(false);
+        }
+
+        m_pedals_active = active;
+    }
 
     public void onBrakePedalPressedEvent(bool pressed)
     {
+        if(!m_pedals_active)
+            return;
+
         m_brakePedalPressed = pressed;
 
         if (param_rotateWhellsWhenFly)
@@ -430,7 +452,10 @@ public class CarController : MonoBehaviour
         image.fillAmount = fuel;
     }
 
-
+    public void OnChildJointBreak() 
+    {
+        crashEvent.Invoke();
+    }
     private void getGasFromKeyboard()
     {
         if (Input.GetKeyDown(KeyCode.Slash))
