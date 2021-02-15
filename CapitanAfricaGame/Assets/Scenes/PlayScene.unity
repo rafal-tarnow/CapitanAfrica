@@ -11674,9 +11674,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 227302620}
-        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
-        m_MethodName: runNextLevel
+      - m_Target: {fileID: 588375269}
+        m_TargetAssemblyTypeName: CanvasMetaLogics, Assembly-CSharp
+        m_MethodName: onNextLevelButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13602,10 +13602,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 227302620}
-        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
-        m_MethodName: restartCurrentScene
-        m_Mode: 6
+      - m_Target: {fileID: 588375269}
+        m_TargetAssemblyTypeName: CanvasMetaLogics, Assembly-CSharp
+        m_MethodName: onRetryButtonPressed
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -17086,6 +17086,7 @@ GameObject:
   - component: {fileID: 588375265}
   - component: {fileID: 588375267}
   - component: {fileID: 588375268}
+  - component: {fileID: 588375269}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -17184,6 +17185,33 @@ MonoBehaviour:
   centerButton: {fileID: 1987895656}
   leftButton: {fileID: 496491684}
   titleTextRt: {fileID: 790691098}
+--- !u!114 &588375269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588375263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eaba9c7416851966939c5b5076e91ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  retryEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 227302620}
+        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
+        m_MethodName: onButtonRelovadLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &589466349
 GameObject:
   m_ObjectHideFlags: 0
@@ -24617,6 +24645,23 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &912231570 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2213201550223907155, guid: e94b64696df2020b0bc9595ac41606df, type: 3}
+  m_PrefabInstance: {fileID: 2213201549973321881}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &912231577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912231570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f168a8f5ffff6fccfbe9e2603fbcfeb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &920999371
 GameObject:
   m_ObjectHideFlags: 0
@@ -25636,8 +25681,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2135066041}
   m_HandleRect: {fileID: 2135066040}
   m_Direction: 2
-  m_Value: 0.9999998
-  m_Size: 0.20393875
+  m_Value: 0.99999994
+  m_Size: 0.21378723
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -50720,9 +50765,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 227302620}
-        m_TargetAssemblyTypeName: GameLogics, Assembly-CSharp
-        m_MethodName: onBackButtonPressed
+      - m_Target: {fileID: 588375269}
+        m_TargetAssemblyTypeName: CanvasMetaLogics, Assembly-CSharp
+        m_MethodName: onMenuButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

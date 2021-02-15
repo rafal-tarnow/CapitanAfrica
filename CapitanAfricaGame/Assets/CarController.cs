@@ -62,7 +62,7 @@ public class CarController : MonoBehaviour
     }
     public void onWhellsCollideEvent(bool touch)
     {
-        Debug.Log("onWhellsCollideEvent() = " + touch.ToString());
+        //Debug.Log("onWhellsCollideEvent() = " + touch.ToString());
 
         if(!param_rotateWhellsWhenFly)
         {
