@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -62,6 +62,7 @@ public class GameLogics : MonoBehaviour
 
     private AudioSource coinAudioSource;
     private AudioSource musicAudioSource;
+    private AudioSource boneCrashAudioSource;
 
     private CoinTextScriptMP coinTextScriptMP;
 
@@ -125,6 +126,7 @@ public class GameLogics : MonoBehaviour
             var audios = this.GetComponents<AudioSource>();
             coinAudioSource = audios[0];
             musicAudioSource = audios[1];
+            boneCrashAudioSource = audios[2];
         }
 
     }
@@ -858,7 +860,7 @@ public class GameLogics : MonoBehaviour
 
     public void onCrash()
     {
-     
+        boneCrashAudioSource.Play();
         carControllerScript.setPedalsActive(false);
         StartCoroutine(ExecuteAfterTime(3));
 
@@ -875,7 +877,6 @@ public class GameLogics : MonoBehaviour
      IEnumerator ExecuteAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
- 
         canvasMeta.GetComponent<CanvasMetaLogics>().setType(CanvasMetaLogics.Type.CRASH);
         canvasMeta.SetActive(true);
 

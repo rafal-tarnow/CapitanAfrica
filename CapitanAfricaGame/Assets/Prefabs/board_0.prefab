@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5195222079632641284}
   - component: {fileID: 1814373837847078303}
   - component: {fileID: -1173207745758546750}
+  - component: {fileID: 1565792913503725642}
   m_Layer: 0
   m_Name: board_0
   m_TagString: Board_0
@@ -98,13 +99,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9feac2be35ba35eba2b613bce323ab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnPositionChanged:
+  OnSpritePointerDown:
     m_PersistentCalls:
       m_Calls: []
-  OnBeginDrag:
+  OnSpritePointerUp:
     m_PersistentCalls:
       m_Calls: []
-  OnEndDrag:
+  OnSpriteDrag:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpriteBeginDrag:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpriteEndDrag:
     m_PersistentCalls:
       m_Calls: []
 --- !u!61 &5195222079632641284
@@ -166,3 +173,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd757afa2a8147b31938f6aa693911d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1565792913503725642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5195222079632641285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef2475a718f13fa7ad012205f6fa1fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mLayer: 01000000

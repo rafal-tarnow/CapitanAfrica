@@ -3,65 +3,11 @@
     "m_SelectedPackage": {
         "deviceId": "3300ee7592eb631f",
         "name": "com.DefaultCompany.CapitanAfricaGame",
-        "processId": 6402,
+        "processId": 12286,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.sec.android.app.launcher",
-            "processId": 4198,
-            "exited": true
-        },
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.DefaultCompany.CapitanAfricaGame",
-            "processId": 24125,
-            "exited": true
-        },
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.DefaultCompany.CapitanAfricaGame",
-            "processId": 26088,
-            "exited": true
-        },
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.sec.android.app.launcher",
-            "processId": 4295,
-            "exited": true
-        },
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.DefaultCompany.CapitanAfricaGame",
-            "processId": 12904,
-            "exited": true
-        },
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.sec.android.app.launcher",
-            "processId": 4238,
-            "exited": false
-        },
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.DefaultCompany.CapitanAfricaGame",
-            "processId": 17061,
-            "exited": true
-        },
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.DefaultCompany.CapitanAfricaGame",
-            "processId": 19107,
-            "exited": true
-        },
-        {
-            "deviceId": "3300ee7592eb631f",
-            "name": "com.DefaultCompany.CapitanAfricaGame",
-            "processId": 24784,
-            "exited": true
-        },
         {
             "deviceId": "3300ee7592eb631f",
             "name": "com.DefaultCompany.CapitanAfricaGame",
@@ -84,12 +30,30 @@
             "deviceId": "3300ee7592eb631f",
             "name": "com.DefaultCompany.CapitanAfricaGame",
             "processId": 2088,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "3300ee7592eb631f",
             "name": "com.DefaultCompany.CapitanAfricaGame",
             "processId": 6402,
+            "exited": true
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.sec.android.app.launcher",
+            "processId": 4235,
+            "exited": false
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 9312,
+            "exited": false
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 12286,
             "exited": false
         },
         {
