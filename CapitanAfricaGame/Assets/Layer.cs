@@ -5,7 +5,8 @@ using UnityEngine;
 public class Layer : MonoBehaviour
 {
     public enum Type{
-        HEAD_BRAKE = (1 << 0)
+        HEAD_BRAKE = (1 << 0),
+        PLAYER = (1 << 1)
     }
 
     public Type[] mLayer;
