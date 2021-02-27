@@ -1,9 +1,9 @@
 {
-    "m_SelectedDeviceId": "3300ee7592eb631f",
+    "m_SelectedDeviceId": "XED7N19102003131",
     "m_SelectedPackage": {
-        "deviceId": "3300ee7592eb631f",
+        "deviceId": "XED7N19102003131",
         "name": "com.DefaultCompany.CapitanAfricaGame",
-        "processId": 12286,
+        "processId": 31293,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -61,6 +61,18 @@
             "name": "com.DefaultCompany.CapitanAfricaGame",
             "processId": 21038,
             "exited": true
+        },
+        {
+            "deviceId": "XED7N19102003131",
+            "name": "com.android.chrome",
+            "processId": 27668,
+            "exited": false
+        },
+        {
+            "deviceId": "XED7N19102003131",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 31293,
+            "exited": false
         }
     ],
     "m_Tags": {
