@@ -6482,9 +6482,9 @@ AudioSource:
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
+  BypassEffects: 1
+  BypassListenerEffects: 1
+  BypassReverbZones: 1
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -6564,7 +6564,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 8c10cbcf0896a66a0a7d7866296ab13a, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 879330d9369b32cbd9c52100fdf6496b, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -6578,9 +6578,9 @@ AudioSource:
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
+  BypassEffects: 1
+  BypassListenerEffects: 1
+  BypassReverbZones: 1
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -25927,8 +25927,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2135066041}
   m_HandleRect: {fileID: 2135066040}
   m_Direction: 2
-  m_Value: 0.99999994
-  m_Size: 0.22817606
+  m_Value: 0.9999998
+  m_Size: 0.21626118
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

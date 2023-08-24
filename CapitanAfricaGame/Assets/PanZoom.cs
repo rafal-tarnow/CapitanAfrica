@@ -29,18 +29,18 @@ public class PanZoom : MonoBehaviour {
     Vector2 touchZoomStartPos2_screen; // = new Vector2(); 
     Vector3 touchZoomStartPos2_wordl; // = new Vector3();
 
-    private static GameLogics gameLogics;
+    private static GameManager gameManager;
 
     void Awake () {
-        if (gameLogics == null)
-            gameLogics = GameObject.FindWithTag ("GameLogics").GetComponent<GameLogics> ();
+        if (gameManager == null)
+            gameManager = GameObject.FindWithTag ("GameLogics").GetComponent<GameManager> ();
 
     }
 
     void onDragStarted () {
         //Debug.Log("On DRAG"); 
         state = State.DRAG;
-        gameLogics.cameraFollowEnable = false;
+        gameManager.cameraFollowEnable = false;
 
         //touchZeroStartPos_screen = Input.GetTouch(0).position;
         //touchZeroStartPos_wordl = Camera.main.ScreenToWorldPoint(touchZeroStartPos_screen);

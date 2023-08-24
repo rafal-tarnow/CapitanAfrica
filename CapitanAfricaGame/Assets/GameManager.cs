@@ -9,8 +9,20 @@ using TMPro;
 
 
 
-public class GameLogics : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
+
+
+    public class GameLogics{
+        GameObject car;
+        GameObject[] coins;
+        GameObject[] bombs;
+
+        public void onCarCollide()
+        {
+            
+        }
+    }
 
     enum MainMode
     {
@@ -71,6 +83,8 @@ public class GameLogics : MonoBehaviour
     AdjustManager adjustManager = new AdjustManager();
     DebugManager debugManager = new DebugManager();
     LevelLoader levelLoader;
+
+    GameLogics gameLogics;
 
     void Awake()
     {
@@ -871,6 +885,7 @@ public class GameLogics : MonoBehaviour
         // }
        
     }
+
 
 
     // Usage StartCoroutine(ExecuteAfterTime(2));

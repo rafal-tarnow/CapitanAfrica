@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class ExplodeBomb : MonoBehaviour
 {
     public GameObject explosion;
 
-    void explode()
+    void explode(Collision2D col)
     {
-                    Instantiate(explosion, transform.position, Quaternion.identity);
+            Destroy(col.gameObject);
+            Instantiate(explosion, transform.position, Quaternion.identity);
             gameObject.SetActive(false);
     }
 
@@ -19,7 +21,7 @@ public class ExplodeBomb : MonoBehaviour
         {
             if (layer.checkLayer(Layer.Type.PLAYER))
             {
-                    explode();
+                    explode(col);
             }
         }
     }

@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "XED7N19102003131",
         "name": "com.DefaultCompany.CapitanAfricaGame",
-        "processId": 21593,
+        "processId": 26573,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -24,6 +24,66 @@
             "deviceId": "XED7N19102003131",
             "name": "com.DefaultCompany.CapitanAfricaGame",
             "processId": 21593,
+            "exited": false
+        },
+        {
+            "deviceId": "XED7N19102003131",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 2832,
+            "exited": false
+        },
+        {
+            "deviceId": "XED7N19102003131",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 11626,
+            "exited": false
+        },
+        {
+            "deviceId": "XED7N19102003131",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 12983,
+            "exited": false
+        },
+        {
+            "deviceId": "XED7N19102003131",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 13596,
+            "exited": false
+        },
+        {
+            "deviceId": "XED7N19102003131",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 26573,
+            "exited": false
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.samsung.android.messaging",
+            "processId": 19783,
+            "exited": true
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 20329,
+            "exited": true
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 2652,
+            "exited": true
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.sec.android.app.launcher",
+            "processId": 4254,
+            "exited": false
+        },
+        {
+            "deviceId": "3300ee7592eb631f",
+            "name": "com.DefaultCompany.CapitanAfricaGame",
+            "processId": 10507,
             "exited": false
         }
     ],

@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class AddCoin : MonoBehaviour
 { 
-    static private  GameLogics gameLogics;
+    static private  GameManager gameManager;
     //private AudioSource audio;
    
     private void Awake() 
     {
-         if (gameLogics == null)
-            gameLogics = GameObject.FindWithTag ("GameLogics").GetComponent<GameLogics>();
+         if (gameManager == null)
+            gameManager = GameObject.FindWithTag ("GameLogics").GetComponent<GameManager>();
     }
 
     private void Start() {
@@ -21,6 +21,6 @@ public class AddCoin : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) 
     {  
         //audio.Play();
-        gameLogics.OnCoinTriggerEnter2D(this.gameObject, other);
+        gameManager.OnCoinTriggerEnter2D(this.gameObject, other);
     }
 }

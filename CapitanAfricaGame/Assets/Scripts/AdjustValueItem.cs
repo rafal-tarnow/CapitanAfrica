@@ -11,11 +11,11 @@ public class AdjustValueItem : MonoBehaviour
         FLOAT,
         BOOLEAN
     }
-    public GameLogics.AdjustValue adjustValue;
+    public GameManager.AdjustValue adjustValue;
     public Type type = Type.FLOAT;
     public TMP_Text button_one_txt;
     public TMP_Text button_two_txt;
-    private static GameLogics gameLogics;
+    private static GameManager gameManager;
 
 
     TMP_Text label;
@@ -23,8 +23,8 @@ public class AdjustValueItem : MonoBehaviour
 
     private void Awake()
     {
-        if (gameLogics == null)
-            gameLogics = GameObject.FindWithTag("GameLogics").GetComponent<GameLogics>();
+        if (gameManager == null)
+            gameManager = GameObject.FindWithTag("GameLogics").GetComponent<GameManager>();
     }
 
     void Start()
@@ -47,11 +47,11 @@ public class AdjustValueItem : MonoBehaviour
     {
         if (type == Type.FLOAT)
         {
-            label.SetText(adjustValue.ToString() + ": " + gameLogics.getFloatAdjustValue(adjustValue).ToString());
+            label.SetText(adjustValue.ToString() + ": " + gameManager.getFloatAdjustValue(adjustValue).ToString());
         }
         else if (type == Type.BOOLEAN)
         {
-            label.SetText(adjustValue.ToString() + ": " + gameLogics.getBoolAdjustValue(adjustValue).ToString());
+            label.SetText(adjustValue.ToString() + ": " + gameManager.getBoolAdjustValue(adjustValue).ToString());
         }
     }
 
@@ -66,12 +66,12 @@ public class AdjustValueItem : MonoBehaviour
 
         if (type == Type.FLOAT)
         {
-            float value = gameLogics.getFloatAdjustValue(adjustValue);
-            gameLogics.setAdjustValue(adjustValue, value * 1.1f);
+            float value = gameManager.getFloatAdjustValue(adjustValue);
+            gameManager.setAdjustValue(adjustValue, value * 1.1f);
         }
         else if (type == Type.BOOLEAN)
         {
-            gameLogics.setAdjustValue(adjustValue, true);
+            gameManager.setAdjustValue(adjustValue, true);
         }
     }
 
@@ -82,12 +82,12 @@ public class AdjustValueItem : MonoBehaviour
 
         if (type == Type.FLOAT)
         {
-            float value = gameLogics.getFloatAdjustValue(adjustValue);
-            gameLogics.setAdjustValue(adjustValue, value / 1.1f);
+            float value = gameManager.getFloatAdjustValue(adjustValue);
+            gameManager.setAdjustValue(adjustValue, value / 1.1f);
         }
         else if (type == Type.BOOLEAN)
         {
-            gameLogics.setAdjustValue(adjustValue, false);
+            gameManager.setAdjustValue(adjustValue, false);
         }
     }
 }

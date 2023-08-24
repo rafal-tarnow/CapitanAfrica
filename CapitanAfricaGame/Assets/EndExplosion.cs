@@ -10,7 +10,7 @@ public class EndExplosion : MonoBehaviour
 
     void Start()
     {
-        AudioSource.PlayClipAtPoint(myAudioClip, new Vector3(0,0,0), 1.0f);
+        AudioSource.PlayClipAtPoint(myAudioClip, Camera.main.transform.position, 1.0f);
         Invoke("DelayedDestory", 0.35f);
     } 
 
